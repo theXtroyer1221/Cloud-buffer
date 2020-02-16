@@ -1,10 +1,9 @@
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/theXtroyer1221/Climate-luft) 
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/theXtroyer1221/Cloud-buffer)
 
-# Climate-lufter
+# Cloud-buffer
 
-**Climate Lufter** is an webapp displaying a weather of the selected city by using open source api's that provide json data for use. 
+**Cloud buffer** is an webapp displaying a weather of the selected city by using open source api's that provide json data for use.
 This data is later parsed and put on the website with using python Flask micro web framework.
-
 
 ## Getting Started
 
@@ -40,19 +39,19 @@ Add additional notes about how to deploy this on a live system
 
 ### Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+- [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+- [Maven](https://maven.apache.org/) - Dependency Management
+- [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/theXtroyer1221/Climate-luft/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/theXtroyer1221/Cloud-buffer/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
 
-* **TheXtroyer1221** - *Initial work* - [TheXtroyer github account](https://github.com/tgeXtroyer1221)
+- **TheXtroyer1221** - _Initial work_ - [TheXtroyer github account](https://github.com/tgeXtroyer1221)
 
-See also the list of [contributors](https://github.com/theXtroyer1221/Climate-luft/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/theXtroyer1221/Cloud-buffer/graphs/contributors) who participated in this project.
 
 ## License
 

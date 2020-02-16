@@ -1,0 +1,29 @@
+html,
+body,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family: $font3;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 !important;
+  padding: 0;
+}
+
+h1 {
+  font-family: $font1 !important;
+}
