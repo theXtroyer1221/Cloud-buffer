@@ -1,0 +1,77 @@
+{% extends 'base.html' %} {% block content%}
+<section class="search-header mb-2">
+  <div class="container">
+    <h1>Weather forecast</h1>
+    <hr />
+    <form class="d-flex" action="" method="GET">
+      {{form.search(class_="form-control search-input", required='required', placeholder="London, New York, Stockholm, Paris")}}
+      <div class="btn-group">
+        <button class="search-button btn btn-primary" type="submit" style="border-right: #0069d9 solid 2px;"><i class="fas fa-search"></i></button>
+        <button class="search-button search-button-location btn btn-primary" type="submit" style="border-left: #0069d9 solid 2px;"><i class="fas fa-map-marker-alt"></i></button>
+      </div>
+    </form>
+  </div>
+</section>
+{% if data.cod == "404"%}
+<hr />
+<section class="py-5">
+  <div class="container text-center">
+    <h1 class="display-1">404</h1>
+    <h1>City not found not found</h1>
+    <p class="lead">The clouds didint reach your search, try checking the name of the city</p>
+  </div>
+</section>
+{% else %}
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <h1 class="display-4 mb-2">Weather in <br />{{data.name}}</h1>
+        <canvas id="weather-icon" width="50" height="50"></canvas>
+        <p>lol</p>
+      </div>
+      <div class="col-lg-6"></div>
+    </div>
+  </div>
+</section>
+{% set sunset = data["sys"]["sunset"] %}
+<p class="d-none" id="weatherId">{% for i in data["weather"] %} {{ i['id']}} {% endfor %}</p>
+<script>
+  console.log({{ data| tojson}});
+
+  const weatherStatus = parseInt(weatherId.textContent);
+  console.log(weatherStatus)
+
+  var skycons = new Skycons({ color: "#2f303a" });
+
+  var sunset_time = {{ sunset| tojson}};
+  var sunset = new Date(sunset_time * 1000);
+
+  skycons.add("weather-icon", Skycons.PARTLY_CLOUDY_NIGHT);
+  skycons.play();
+
+  if (weatherStatus == 800) {
+    skycons.set("weather-icon", Skycons.CLEAR_DAY);
+  } else if (weatherStatus == 801 || weatherStatus == 802) {
+    skycons.set("weather-icon", Skycons.PARTLY_CLOUDY_DAY);
+  } else if (weatherStatus == 803 || weatherStatus == 804) {
+    skycons.set("weather-icon", Skycons.CLOUDY);
+  } else if (weatherStatus == 500 || weatherStatus == 501) {
+    skycons.set("weather-icon", Skycons.RAIN);
+  } else if (weatherStatus == 502 || weatherStatus == 503 || weatherStatus == 504) {
+    skycons.set("weather-icon", Skycons.SLEET);
+  } else if (weatherStatus == 511) {
+    skycons.set("weather-icon", Skycons.SNOW);
+  } else if (weatherStatus == 520 || weatherStatus == 521 || weatherStatus == 522 || weatherStatus == 531) {
+    skycons.set("weather-icon", Skycons.SLEET);
+  } else if (weatherStatus == 600 || weatherStatus == 601 || weatherStatus == 602 || weatherStatus == 616) {
+    skycons.set("weather-icon", Skycons.SNOW);
+  } else if (weatherStatus == 611 || weatherStatus == 612 || weatherStatus == 613 || weatherStatus == 615) {
+    skycons.set("weather-icon", Skycons.SLEET);
+  } else if (weatherStatus == 701 || weatherStatus == 711 || weatherStatus == 721 || weatherStatus == 731 || weatherStatus == 741) {
+    skycons.set("weather-icon", Skycons.FOG);
+  } else {
+    skycons.set("weather-icon", Skycons.CLOUDY);
+  }
+</script>
+{% endif %} {% endblock %}

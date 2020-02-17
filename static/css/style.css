@@ -41,6 +41,34 @@
   font-size: 17px !important;
 }
 
+.search-header {
+  margin-top: 56px;
+  padding-top: 6rem;
+}
+
+.search-input {
+  border-radius: 50px !important;
+  border: 0 !important;
+  width: 500px !important;
+  height: 50px !important;
+  margin-right: -52px !important;
+  border: 2px solid rgba(0, 0, 0, 0.5) !important;
+}
+
+.btn-group .search-button {
+  border-radius: 0px !important;
+  border-top-left-radius: 50px !important;
+  border-bottom-left-radius: 50px !important;
+  height: 51px !important;
+  width: 50px !important;
+}
+
+.btn-group .search-button-location {
+  border-radius: 0px !important;
+  border-top-right-radius: 50px !important;
+  border-bottom-right-radius: 50px !important;
+}
+
 html,
 body,
 ul,
