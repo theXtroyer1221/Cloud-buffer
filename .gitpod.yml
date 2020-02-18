@@ -3,3 +3,16 @@ tasks:
     command: echo "Replace me with something that should run on every start, or just
       remove me entirely."
 image: gitpod/workspace-full
+
+vscode:
+  extensions:
+    - monokai.theme-monokai-pro-vscode@1.1.14:tzpg+nCWpSYgsp0YhkrF5g==
+    - syler.sass-indented@1.7.5:7yLxh0eMJnZEtErQtSd3aw==
+    - formulahendry.auto-rename-tag@0.1.1:lKCmLIZAiCM0M8AjDnwCLQ==
+    - wholroyd.jinja@0.0.8:/rhegJhzNpXXsUJsB4wDGA==
+    - Equinusocio.vsc-material-theme@32.5.0:QKQzJamqCIUjkJSSXc5o8w==
+    - eamodio.gitlens@10.2.1:e0IYyp0efFqVsrZwsIe8CA==
+    - esbenp.prettier-vscode@3.20.0:37/f4uBlE287wUjENFq1aA==
+    - PKief.material-icon-theme@3.9.3:GVmljEI1+vB8Qkqq/e1dfw==
+    - ritwickdey.LiveServer@5.6.1:wV4LBkq6Z5s1xwf2HrB+cw==
+    - ritwickdey.live-sass@3.0.0:x2c+sCJm+QmH2qn2h1X9Zw==

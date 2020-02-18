@@ -26,9 +26,8 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-6">
-        <h1 class="display-4 mb-2">Weather in <br />{{data.name}}</h1>
-        <canvas id="weather-icon" width="50" height="50"></canvas>
-        <p>lol</p>
+        <h1 class="display-4 mb-4">Weather in <br />{{data.name}}</h1>
+        <canvas id="weather-icon" width="50" height="50"></canvas><p class="weather-temprature">{{data["main"]["temp"]}}</p>
       </div>
       <div class="col-lg-6"></div>
     </div>
