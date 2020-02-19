@@ -2,3 +2,19 @@
 @import "header";
 @import "reset";
 @import "scrollbar";
+@import "switch";
+@import "loader";
+
+.weather-temprature {
+  font-family: $font1;
+  font-weight: 600;
+  font-size: 50px;
+
+  &::after {
+    content: var(--c, "°c");
+  }
+}
+
+.weather-desc {
+  font-size: 24px !important;
+}

@@ -4,9 +4,19 @@ from forms import SignUpForm
 import json
 import requests
 
+from dotenv import load_dotenv
+load_dotenv()
+
+import os
+
+from google_images_search import GoogleImagesSearch
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Cloud Buffer"
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+GCS_DEVELOPER_KEY = os.environ.get('GCS_DEVELOPER_KEY')
+GCS_CX = os.environ.get('GCS_CX')
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -20,7 +30,7 @@ def index():
     return render_template("index.html", form=form)
 
 
-@app.route("/<query>")
+@app.route("/weather/<query>")
 def search(query):
     form = SignUpForm()
 
@@ -38,7 +48,41 @@ def search(query):
                      params=payload)
     data = r.json()
 
-    return render_template("search.html", query=query, data=data, form=form)
+    if data["cod"] == 200:
+        search_country = data["sys"]["country"]
+        search_query = f"{query} city {search_country}"
+
+        gis = GoogleImagesSearch(GCS_DEVELOPER_KEY, GCS_CX)
+        google_search_params = {
+            'q': search_query,
+            'num': 1,
+            'safe': 'off',
+            'fileType': 'jpg',
+            'imgSize': 'xlarge'
+        }
+        try:
+            gis.search(search_params=google_search_params)
+        except:
+            img = "../static/images/notfound.jpg"
+
+        img = "../static/images/notfound.jpg"
+
+        for image in gis.results():
+            img = image.url
+            print(img)
+
+        return render_template("search.html",
+                               query=query,
+                               data=data,
+                               form=form,
+                               img=img)
+    else:
+        return render_template(
+            "search.html",
+            query=query,
+            data=data,
+            form=form,
+        )
 
 
 @app.errorhandler(404)

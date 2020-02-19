@@ -17,26 +17,78 @@
 <section class="py-5">
   <div class="container text-center">
     <h1 class="display-1">404</h1>
-    <h1>City not found not found</h1>
+    <h1>City not found</h1>
     <p class="lead">The clouds didint reach your search, try checking the name of the city</p>
   </div>
 </section>
 {% else %}
-<section class="py-5">
+<div id="loader"></div>
+<section class="py-5 animate-bottom" id="mainSection">
   <div class="container">
-    <div class="row">
-      <div class="col-lg-6">
-        <h1 class="display-4 mb-4">Weather in <br />{{data.name}}</h1>
+    <div class="row mb-3">
+      <div class="col-lg-6 p-0">
+        <h1 class="display-4 mb-4">Weather in <br />{{data.name}}, <small>{{data["sys"]["country"]}}</small></h1>
         <div class="d-flex">
-        <canvas id="weather-icon" width="50" height="50"></canvas><p class="weather-temprature">{{data["main"]["temp"]}}</p>
+          <canvas id="weather-icon" width="75" height="75" class="mr-3"></canvas>
+          <p id="weather-temprature" class="weather-temprature" style="--c: '°c';">{{data["main"]["temp"]|round|int}}</p>
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked onclick="celcuis_to_fehrenheit()" />
+            <label class="onoffswitch-label" for="myonoffswitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch" style="height: 18px; margin-top: 8px;"></span>
+            </label>
+          </div>
         </div>
+        <p class=" weather-desc"><small>{{data["weather"][0]["description"]}}</small></p>
       </div>
+      <div class="col-lg-6 p-0" style="height: 270px;">
+        <div class="h-100">
+          <img class="img-fluid w-100 h-100 o" src="{{img}}" alt="" />
+        </div>
+        <hr />
+      </div>
+    </div>
+    <div class="row">
       <div class="col-lg-6"></div>
+      <div class="col-lg-6">
+        <canvas id="wind-icon" width="75" height="75" class="mr-3"></canvas>
+      </div>
     </div>
   </div>
 </section>
 {% set sunset = data["sys"]["sunset"] %}
 <p class="d-none" id="weatherId">{% for i in data["weather"] %} {{ i['id']}} {% endfor %}</p>
+<script>
+  var myVar;
+
+  function loading() {
+    myVar = setTimeout(showPage, 2000);
+  }
+
+  function showPage() {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("mainSection").style.display = "inherit";
+  }
+</script>
+<script>
+  function celcuis_to_fehrenheit() {
+    var temp = document.getElementById("weather-temprature");
+    var switchy = document.getElementById("myonoffswitch");
+
+    var isChecked = switchy.checked;
+    if (isChecked == false) {
+      fehrenheit = temp.innerHTML * 1.8 + 32;
+
+      temp.innerHTML = Math.round(fehrenheit);
+      temp.style.setProperty("--c", "'°F'");
+    } else if (isChecked == true) {
+      celcuis = (temp.innerHTML - 32) * (5 / 9);
+
+      temp.innerHTML = Math.round(celcuis);
+      temp.style.setProperty("--c", "'°c'");
+    }
+  }
+</script>
 <script>
   console.log({{ data| tojson}});
 
@@ -44,9 +96,13 @@
   console.log(weatherStatus)
 
   var skycons = new Skycons({ color: "#2f303a" });
+  var skyconsWind = new Skycons({ color: "#2f303a" });
 
   var sunset_time = {{ sunset| tojson}};
   var sunset = new Date(sunset_time * 1000);
+
+  skyconsWind.add("wind-icon", Skycons.WIND);
+  skyconsWind.play();
 
   skycons.add("weather-icon", Skycons.PARTLY_CLOUDY_NIGHT);
   skycons.play();
