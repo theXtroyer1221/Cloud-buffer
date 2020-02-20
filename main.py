@@ -61,7 +61,7 @@ def search(query):
             'imgSize': 'xlarge'
         }
         try:
-            gis.search(search_params=google_search_params)
+            gis.search(search_params=google_searchparams)
         except:
             img = "../static/images/notfound.jpg"
 

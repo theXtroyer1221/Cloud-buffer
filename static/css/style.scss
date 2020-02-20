@@ -15,6 +15,49 @@
   }
 }
 
+.weather-feel {
+  font-family: $font1;
+  font-weight: 600;
+  font-size: 20px;
+
+  &::before {
+    content: "Feels like: ";
+  }
+
+  &::after {
+    content: var(--c, "°c");
+  }
+}
+
 .weather-desc {
   font-size: 24px !important;
+  font-weight: 600;
+}
+
+.weather-humidity {
+  font-family: $font1;
+  font-size: 37px;
+  font-weight: 600;
+}
+
+.weather-wind {
+  font-family: $font1;
+  font-weight: 600;
+  font-size: 50px;
+
+  &::after {
+    content: "m/s";
+    font-size: 25px;
+  }
+}
+
+.weather-pressure {
+  font-family: $font1;
+  font-weight: 600;
+  font-size: 40px;
+
+  &::after {
+    content: "hPa";
+    font-size: 25px;
+  }
 }

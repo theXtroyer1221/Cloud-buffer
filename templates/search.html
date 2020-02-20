@@ -25,10 +25,10 @@
 <div id="loader"></div>
 <section class="py-5 animate-bottom" id="mainSection">
   <div class="container">
-    <div class="row mb-3">
+    <div class="row mb-1">
       <div class="col-lg-6 p-0">
         <h1 class="display-4 mb-4">Weather in <br />{{data.name}}, <small>{{data["sys"]["country"]}}</small></h1>
-        <div class="d-flex">
+        <div class="d-flex mb-2">
           <canvas id="weather-icon" width="75" height="75" class="mr-3"></canvas>
           <p id="weather-temprature" class="weather-temprature" style="--c: '°c';">{{data["main"]["temp"]|round|int}}</p>
           <div class="onoffswitch">
@@ -39,19 +39,37 @@
             </label>
           </div>
         </div>
-        <p class=" weather-desc"><small>{{data["weather"][0]["description"]}}</small></p>
+        <p id="weather-feel" class="weather-feel" style="--c: '°c';">{{data["main"]["feels_like"]|round|int}}</p>
+        <p class="weather-desc"><small>{{data["weather"][0]["description"]}}</small></p>
       </div>
-      <div class="col-lg-6 p-0" style="height: 270px;">
-        <div class="h-100">
-          <img class="img-fluid w-100 h-100 o" src="{{img}}" alt="" />
+      <div class="col-lg-6 p-0">
+        <div>
+          <img class="img-fluid w-100" src="{{img}}" alt="" style="height: 270px;" />
+          <p class="image-desc">The picture is the first result of the of google image serach of <b>{{query}} city {{data["sys"]["country"]}}</b></p>
         </div>
-        <hr />
       </div>
     </div>
+    <hr />
+
     <div class="row">
-      <div class="col-lg-6"></div>
       <div class="col-lg-6">
-        <canvas id="wind-icon" width="75" height="75" class="mr-3"></canvas>
+        <div class="d-flex">
+          <p class="weather-humidity">Humidity</p>
+          <img src="https://image.flaticon.com/icons/svg/219/219816.svg" alt="humitidy" width="60" height="60" />
+          <p class="weather-humidity">hello</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="d-flex">
+          <div class="wind d-flex mr-5">
+            <canvas id="wind-icon" width="75" height="75" class="mr-3"></canvas>
+            <p class="weather-wind">{{data["wind"]["speed"]}}</p>
+          </div>
+          <div class="d-flex">
+            <img class="mr-3" src="https://c7.uihere.com/icons/609/5/153/pressure-16a86894aa7e21d778b1d9c8a307930d.png" alt="" height="75" width="75" />
+            <p class="weather-pressure">{{data["main"]["pressure"]}}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -62,7 +80,7 @@
   var myVar;
 
   function loading() {
-    myVar = setTimeout(showPage, 2000);
+    myVar = setTimeout(showPage, 1400);
   }
 
   function showPage() {
@@ -73,19 +91,26 @@
 <script>
   function celcuis_to_fehrenheit() {
     var temp = document.getElementById("weather-temprature");
+    var tempFeel = document.getElementById("weather-feel");
     var switchy = document.getElementById("myonoffswitch");
 
     var isChecked = switchy.checked;
     if (isChecked == false) {
       fehrenheit = temp.innerHTML * 1.8 + 32;
+      fehrenheitFeel = tempFeel.innerHTML * 1.8 + 32;
 
       temp.innerHTML = Math.round(fehrenheit);
       temp.style.setProperty("--c", "'°F'");
+      tempFeel.innerHTML = Math.round(fehrenheitFeel);
+      tempFeel.style.setProperty("--c", "'°F'");
     } else if (isChecked == true) {
       celcuis = (temp.innerHTML - 32) * (5 / 9);
+      celcuisFeel = (tempFeel.innerHTML - 32) * (5 / 9);
 
       temp.innerHTML = Math.round(celcuis);
       temp.style.setProperty("--c", "'°c'");
+      tempFeel.innerHTML = Math.round(celcuisFeel);
+      tempFeel.style.setProperty("--c", "'°c'");
     }
   }
 </script>
