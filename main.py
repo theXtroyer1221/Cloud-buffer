@@ -27,7 +27,7 @@ def index():
 
         return redirect(url_for("search", query=query))
 
-    return render_template("index.html", form=form)
+    return render_template("index.html", form=form, data="data")
 
 
 @app.route("/weather/<query>")
@@ -61,7 +61,7 @@ def search(query):
             'imgSize': 'xlarge'
         }
         try:
-            gis.search(search_params=google_search_params)
+            gis.search(search_params=google_search_param)
         except:
             img = "../static/images/notfound.jpg"
 
@@ -88,6 +88,12 @@ def search(query):
 def page_not_found(e):
     data = "error"
     return render_template('error.html', e=e, data=data), 404
+
+
+@app.route("/")
+def lolol():
+    data = request.get_json()
+    return data
 
 
 if __name__ == "__main__":

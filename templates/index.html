@@ -4,10 +4,10 @@
     <h1 class="text-white">The Clouds reach every corner in the world</h1>
     <p class="lead text-white mb-3 header-muted">Your search too, try finding your city's weather anywhere, at anytime</p>
     <form action="" method="GET">
-      {{form.search(class_="form-control header-input", required='required', placeholder="London, New York, Stockholm, Paris", value="")}}
+      {{form.search(class_="form-control header-input", placeholder="London, New York, Stockholm, Paris", value="London, New York, Stockholm, Paris", onfocus="this.value=''")}}
       <div class="btn-group" style="margin-top: -6px;">
         <button class="header-button btn btn-primary" type="submit" style="border-right: #0069d9 solid 2px;"><i class="fas fa-search"></i></button>
-        <button class="header-button btn btn-primary" type="submit" value="lol" style="border-left: #0069d9 solid 2px;"><i class="fas fa-map-marker-alt"></i></button>
+        <button class="header-button btn btn-primary" type="submit" value="lol" style="border-left: #0069d9 solid 2px;" onclick="checkLocation()"><i class="fas fa-map-marker-alt"></i></button>
       </div>
     </form>
   </div>
@@ -45,6 +45,7 @@
 
 <section class="py-5">
   <div class="container">
+    <button onclick="checkLocation()" value="hello">hello</button>
     <div class="row">
       <div class="col-lg-6">
         <h1 class="display-4 text-primary">We love the <i class="fas fa-globe-americas"></i>!</h1>
@@ -93,4 +94,17 @@
     </div>
   </div>
 </section>
+<script>
+  var nav = document.getElementById("navbar");
+
+  window.onscroll = function() {
+    if (window.scrollY >= 100) {
+      nav.classList.remove("py-4");
+      nav.classList.add("bg-dark");
+    } else {
+      nav.classList.add("py-4");
+      nav.classList.remove("bg-dark");
+    }
+  };
+</script>
 {% endblock %}
