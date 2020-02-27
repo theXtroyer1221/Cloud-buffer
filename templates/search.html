@@ -1,81 +1,75 @@
 {% extends 'base.html' %} {% block content%}
-<section class="search-header mb-2">
-  <div class="container">
-    <h1>Weather forecast</h1>
-    <hr />
-    <form class="d-flex" action="" method="GET">
-      {{form.search(class_="form-control search-input", required='required', placeholder="London, New York, Stockholm, Paris")}}
-      <div class="btn-group">
-        <button class="search-button btn btn-primary" type="submit" style="border-right: #0069d9 solid 2px;"><i class="fas fa-search"></i></button>
-        <button class="search-button search-button-location btn btn-primary" type="submit" style="border-left: #0069d9 solid 2px;"><i class="fas fa-map-marker-alt"></i></button>
-      </div>
-    </form>
-  </div>
-</section>
-{% if data.cod == "404"%}
-<hr />
-<section class="py-5">
-  <div class="container text-center">
-    <h1 class="display-1">404</h1>
-    <h1>City not found</h1>
-    <p class="lead">The clouds didint reach your search, try checking the name of the city</p>
-  </div>
-</section>
-{% else %}
-<div id="loader"></div>
-<section class="py-5 animate-bottom" id="mainSection">
-  <div class="container">
-    <div class="row mb-1">
-      <div class="col-lg-6 p-0">
-        <h1 class="display-4 mb-4">Weather in <br />{{data.name}}, <small>{{data["sys"]["country"]}}</small></h1>
-        <div class="d-flex mb-2">
-          <canvas id="weather-icon" width="75" height="75" class="mr-3"></canvas>
-          <p id="weather-temprature" class="weather-temprature" style="--c: '°c';">{{data["main"]["temp"]|round|int}}</p>
-          <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked onclick="celcuis_to_fehrenheit()" />
-            <label class="onoffswitch-label" for="myonoffswitch">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch" style="height: 18px; margin-top: 8px;"></span>
-            </label>
+<div id="page-container">
+  <section class="search-header mb-2">
+    <div class="container">
+      <h1 class="text-primary">Weather forecast</h1>
+      <hr />
+      <form class="d-flex" action="" method="GET">
+        {{form.search(class_="form-control search-input", required='required', placeholder="London, New York, Stockholm, Paris")}}
+        <div class="btn-group">
+          <button class="search-button btn btn-primary" type="submit" style="border-right: #0069d9 solid 2px;"><i class="fas fa-search"></i></button>
+          <button class="search-button search-button-location btn btn-primary" type="submit" style="border-left: #0069d9 solid 2px;"><i class="fas fa-map-marker-alt"></i></button>
+        </div>
+      </form>
+    </div>
+  </section>
+  {% if data.cod == "404"%}
+  <hr />
+  <section class="py-5">
+    <div class="container text-center">
+      <h1 class="display-1 text-primary">404</h1>
+      <h1>City not found</h1>
+      <p class="lead">The clouds didint reach your search, try checking the name of the city</p>
+    </div>
+  </section>
+  {% else %}
+  <div id="loader"></div>
+  <section class="py-5 animate-bottom" id="mainSection">
+    <div class="container">
+      <div class="row mb-1">
+        <div class="col-lg-6 p-0">
+          <h1 class="display-4 mb-4">Weather in <br />{{data.name}}, <small>{{data["sys"]["country"]}}</small></h1>
+          <div class="d-flex mb-2">
+            <canvas id="weather-icon" width="75" height="75" class="mr-3"></canvas>
+            <p id="weather-temprature" class="weather-temprature text-primary" style="--c: '°c';">{{data["main"]["temp"]|round|int}}</p>
+          </div>
+          <p id="weather-feel" class="weather-feel " style="--c: '°c';">{{data["main"]["feels_like"]|round|int}}</p>
+          <p class="weather-desc"><small>{{data["weather"][0]["description"]}}</small></p>
+        </div>
+        <div class="col-lg-6 p-0">
+          <div>
+            <img class="img-fluid w-100" src="{{img}}" alt="" style="height: 270px;" />
+            <p class="image-desc">The picture is the first result of the of google image serach of <b>{{query}} city {{data["sys"]["country"]}}</b></p>
           </div>
         </div>
-        <p id="weather-feel" class="weather-feel" style="--c: '°c';">{{data["main"]["feels_like"]|round|int}}</p>
-        <p class="weather-desc"><small>{{data["weather"][0]["description"]}}</small></p>
       </div>
-      <div class="col-lg-6 p-0">
-        <div>
-          <img class="img-fluid w-100" src="{{img}}" alt="" style="height: 270px;" />
-          <p class="image-desc">The picture is the first result of the of google image serach of <b>{{query}} city {{data["sys"]["country"]}}</b></p>
-        </div>
-      </div>
-    </div>
-    <hr />
+      <hr />
 
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="d-flex">
-          <p class="weather-humidity">Humidity</p>
-          <img src="https://image.flaticon.com/icons/svg/219/219816.svg" alt="humitidy" width="60" height="60" />
-          <p class="weather-humidity">hello</p>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="d-flex">
-          <div class="wind d-flex mr-5">
-            <canvas id="wind-icon" width="75" height="75" class="mr-3"></canvas>
-            <p class="weather-wind">{{data["wind"]["speed"]}}</p>
-          </div>
+      <div class="row">
+        <div class="col-lg-6">
           <div class="d-flex">
-            <img class="mr-3" src="https://c7.uihere.com/icons/609/5/153/pressure-16a86894aa7e21d778b1d9c8a307930d.png" alt="" height="75" width="75" />
-            <p class="weather-pressure">{{data["main"]["pressure"]}}</p>
+            <img class="mr-3" src="../static/images/humitidy.png" alt="humitidy" width="60" height="60" style="object-fit: contain;" />
+            <p class="weather-humidity">{{data["main"]["humidity"]}}%</p>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="d-flex">
+            <div class="wind d-flex mr-5">
+              <canvas id="wind-icon" width="75" height="75" class="mr-3"></canvas>
+              <p class="weather-wind">{{data["wind"]["speed"]}}</p>
+            </div>
+            <div class="d-flex">
+              <img class="mr-3" src="../static/images/pressure.png" alt="" height="75" width="75" />
+              <p class="weather-pressure">{{data["main"]["pressure"]}}</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-{% set sunset = data["sys"]["sunset"] %}
-<p class="d-none" id="weatherId">{% for i in data["weather"] %} {{ i['id']}} {% endfor %}</p>
+  </section>
+  {% set sunset = data["sys"]["sunset"] %}
+  <p class="d-none" id="weatherId">{% for i in data["weather"] %} {{ i['id']}} {% endfor %}</p>
+</div>
 <script>
   var myVar;
 
@@ -120,8 +114,8 @@
   const weatherStatus = parseInt(weatherId.textContent);
   console.log(weatherStatus)
 
-  var skycons = new Skycons({ color: "#2f303a" });
-  var skyconsWind = new Skycons({ color: "#2f303a" });
+  var skycons = new Skycons({ color: "#4facfe" });
+  var skyconsWind = new Skycons({ color: "#4facfe" });
 
   var sunset_time = {{ sunset| tojson}};
   var sunset = new Date(sunset_time * 1000);

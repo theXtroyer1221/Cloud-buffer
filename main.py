@@ -61,7 +61,7 @@ def search(query):
             'imgSize': 'xlarge'
         }
         try:
-            gis.search(search_params=google_searchparams)
+            gis.search(search_params=google_search_params)
         except:
             img = "../static/images/notfound.jpg"
 
@@ -69,7 +69,6 @@ def search(query):
 
         for image in gis.results():
             img = image.url
-            print(img)
 
         return render_template("search.html",
                                query=query,
@@ -87,7 +86,8 @@ def search(query):
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('error.html', e=e), 404
+    data = "error"
+    return render_template('error.html', e=e, data=data), 404
 
 
 if __name__ == "__main__":

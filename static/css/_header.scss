@@ -1,10 +1,9 @@
 .header-index {
   background-color: #ffd000;
-  background-image: url("../brand/overlay.svg"), linear-gradient(45deg, #ffd000 0%, #ff9600 100%);
+  background-image: url("../brand/overlay.svg"), linear-gradient(90deg, #00f2fe 0%, #03effe 2.1%, #24d2fe 29.3%, #3cbdfe 55.4%, #4ab0fe 79.6%, #4facfe 100%);
   background-repeat: no-repeat;
   background-size: cover;
-  margin-top: 56px;
-  padding-top: 6rem;
+  padding-top: 10rem;
   padding-bottom: 0rem;
   .header-input {
     border-radius: 50px;
@@ -68,4 +67,16 @@
     border-top-right-radius: 50px !important;
     border-bottom-right-radius: 50px !important;
   }
+}
+
+.nav-part-dark {
+  border-radius: 5px;
+}
+
+.navbar {
+  transition: all 1s ease;
+}
+
+.nav-link {
+  transition: all 0.6s ease;
 }

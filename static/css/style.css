@@ -1,11 +1,11 @@
 @charset "UTF-8";
 .header-index {
   background-color: #ffd000;
-  background-image: url("../brand/overlay.svg"), linear-gradient(45deg, #ffd000 0%, #ff9600 100%);
+  background-image: url("../brand/overlay.svg"), -webkit-gradient(linear, left top, right top, from(#00f2fe), color-stop(2.1%, #03effe), color-stop(29.3%, #24d2fe), color-stop(55.4%, #3cbdfe), color-stop(79.6%, #4ab0fe), to(#4facfe));
+  background-image: url("../brand/overlay.svg"), linear-gradient(90deg, #00f2fe 0%, #03effe 2.1%, #24d2fe 29.3%, #3cbdfe 55.4%, #4ab0fe 79.6%, #4facfe 100%);
   background-repeat: no-repeat;
   background-size: cover;
-  margin-top: 56px;
-  padding-top: 6rem;
+  padding-top: 10rem;
   padding-bottom: 0rem;
 }
 
@@ -70,6 +70,20 @@
   border-bottom-right-radius: 50px !important;
 }
 
+.nav-part-dark {
+  border-radius: 5px;
+}
+
+.navbar {
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
+.nav-link {
+  -webkit-transition: all 0.6s ease;
+  transition: all 0.6s ease;
+}
+
 html,
 body,
 ul,
@@ -85,7 +99,7 @@ html,
 body {
   height: 100%;
   width: 100%;
-  font-family: "Roboto Condensed", sans-serif !important;
+  font-family: "Raleway", sans-serif;
 }
 
 p,
@@ -101,6 +115,10 @@ h1 {
   font-family: "Montserrat", sans-serif !important;
 }
 
+p {
+  font-family: "Raleway", sans-serif;
+}
+
 img {
   -o-object-fit: cover;
      object-fit: cover;
@@ -112,6 +130,26 @@ img {
   border-left: 1px solid #73848c;
   height: 100vh;
   width: 1px;
+}
+
+.text-primary {
+  color: #4facfe !important;
+}
+
+.bg-primary {
+  background-color: #4facfe !important;
+}
+
+.bg-primary-2 {
+  background-color: #4f80fe !important;
+}
+
+#footer-copyright {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  /* Footer height */
 }
 
 body::-webkit-scrollbar-track {
@@ -182,7 +220,7 @@ body::-webkit-scrollbar-thumb {
 .onoffswitch-inner:before {
   content: "°C";
   padding-left: 10px;
-  background-color: #34a7c1;
+  background-color: #4facfe;
   color: #ffffff;
 }
 
@@ -190,7 +228,7 @@ body::-webkit-scrollbar-thumb {
   content: "°F";
   padding-right: 10px;
   background-color: #ffffff;
-  color: #34a7c1;
+  color: #4facfe;
   text-align: right;
 }
 
@@ -227,7 +265,7 @@ body::-webkit-scrollbar-thumb {
   margin: -75px 0 0 -75px;
   border: 16px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 16px solid #3498db;
+  border-top: 16px solid #4facfe;
   width: 120px;
   height: 120px;
   -webkit-animation: spin 2s linear infinite;
@@ -315,7 +353,7 @@ body::-webkit-scrollbar-thumb {
 
 .weather-humidity {
   font-family: "Montserrat", sans-serif;
-  font-size: 37px;
+  font-size: 40px;
   font-weight: 600;
 }
 
@@ -339,5 +377,15 @@ body::-webkit-scrollbar-thumb {
 .weather-pressure::after {
   content: "hPa";
   font-size: 25px;
+}
+
+.quote {
+  font-size: 25px;
+}
+
+@media (max-width: 990px) {
+  .mobile-dark {
+    background-color: #2f303a !important;
+  }
 }
 /*# sourceMappingURL=style.css.map */
