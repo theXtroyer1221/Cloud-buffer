@@ -31,7 +31,7 @@
       {% endif %} {% if request.path == "/" %}
       <nav id="navbar" class="navbar navbar-expand-lg navbar-dark fixed-top py-4 mobile-dark">
         <div class="container">
-          <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50"/></a>
+          <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -56,7 +56,7 @@
       {% else %}
       <nav id="navbarSearch" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top py-2">
         <div class="d-flex bg-dark px-5 nav-part-dark w-100">
-          <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50"/></a>
+          <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -74,7 +74,7 @@
               <li class="nav-item js-scroll-trigger mr-5">
                 <a class="nav-link" href="#">Contact</a>
               </li>
-              <li class="nav item" style="height: 36px;margin-top: auto;">
+              <li class="nav item" style="height: 36px; margin-top: auto;">
                 <div class="onoffswitch">
                   <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked onclick="celcuis_to_fehrenheit()" />
                   <label class="onoffswitch-label" for="myonoffswitch">
@@ -105,7 +105,7 @@
       <script>
         var nav = document.getElementById("navbar");
 
-        window.onscroll = function() {
+        window.onscroll = function () {
           if (window.scrollY >= 100) {
             nav.classList.remove("py-4");
             nav.classList.add("bg-dark");
@@ -138,22 +138,23 @@
 
           pos = {
             lat: position.coords.latitude,
-            lng: position.coords.longitude
+            lng: position.coords.longitude,
           };
 
-          $.ajax({
-            type: "POST",
-            url: "/lolol",
-            contentType: "application/json",
-            data: JSON.stringify({location: pos}),
-            dataType: "json",
-            success: function(response) {
-              console.log(response);
-            },
-            error: function(err) {
-              console.log(err);
-            }
-          });
+          //$.ajax({
+          //  type: "POST",
+          //  url: "/lolol",
+          //  contentType: "application/json",
+          //  data: JSON.stringify({location: pos}),
+          //  dataType: "json",
+          //  success: function(response) {
+          //    console.log(response);
+          //  },
+          //  error: function(err) {
+          //    console.log(err);
+          //  }
+          //});
+          //
         }
       </script>
     </body>
