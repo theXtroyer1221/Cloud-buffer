@@ -24,8 +24,8 @@
   </section>
   {% else %}
   <div id="loader"></div>
-  <section class="py-5 animate-bottom" id="mainSection">
-    <div class="container">
+  <section class="pt-5 animate-bottom" id="mainSection">
+    <div class="container mb-5">
       <div class="row mb-1">
         <div class="col-lg-6 p-0">
           <h1 class="display-4 mb-4">Weather in <br />{{data.name}}, <small>{{data["sys"]["country"]}}</small></h1>
@@ -73,12 +73,18 @@
         <div id="weatherMap"></div>
       </div>
     </div>
+    <footer>
+      <div class="footer-copyright text-center py-3 bg-dark text-white">
+        © 2020 Copyright:
+        <a href="/" class="text-white"> Cloud Buffer</a>
+      </div>
+    </footer>
   </section>
-  {% set sunset = data["sys"]["sunset"] %}
+  {% set sunset = data["sys"]["sunset"] %} {% set lat = data["coord"]["lat"] %} {% set lon = data["coord"]["lon"] %}
   <p class="d-none" id="weatherId">{% for i in data["weather"] %} {{ i['id']}} {% endfor %}</p>
 </div>
 <script>
-  var weatherMap = L.map("weatherMap").setView([ {{ data['coord']['lat'] }} , {{ data['coord']['lon'] }} ], 9);
+  var weatherMap = L.map("weatherMap").setView([{{lat|tojson}}, {{lon|tojson}}], 8);
   L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OSM contributors",
   }).addTo(weatherMap);
@@ -125,7 +131,7 @@
   }
 </script>
 <script>
-  console.log({{ data| tojson}});
+  console.log({{data| tojson}});
 
   const weatherStatus = parseInt(weatherId.textContent);
   console.log(weatherStatus)

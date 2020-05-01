@@ -93,16 +93,9 @@
       </nav>
       {% endif %} {% block content %}{% endblock %} {% if request.path == "/" %}
       <footer>
-        <div class="footer-copyright text-center py-3 bg-primary">
+        <div class="footer-copyright text-center py-3 bg-dark text-white">
           © 2020 Copyright:
-          <a href="/"> Cloud Buffer</a>
-        </div>
-      </footer>
-      {% else %}
-      <footer id="footer-copyright">
-        <div class="footer-copyright text-center py-3 bg-primary">
-          © 2020 Copyright:
-          <a href="/"> Cloud Buffer</a>
+          <a href="/" class="text-white"> Cloud Buffer</a>
         </div>
       </footer>
       {% endif %} {% if request.path == "/" %}
