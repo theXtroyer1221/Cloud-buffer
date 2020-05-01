@@ -68,6 +68,11 @@
 
 @media (max-width: 990px) {
   .mobile-dark {
-    background-color: #2f303a !important;
+    background-color: #283655 !important;
   }
+}
+
+#weatherMap {
+  height: 450px;
+  width: 100%;
 }

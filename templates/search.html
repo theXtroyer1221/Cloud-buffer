@@ -33,7 +33,7 @@
             <canvas id="weather-icon" width="75" height="75" class="mr-3"></canvas>
             <p id="weather-temprature" class="weather-temprature text-primary" style="--c: '°c';">{{data["main"]["temp"]|round|int}}</p>
           </div>
-          <p id="weather-feel" class="weather-feel " style="--c: '°c';">{{data["main"]["feels_like"]|round|int}}</p>
+          <p id="weather-feel" class="weather-feel" style="--c: '°c';">{{data["main"]["feels_like"]|round|int}}</p>
           <p class="weather-desc"><small>{{data["weather"][0]["description"]}}</small></p>
         </div>
         <div class="col-lg-6 p-0">
@@ -45,7 +45,7 @@
       </div>
       <hr />
 
-      <div class="row">
+      <div class="row mb-4">
         <div class="col-lg-6">
           <div class="d-flex">
             <img class="mr-3" src="../static/images/humitidy.png" alt="humitidy" width="60" height="60" style="object-fit: contain;" />
@@ -65,11 +65,27 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <h1 class="text-primary">{{data.name}}, {{data["sys"]["country"]}} location</h1>
+      </div>
+      <hr />
+      <div class="row">
+        <div id="weatherMap"></div>
+      </div>
     </div>
   </section>
   {% set sunset = data["sys"]["sunset"] %}
   <p class="d-none" id="weatherId">{% for i in data["weather"] %} {{ i['id']}} {% endfor %}</p>
 </div>
+<script>
+  var weatherMap = L.map("weatherMap").setView([ {{ data['coord']['lat'] }} , {{ data['coord']['lon'] }} ], 9);
+  L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OSM contributors",
+  }).addTo(weatherMap);
+  setTimeout(function () {
+    weatherMap.invalidateSize();
+  }, 2000);
+</script>
 <script>
   var myVar;
 

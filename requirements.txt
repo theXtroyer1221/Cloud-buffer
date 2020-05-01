@@ -2,4 +2,3 @@ flask
 requests
 flask_wtf
 Google-Images-Search
-windows-curses
