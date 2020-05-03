@@ -69,3 +69,15 @@ img {
 #location_submit {
   font-family: font-awesome;
 }
+
+.card-signin {
+  border-radius: 1rem;
+}
+
+.form-control {
+  border-radius: 1rem;
+  &:focus {
+    border-color: #283655;
+    box-shadow: 0 0 0 0.2rem #2836556b;
+  }
+}

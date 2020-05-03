@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
-from forms import SearchForm, locationSearch
+from flask import Flask, render_template, request, redirect, url_for, flash
+from forms import SearchForm, locationSearch, RegistrationForm, LoginForm
 
 import json
 import requests
@@ -114,6 +114,41 @@ def search(query):
                                data=data,
                                form=form,
                                location_form=location_form)
+
+
+@app.route("/blog")
+def blog():
+    return render_template("blog.html", data="data", title="Blog")
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'admin@blog.com' and form.password.data == 'password':
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('blog'))
+        else:
+            flash('Login Unsuccessful. Please check username and password',
+                  'danger')
+
+    return render_template("login.html",
+                           form=form,
+                           data="data",
+                           title="Log in")
+
+
+@app.route("/signup", methods=['GET', 'POST'])
+def signup():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('blog'))
+
+    return render_template("signup.html",
+                           form=form,
+                           data="data",
+                           title="Sign up")
 
 
 @app.errorhandler(404)

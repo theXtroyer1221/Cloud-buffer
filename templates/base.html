@@ -3,13 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    {% if request.path == "/" %}
+    {% if title %}
+    <title>{{title}} - Cloud buffer</title>
+    {%else%} {% if request.path == "/" %}
     <title>Weather forecast - Cloud Buffer</title>
     {% else %} {% if data.cod == "404" %}
     <title>City not found - Cloud Buffer</title>
     {% endif %}
     <title>Weather in {{query}} - Cloud Buffer</title>
-    {% endif %}
+    {% endif %} {%endif%}
     <link rel="icon" href="{{ url_for('static', filename='brand/icon.ico') }}" />
     <link href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet" />
@@ -32,7 +34,7 @@
   <body data-spy="scroll" data-target=".navbar" data-offset="50">
     {% else %}
     <body onload="loading()" data-spy="scroll" data-target=".navbar" data-offset="50">
-      {% endif %} {% if request.path == "/" %}
+      {% endif %} {% if request.path == "/"%}
       <nav id="navbar" class="navbar navbar-expand-lg navbar-dark fixed-top py-4 mobile-dark">
         <div class="container">
           <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
@@ -41,19 +43,86 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-              <li class="nav-item active">
-                <a class="nav-link js-scroll-trigger" href="#">Home </a>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('index')}}"><i class="fa fa-home"></i> Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="#">About</a>
+                <a class="nav-link js-scroll-trigger" href="{{url_for('blog')}}"><i class="fa fa-newspaper"></i> Blog</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="#">Services</a>
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-question"></i> About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="#">Contact</a>
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fas fa-hands-helping"></i> Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-phone" aria-hidden="true"></i> Contact</a>
               </li>
             </ul>
+          </div>
+        </div>
+      </nav>
+      {% elif request.path == "/blog" %}
+      <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark fixed-top py-2 mobile-dark bg-dark mb-3">
+        <div class="container">
+          <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('index')}}"><i class="fa fa-home"></i> Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('blog')}}"><i class="fa fa-newspaper"></i> Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-question"></i> About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fas fa-hands-helping"></i> Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-phone" aria-hidden="true"></i> Contact</a>
+              </li>
+            </ul>
+          </div>
+          <div style="justify-content: flex-end;" class="collapse navbar-collapse">
+            <a name="Log in" class="btn btn-blog nav-link" href="{{url_for('login')}}" role="button">Log in</a>
+            <a name="Sign up" class="btn btn-blog nav-link" href="{{url_for('signup')}}" role="button">Sign up</a>
+          </div>
+        </div>
+      </nav>
+      {%elif request.path == "/login" or "/signup"%}
+      <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark py-2 mobile-dark bg-dark mb-3">
+        <div class="container">
+          <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('index')}}"><i class="fa fa-home"></i> Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('blog')}}"><i class="fa fa-newspaper"></i> Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-question"></i> About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fas fa-hands-helping"></i> Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-phone" aria-hidden="true"></i> Contact</a>
+              </li>
+            </ul>
+          </div>
+          <div style="justify-content: flex-end;" class="collapse navbar-collapse">
+            <a name="Log in" class="btn btn-blog nav-link" href="{{url_for('login')}}" role="button">Log in</a>
+            <a name="Sign up" class="btn btn-blog nav-link" href="{{url_for('signup')}}" role="button">Sign up</a>
           </div>
         </div>
       </nav>
@@ -66,17 +135,20 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-              <li class="nav-item active">
-                <a class="nav-link js-scroll-trigger" href="#">Home </a>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('index')}}"><i class="fa fa-home"></i> Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="#">About</a>
+                <a class="nav-link js-scroll-trigger" href="{{url_for('blog')}}"><i class="fa fa-newspaper"></i> Blog</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="#">Services</a>
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-question"></i> About</a>
               </li>
-              <li class="nav-item js-scroll-trigger mr-5">
-                <a class="nav-link" href="#">Contact</a>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fas fa-hands-helping"></i> Services</a>
+              </li>
+              <li class="nav-item mr-2">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-phone" aria-hidden="true"></i> Contact</a>
               </li>
               <li class="nav item" style="height: 36px; margin-top: auto;">
                 <div class="onoffswitch">
@@ -121,9 +193,6 @@
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
       <!-- Font awesome -->
       <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
-      <script>
-        document.getElementById("location_submit").value = <i class="fa"></i>;
-      </script>
       <script>
         var location_btn = document.getElementById("location_submit");
 
