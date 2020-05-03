@@ -1,5 +1,5 @@
 import json
-import requests
+from flask import request
 
 from google_images_search import GoogleImagesSearch
 
@@ -18,3 +18,5 @@ gis.search(search_params=google_search_params)
 for image in gis.results():
     img = image.url
     print(img)
+
+print(request.access_route[-1])

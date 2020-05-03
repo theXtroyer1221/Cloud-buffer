@@ -1,8 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, HiddenField
 
 
-class SignUpForm(FlaskForm):
+class SearchForm(FlaskForm):
     search = StringField("search")
     submit = SubmitField("submit")
-    location_submit = SubmitField("submit")
+
+
+class locationSearch(FlaskForm):
+    hfield = HiddenField("hfield")
+    location_submit = SubmitField()

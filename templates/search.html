@@ -4,13 +4,16 @@
     <div class="container">
       <h1 class="text-primary">Weather forecast</h1>
       <hr />
-      <form class="d-flex" action="" method="GET">
-        {{form.search(class_="form-control search-input", required='required', placeholder="London, New York, Stockholm, Paris")}}
-        <div class="btn-group">
-          <button class="search-button btn btn-primary" type="submit" style="border-right: #0069d9 solid 2px;"><i class="fas fa-search"></i></button>
-          <button class="search-button search-button-location btn btn-primary" type="submit" style="border-left: #0069d9 solid 2px;"><i class="fas fa-map-marker-alt"></i></button>
-        </div>
-      </form>
+      <div class="form-div">
+        <form action="" method="GET">
+          {{form.search(class_="form-control search-input", placeholder="London, New York, Stockholm, Paris", value="London, New York, Stockholm, Paris", onfocus="this.value=''")}}
+          <button class="search-button btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+        </form>
+        <form action="" method="GET">
+          {{location_form.hfield(class_="d-none", value="123")}}
+          <button class="search-button btn btn-primary" type="submit" style="left: 5px;"><i class="fas fa-map-marker-alt"></i></button>
+        </form>
+      </div>
     </div>
   </section>
   {% if data.cod == "404"%}

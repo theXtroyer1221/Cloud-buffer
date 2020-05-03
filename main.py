@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from forms import SignUpForm
+from forms import SearchForm, locationSearch
 
 import json
 import requests
@@ -11,31 +11,64 @@ import os
 
 from google_images_search import GoogleImagesSearch
 
+from werkzeug.contrib.fixers import ProxyFix
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Cloud Buffer"
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 GCS_DEVELOPER_KEY = os.environ.get('GCS_DEVELOPER_KEY')
 GCS_CX = os.environ.get('GCS_CX')
+IP_STACK = os.environ.get("IP_STACK")
+
+app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    form = SignUpForm()
+    form = SearchForm()
+    location_form = locationSearch()
+
     if request.args.get("search", None):
         query = request.args["search"]
 
         return redirect(url_for("search", query=query))
 
-    return render_template("index.html", form=form, data="data")
+    if request.args.get("hfield", None):
+        headers_list = request.headers.getlist("X-Forwarded-For")
+        user_ip = headers_list[0] if headers_list else request.remote_addr
+        url = 'http://api.ipstack.com/{}?access_key={}'.format(
+            "83.250.184.69", IP_STACK)
+        r = requests.get(url)
+        j = r.json()
+        query = j["city"]
+
+        return redirect(url_for("search", query=query))
+
+    return render_template("index.html",
+                           form=form,
+                           location_form=location_form,
+                           data="data")
 
 
 @app.route("/weather/<query>")
 def search(query):
-    form = SignUpForm()
+    form = SearchForm()
+    location_form = locationSearch()
 
     if request.args.get("search", None):
         query = request.args["search"]
+
+        return redirect(url_for("search", query=query))
+
+    if request.args.get("hfield", None):
+        headers_list = request.headers.getlist("X-Forwarded-For")
+        user_ip = headers_list[0] if headers_list else request.remote_addr
+        url = 'http://api.ipstack.com/{}?access_key={}'.format(
+            "83.250.184.69", IP_STACK)
+        r = requests.get(url)
+        j = r.json()
+        query = j["city"]
 
         return redirect(url_for("search", query=query))
 
@@ -57,11 +90,10 @@ def search(query):
             'q': search_query,
             'num': 1,
             'safe': 'off',
-            'fileType': 'jpg',
             'imgSize': 'xlarge'
         }
         try:
-            gis.search(search_params_=google_search_params)
+            gis.search(search_params=google_search_params)
         except:
             img = "../static/images/notfound.jpg"
 
@@ -74,26 +106,20 @@ def search(query):
                                query=query,
                                data=data,
                                form=form,
+                               location_form=location_form,
                                img=img)
     else:
-        return render_template(
-            "search.html",
-            query=query,
-            data=data,
-            form=form,
-        )
+        return render_template("search.html",
+                               query=query,
+                               data=data,
+                               form=form,
+                               location_form=location_form)
 
 
 @app.errorhandler(404)
 def page_not_found(e):
     data = "error"
     return render_template('error.html', e=e, data=data), 404
-
-
-@app.route("/")
-def lolol():
-    data = request.get_json()
-    return data
 
 
 if __name__ == "__main__":

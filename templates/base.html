@@ -122,6 +122,13 @@
       <!-- Font awesome -->
       <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
       <script>
+        document.getElementById("location_submit").value = <i class="fa"></i>;
+      </script>
+      <script>
+        var location_btn = document.getElementById("location_submit");
+
+        location_btn.addEventListener("click", checkLocation);
+
         function checkLocation() {
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(sendLocation);
