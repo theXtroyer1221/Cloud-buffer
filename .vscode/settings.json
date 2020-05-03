@@ -1,4 +1,12 @@
 {
     "python.formatting.provider": "yapf",
-    "python.pythonPath": "C:\\Users\\mohamad\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe"
+    "python.pythonPath": "C:\\Users\\mohamad\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
+    "sqltools.connections": [
+        {
+            "database": "${workspaceFolder}\\site.db",
+            "dialect": "SQLite",
+            "name": "db"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
 }
