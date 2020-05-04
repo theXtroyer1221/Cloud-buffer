@@ -2,6 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, HiddenField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
+from cloudBuffer.models import User, Post
+
 
 class SearchForm(FlaskForm):
     search = StringField("search")
