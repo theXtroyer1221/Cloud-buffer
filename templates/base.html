@@ -94,7 +94,7 @@
           </div>
         </div>
       </nav>
-      {%elif request.path == "/login" or "/signup"%}
+      {%elif request.path == "/signup" or request.path == "/login"%}
       <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark py-2 mobile-dark bg-dark mb-3">
         <div class="container">
           <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>

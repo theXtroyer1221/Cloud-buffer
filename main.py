@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from forms import SearchForm, locationSearch, RegistrationForm, LoginForm
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 
 import json
 import requests
@@ -25,8 +26,8 @@ GCS_CX = os.environ.get('GCS_CX')
 IP_STACK = os.environ.get("IP_STACK")
 
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
-
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 
 
 class User(db.Model):
@@ -174,8 +175,17 @@ def login():
 def signup():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('blog'))
+        hashed_password = bcrypt.generate_password_hash(
+            form.password.data).decode("utf-8")
+        user = User(username=form.username.data,
+                    email=form.email.data,
+                    password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash(
+            f'Your account has been created, you are now able to log in, {form.username.data}',
+            'success')
+        return redirect(url_for('login'))
 
     return render_template("signup.html",
                            form=form,
