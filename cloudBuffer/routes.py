@@ -176,6 +176,7 @@ def save_picture(form_picture):
     form_picture.save(picture_path)
 
     return picture_fn
+    #hello
 
 
 @app.route("/account", methods=['GET', 'POST'])
