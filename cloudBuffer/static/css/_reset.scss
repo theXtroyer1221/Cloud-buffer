@@ -72,6 +72,7 @@ img {
 
 .card-signin {
   border-radius: 1rem;
+  border: 1px solid #283655;
 }
 
 .form-control {
@@ -80,4 +81,27 @@ img {
     border-color: #283655;
     box-shadow: 0 0 0 0.2rem #2836556b;
   }
+}
+
+.mb-6 {
+  margin-bottom: 8rem !important;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
 }

@@ -1,7 +1,8 @@
 from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm
 from flask import render_template, request, redirect, url_for, flash
+from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer.models import User, Post
-from cloudBuffer import app, bcrypt, db
+from cloudBuffer import app, bcrypt, db, login_manager
 
 import requests
 import os
@@ -15,6 +16,8 @@ IP_STACK = os.environ.get("IP_STACK")
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    if current_user.is_authenticated:
+        logout_user()
     form = SearchForm()
     location_form = locationSearch()
 
@@ -42,6 +45,8 @@ def index():
 
 @app.route("/weather/<query>")
 def search(query):
+    if current_user.is_authenticated:
+        logout_user()
     form = SearchForm()
     location_form = locationSearch()
 
@@ -112,13 +117,19 @@ def blog():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("blog"))
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == 'admin@blog.com' and form.password.data == 'password':
-            flash('You have been logged in!', 'success')
-            return redirect(url_for('blog'))
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password,
+                                               form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get("next")
+            return redirect(next_page) if next_page else redirect(
+                url_for("blog"))
         else:
-            flash('Login Unsuccessful. Please check username and password',
+            flash('Login Unsuccessful. Please check email and password',
                   'danger')
 
     return render_template("login.html",
@@ -129,6 +140,8 @@ def login():
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for("blog"))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(
@@ -147,6 +160,22 @@ def signup():
                            form=form,
                            data="data",
                            title="Sign up")
+
+
+@app.route("/account")
+@login_required
+def account():
+    image_file = url_for("static",
+                         filename="profile_pics/" + current_user.image_file)
+    return render_template("account.html",
+                           title="Account",
+                           image_file=image_file)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("blog"))
 
 
 @app.errorhandler(404)

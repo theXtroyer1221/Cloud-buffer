@@ -83,6 +83,23 @@
   transition: all 0.6s ease;
 }
 
+.sign-btns {
+  justify-content: flex-end;
+}
+
+@media (max-width: 991px) {
+  .sign-btns a {
+    margin-bottom: 5px;
+    width: 50%;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .sign-btns {
+    margin: auto;
+    display: flex;
+  }
+}
+
 .btn-blog {
   background-color: transparent;
   border: solid white 2px;
@@ -114,4 +131,14 @@
   100% {
     color: black;
   }
+}
+
+.navbar-username {
+  display: inline-table;
+  align-self: center;
+  color: white;
+}
+
+.navbar-image {
+  border-radius: 50%;
 }

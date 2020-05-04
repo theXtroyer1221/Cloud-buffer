@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container pt-5 mt-5">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="content-section">
+        <div class="media">
+          <img class="rounded-circle account-img" src="{{ image_file }}" />
+          <div class="media-body">
+            <h2 class="account-heading">{{ current_user.username }}</h2>
+            <p class="text-secondary">{{ current_user.email }}</p>
+          </div>
+        </div>
+        <!-- FORM HERE -->
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div style="border: 1px solid black; height: 100%; border-radius: 20px;"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
