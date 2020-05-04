@@ -115,11 +115,9 @@ def search(query):
 def blog():
     if current_user.is_authenticated:
         image_file = url_for("static",
-                            filename="profile_pics/" + current_user.image_file)
-    return render_template("blog.html",
-                           data="data",
-                           title="Blog",
-                           image_file=image_file)
+                             filename="profile_pics/" +
+                             current_user.image_file)
+    return render_template("blog.html", data="data", title="Blog")
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -168,11 +166,17 @@ def signup():
                            data="data",
                            title="Sign up")
 
+
 def save_picture(form_picture):
-    random_hex = secrets.token_hek(8)
+    random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, "static/profile_pics", picture_fn)
+    picture_path = os.path.join(app.root_path, "static/profile_pics",
+                                picture_fn)
+    form_picture.save(picture_path)
+
+    return picture_fn
+
 
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
@@ -180,7 +184,8 @@ def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
-
+            picture_file = save_picture(form.picture.data)
+            current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
         db.session.commit()
@@ -189,8 +194,8 @@ def account():
     elif request.method == "GET":
         form.username.data = current_user.username
         form.email.data = current_user.email
-    image_file = url_for("static",
-                         filename="profile_pics/" + current_user.image_file)
+    image_file = url_for('static',
+                         filename='profile_pics/' + current_user.image_file)
     return render_template("account.html",
                            title="Account",
                            image_file=image_file,
