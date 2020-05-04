@@ -72,7 +72,6 @@ img {
 
 .card-signin {
   border-radius: 1rem;
-  border: 1px solid #283655;
 }
 
 .form-control {
@@ -87,14 +86,6 @@ img {
   margin-bottom: 8rem !important;
 }
 
-.content-section {
-  background: #ffffff;
-  padding: 10px 20px;
-  border: 1px solid #dddddd;
-  border-radius: 20px;
-  margin-bottom: 20px;
-}
-
 .account-img {
   height: 125px;
   width: 125px;
@@ -104,4 +95,24 @@ img {
 
 .account-heading {
   font-size: 2.5rem;
+}
+
+.account-body {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.file-btn input {
+  background-color: transparent;
+  border: solid #283655 2px;
+  color: #283655;
+  margin-left: 5px;
+  margin-right: 5px;
+  &:hover {
+    background-color: #283655;
+    color: white;
+  }
 }

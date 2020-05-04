@@ -92,7 +92,7 @@
           <div class="d-flex">
             <div class="collapse navbar-collapse">
               <a href="{{url_for('account')}}" class="d-flex mr-3">
-                <img src="../static/images/notfound.jpg" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
+                <img src="{{ image_file }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
                 <p class="navbar-username">{{ current_user.username }}</p>
               </a>
             </div>
@@ -109,7 +109,11 @@
         </div>
       </nav>
       {%elif request.path == "/signup" or request.path == "/login"%}
+      {% if request.path == "/login" %}
       <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark py-2 mobile-dark bg-dark mb-6">
+      {% else %}
+      <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark py-2 mobile-dark bg-dark mb-5">
+      {% endif %}
         <div class="container">
           <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
