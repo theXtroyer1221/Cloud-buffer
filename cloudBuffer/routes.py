@@ -117,7 +117,9 @@ def blog():
         image_file = url_for("static",
                              filename="profile_pics/" +
                              current_user.image_file)
-    return render_template("blog.html", data="data", title="Blog")
+    else:
+        image_file = None
+    return render_template("blog.html", data="data", title="Blog", image_file=image_file)
 
 
 @app.route("/login", methods=['GET', 'POST'])
