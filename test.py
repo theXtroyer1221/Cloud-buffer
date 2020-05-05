@@ -1,22 +1,22 @@
-import json
-from flask import request
+from PIL import Image, ImageOps
+import secrets
+import os
 
-from google_images_search import GoogleImagesSearch
 
-gis = GoogleImagesSearch("AIzaSyDzlZD6DZWdqhsH__KaM_x5ohDqYJX7xrM",
-                         "013299270315827120003:el8nk3thdun")
-google_search_params = {
-    'q': "bla",
-    'num': 1,
-    'safe': 'off',
-    'fileType': 'jpg',
-    'imgSize': 'xlarge'
-}
+def save_picture(form_picture):
+    im = Image.open(form_picture)
+    old_size = im.size
+    desired_size = 125
+    ratio = float(desired_size) / max(old_size)
+    new_size = tuple([int(x * ratio) for x in old_size])
 
-gis.search(search_params=google_search_params)
+    delta_w = desired_size - new_size[0]
+    delta_h = desired_size - new_size[1]
+    padding = (delta_w // 2, delta_h // 2, delta_w - (delta_w // 2),
+               delta_h - (delta_h // 2))
+    new_im = ImageOps.expand(im, padding)
 
-for image in gis.results():
-    img = image.url
-    print(img)
+    new_im.save("minecraft.png")
 
-print(request.access_route[-1])
+
+save_picture("cloudBuffer/static/profile_pics/872c8a20318ea3a9.png")

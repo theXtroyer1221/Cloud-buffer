@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5 pt-5">
+  <div class="row">
+    <div class="col-md-8">
+      <article class="media content-section-article">
+        <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" width="125px" height="125px" />
+        <div class="media-body">
+          <div class="article-metadata mb-2">
+            <a class="mr-2" href="#">{{ post.author.username }}</a>
+            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+          </div>
+          <h2 class="mb-2">{{ post.title }}</h2>
+          <p class="article-content">{{ post.content }}</p>
+        </div>
+      </article>
+      <div id="disqus_thread"></div>
+      <script>
+        var disqus_config = "{{ request.url }}{{ request.path }}";
+        //= function () {
+        //  this.page.url = "{{request.path}}";
+        //  this.page.identifier = "{{post.id}}";
+        //};
+        (function () {
+          // DON'T EDIT BELOW THIS LINE
+          var d = document,
+            s = d.createElement("script");
+          s.src = "https://cloud-buffer.disqus.com/embed.js";
+          s.setAttribute("data-timestamp", +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+    <div class="col-md-4">
+      <div class="media content-section-article d-block text-center">
+        <h3 class="mt-4">Post published</h3>
+        <br />
+        <h4 class="text-primary mb-4">{{ post.date_posted.strftime('%Y-%m-%d') }}</h4>
+        <h3>Post author</h3>
+        <br />
+        <h4 class="text-primary mb-4"><a class="mr-2" href="#">{{ post.author.username }}</a></h4>
+        <h3>Post ID</h3>
+        <br />
+        <h4 class="text-primary mb-4">{{ post.id }}</h4>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

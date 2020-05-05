@@ -4,7 +4,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer.models import User, Post
 from cloudBuffer import app, bcrypt, db, login_manager
 
-from PIL import Image
+from PIL import Image, ImageOps
 import requests
 import secrets
 import os
@@ -120,10 +120,12 @@ def blog():
                              current_user.image_file)
     else:
         image_file = None
+    posts = Post.query.all()
     return render_template("blog.html",
                            data="data",
                            title="Blog",
-                           image_file=image_file)
+                           image_file=image_file,
+                           posts=posts)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -182,7 +184,7 @@ def save_picture(form_picture):
 
     output_size = (125, 125)
     i = Image.open(form_picture)
-    i.thumbnail(output_size)
+    i.resize(output_size)
     i.save(picture_path)
 
     return picture_fn
@@ -219,12 +221,31 @@ def new_post():
                          filename="profile_pics/" + current_user.image_file)
     form = PostForm()
     if form.validate_on_submit():
+        post = Post(title=form.title.data,
+                    content=form.content.data,
+                    author=current_user)
+        db.session.add(post)
+        db.session.commit()
         flash("The post has been created successfully", "success")
         return redirect(url_for("blog"))
     return render_template('create_post.html',
                            title="New post",
                            form=form,
                            image_file=image_file)
+
+
+@app.route("/post/<int:post_id>", methods=['GET', 'POST'])
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    return render_template("post.html", title=post.title, post=post)
+
+
+@app.route("/user/<int:user_id>", methods=['GET', 'POST'])
+def user(user_id):
+    user = User.query.get_or_404(user_id)
+
+    return render_template("user.html", title=user.username, user=user)
 
 
 @app.route("/logout")

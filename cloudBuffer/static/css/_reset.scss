@@ -36,6 +36,10 @@ img {
   object-fit: cover;
 }
 
+ul {
+  list-style-type: none;
+}
+
 .bg-dark {
   background-color: #283655 !important;
 }
@@ -116,57 +120,57 @@ img {
   }
 }
 
-@media (min-width: 992px) {
-  .animate {
-    animation-duration: 0.3s;
-    -webkit-animation-duration: 0.3s;
-    animation-fill-mode: both;
-    -webkit-animation-fill-mode: both;
-  }
+.content-section-article {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  margin-bottom: 20px;
 }
 
-@keyframes slideIn {
-  0% {
-    transform: translateY(1rem);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0rem);
-    opacity: 1;
-  }
-  0% {
-    transform: translateY(1rem);
-    opacity: 0;
-  }
+.article-title {
+  color: #444444;
 }
 
-@-webkit-keyframes slideIn {
-  0% {
-    -webkit-transform: transform;
-    -webkit-opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateY(0);
-    -webkit-opacity: 1;
-  }
-  0% {
-    -webkit-transform: translateY(1rem);
-    -webkit-opacity: 0;
-  }
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
 }
 
-.slideIn {
-  -webkit-animation-name: slideIn;
-  animation-name: slideIn;
+.article-content {
+  white-space: pre-line;
 }
 
-.dropdown-toggle::after {
-  align-self: center;
-  color: white;
-  margin-left: 0.455rem;
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
 }
 
-.dropdown-item {
-  color: #283655 !important;
-  transition: all 0.4s ease !important;
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
 }
