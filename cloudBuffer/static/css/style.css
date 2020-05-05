@@ -181,7 +181,6 @@ ol {
 html,
 body {
   min-height: 100%;
-  min-height: 100vh;
   width: 100%;
   font-family: "Raleway", sans-serif;
 }
@@ -289,6 +288,67 @@ img {
 .file-btn input:hover {
   background-color: #283655;
   color: white;
+}
+
+@media (min-width: 992px) {
+  .animate {
+    animation-duration: 0.3s;
+    -webkit-animation-duration: 0.3s;
+    animation-fill-mode: both;
+    -webkit-animation-fill-mode: both;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    -webkit-transform: translateY(1rem);
+            transform: translateY(1rem);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0rem);
+            transform: translateY(0rem);
+    opacity: 1;
+  }
+  0% {
+    -webkit-transform: translateY(1rem);
+            transform: translateY(1rem);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes slideIn {
+  0% {
+    -webkit-transform: transform;
+    -webkit-opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    -webkit-opacity: 1;
+  }
+  0% {
+    -webkit-transform: translateY(1rem);
+    -webkit-opacity: 0;
+  }
+}
+
+.slideIn {
+  -webkit-animation-name: slideIn;
+  animation-name: slideIn;
+}
+
+.dropdown-toggle::after {
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+  color: white;
+  margin-left: 0.455rem;
+}
+
+.dropdown-item {
+  color: #283655 !important;
+  -webkit-transition: all 0.4s ease !important;
+  transition: all 0.4s ease !important;
 }
 
 body::-webkit-scrollbar-track {

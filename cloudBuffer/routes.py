@@ -1,12 +1,13 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer.models import User, Post
 from cloudBuffer import app, bcrypt, db, login_manager
 
+from PIL import Image
 import requests
-import os
 import secrets
+import os
 
 from google_images_search import GoogleImagesSearch
 
@@ -119,7 +120,10 @@ def blog():
                              current_user.image_file)
     else:
         image_file = None
-    return render_template("blog.html", data="data", title="Blog", image_file=image_file)
+    return render_template("blog.html",
+                           data="data",
+                           title="Blog",
+                           image_file=image_file)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -175,10 +179,13 @@ def save_picture(form_picture):
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, "static/profile_pics",
                                 picture_fn)
-    form_picture.save(picture_path)
+
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
 
     return picture_fn
-    #hello
 
 
 @app.route("/account", methods=['GET', 'POST'])
@@ -205,6 +212,21 @@ def account():
                            form=form)
 
 
+@app.route("/post/new", methods=['GET', 'POST'])
+@login_required
+def new_post():
+    image_file = url_for("static",
+                         filename="profile_pics/" + current_user.image_file)
+    form = PostForm()
+    if form.validate_on_submit():
+        flash("The post has been created successfully", "success")
+        return redirect(url_for("blog"))
+    return render_template('create_post.html',
+                           title="New post",
+                           form=form,
+                           image_file=image_file)
+
+
 @app.route("/logout")
 def logout():
     logout_user()
@@ -214,4 +236,7 @@ def logout():
 @app.errorhandler(404)
 def page_not_found(e):
     data = "error"
-    return render_template('error.html', e=e, data=data), 404
+    return render_template('error.html',
+                           e=e,
+                           data=data,
+                           title="Page not found"), 404

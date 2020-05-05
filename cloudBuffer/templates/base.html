@@ -62,7 +62,7 @@
           </div>
         </div>
       </nav>
-      {% elif request.path == "/blog" or request.path == "/account" %}
+      {% elif request.path == "/blog" or request.path == "/account" or request.path == "/post/new"%}
       <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark fixed-top py-2 mobile-dark bg-dark mb-3">
         <div class="container">
           <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
@@ -90,15 +90,20 @@
           </div>
           {% if current_user.is_authenticated %}
           <div class="d-flex">
-            <div class="collapse navbar-collapse">
-              <a href="{{url_for('account')}}" class="d-flex mr-3">
-                <img src="{{ image_file }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
-                <p class="navbar-username">{{ current_user.username }}</p>
-              </a>
-            </div>
-            <div class="navbar-collapse sign-btns">
-              <a name="Log out" class="btn btn-blog nav-link" href="{{url_for('.logout')}}" role="button">Log out</a>
-            </div>
+            <ul>
+              <li class="nav-item dropdown">
+                <a href="#" class="d-flex mr-3 nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <img src="{{ image_file }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
+                  <p class="navbar-username">{{ current_user.username }}</p>
+                </a>
+                <div class="dropdown-menu slideIn animate" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{{ url_for('account') }}"><i class="fas fa-user mr-2"></i> Account</a>
+                  <a class="dropdown-item" href="{{ url_for('new_post') }}"><i class="fas fa-pen-alt mr-2"></i> Create a post</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{{url_for('.logout')}}"><i class="fas fa-sign-out-alt mr-2"></i> Log out</a>
+                </div>
+              </li>
+            </ul>
           </div>
           {% else %}
           <div class="navbar-collapse sign-btns">
@@ -144,7 +149,7 @@
           </div>
         </div>
       </nav>
-      {% else %}
+      {% elif  request.path == "/weather/", query %}
       <nav id="navbarSearch" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top py-2">
         <div class="d-flex bg-dark px-5 nav-part-dark w-100">
           <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
@@ -181,7 +186,59 @@
           </div>
         </div>
       </nav>
-      {% endif %} {% block content %}{% endblock %} {% if request.path == "/" %}
+      {% else %}
+      <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark fixed-top py-2 mobile-dark bg-dark mb-3">
+        <div class="container">
+          <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('index')}}"><i class="fa fa-home"></i> Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('blog')}}"><i class="fa fa-newspaper"></i> Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-question"></i> About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fas fa-hands-helping"></i> Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-phone" aria-hidden="true"></i> Contact</a>
+              </li>
+            </ul>
+          </div>
+          {% if current_user.is_authenticated %}
+          <div class="d-flex">
+            <ul>
+              <li class="nav-item dropdown">
+                <a href="#" class="d-flex mr-3 nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <img src="{{ image_file }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
+                  <p class="navbar-username">{{ current_user.username }}</p>
+                </a>
+                <div class="dropdown-menu slideIn animate" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{{ url_for('account') }}"><i class="fas fa-user mr-2"></i> Account</a>
+                  <a class="dropdown-item" href="{{ url_for('new_post') }}"><i class="fas fa-pen-alt mr-2"></i> Create a post</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{{url_for('.logout')}}"><i class="fas fa-sign-out-alt mr-2"></i> Log out</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+          {% else %}
+          <div class="navbar-collapse sign-btns">
+            <a name="Log in" class="btn btn-blog nav-link" href="{{url_for('.login')}}" role="button">Log in</a>
+            <a name="Sign up" class="btn btn-blog nav-link" href="{{url_for('.signup')}}" role="button">Sign up</a>
+          </div>
+          {% endif %}
+        </div>
+      </nav>
+      {% endif %}
+      {% block content %}{% endblock %} {% if request.path == "/" %}
       <footer>
         <div class="footer-copyright text-center py-3 bg-dark text-white">
           © 2020 Copyright:
@@ -244,10 +301,10 @@
           //  error: function(err) {
           //    console.log(err);
           //  }
-          //});
+          //}); 
           //
         }
       </script>
     </body>
-  </body>
+  </body>  
 </html>
