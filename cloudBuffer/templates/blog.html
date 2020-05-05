@@ -15,7 +15,7 @@
             <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
           </div>
           <h2><a class="article-title mb-2" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
-          <p class="article-content text-truncate" style="max-height: 250;">{{ post.content }}</p>
+          <p class="article-content text-truncate" style="max-height: 250px;">{{ post.content }}</p>
         </div>
       </article>
       {% endfor %}

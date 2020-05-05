@@ -1,5 +1,5 @@
 from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer.models import User, Post
 from cloudBuffer import app, bcrypt, db, login_manager
@@ -239,6 +239,18 @@ def post(post_id):
     post = Post.query.get_or_404(post_id)
 
     return render_template("post.html", title=post.title, post=post)
+
+
+@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = PostForm()
+    return render_template('create_post.html',
+                           title="Update existing post",
+                           form=form)
 
 
 @app.route("/user/<int:user_id>", methods=['GET', 'POST'])
