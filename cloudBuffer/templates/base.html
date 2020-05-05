@@ -97,13 +97,13 @@
               </a>
             </div>
             <div class="navbar-collapse sign-btns">
-              <a name="Log out" class="btn btn-blog nav-link" href="{{url_for('logout')}}" role="button">Log out</a>
+              <a name="Log out" class="btn btn-blog nav-link" href="{{url_for('.logout')}}" role="button">Log out</a>
             </div>
           </div>
           {% else %}
           <div class="navbar-collapse sign-btns">
-            <a name="Log in" class="btn btn-blog nav-link" href="{{url_for('login')}}" role="button">Log in</a>
-            <a name="Sign up" class="btn btn-blog nav-link" href="{{url_for('signup')}}" role="button">Sign up</a>
+            <a name="Log in" class="btn btn-blog nav-link" href="{{url_for('.login')}}" role="button">Log in</a>
+            <a name="Sign up" class="btn btn-blog nav-link" href="{{url_for('.signup')}}" role="button">Sign up</a>
           </div>
           {% endif %}
         </div>
