@@ -113,7 +113,7 @@
           {% endif %}
         </div>
       </nav>
-      {%elif request.path == "/signup" or request.path == "/login"%}
+      {% elif request.path == "/signup" or request.path == "/login" %}
       {% if request.path == "/login" %}
       <nav id="navbarBlog" class="navbar navbar-expand-md navbar-dark py-2 mobile-dark bg-dark mb-6">
       {% else %}
