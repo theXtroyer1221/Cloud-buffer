@@ -8,10 +8,10 @@
       </div>
       {% endfor %} {% endif %} {% endwith %}
       <article class="media content-section-article">
-        <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" width="125px" height="125px" />
+        <a class="mr-2" href="{{url_for('user', username=post.author.username)}}"><img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" width="125px" height="125px" /></a>
         <div class="media-body">
           <div class="article-metadata mb-2">
-            <a class="mr-2" href="url_for('user', user_id=post.author.id)">{{ post.author.username }}</a>
+            <a class="mr-2" href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a>
             <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             {% if post.author == current_user %}
             <div>
@@ -70,7 +70,7 @@
         <h4 class="text-primary mb-4">{{ post.date_posted.strftime('%Y-%m-%d') }}</h4>
         <h3>Post author</h3>
         <br />
-        <h4 class="text-primary mb-4"><a class="mr-2" href="{{url_for('user', user_id=post.author.id)}}">{{ post.author.username }}</a></h4>
+        <h4 class="text-primary mb-4"><a class="mr-2" href="{{url_for('user', username=post.author.username)}}">{{ post.author.username }}</a></h4>
         <h3>Post ID</h3>
         <br />
         <h4 class="text-primary mb-4">{{ post.id }}</h4>

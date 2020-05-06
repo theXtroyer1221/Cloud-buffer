@@ -114,13 +114,15 @@ def search(query):
 
 @app.route("/blog")
 def blog():
+    page = request.args.get("page", 1, type=int)
     if current_user.is_authenticated:
         image_file = url_for("static",
                              filename="profile_pics/" +
                              current_user.image_file)
     else:
         image_file = None
-    posts = Post.query.all()
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page,
+                                                                  per_page=5)
     return render_template("blog.html",
                            data="data",
                            title="Blog",
@@ -214,11 +216,18 @@ def account():
                            form=form)
 
 
-@app.route("/user/<int:user_id>", methods=['GET', 'POST'])
-def user(user_id):
-    user = User.query.get_or_404(user_id)
-
-    return render_template("user.html", title=user.username, user=user)
+@app.route("/user/<username>", methods=['GET', 'POST'])
+def user(username):
+    page = request.args.get("page", 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    if current_user == user:
+        return redirect(url_for("account"))
+    posts = Post.query.filter_by(author=user).order_by(
+        Post.date_posted.desc()).paginate(page=page, per_page=5)
+    return render_template("user.html",
+                           title=user.username,
+                           user=user,
+                           posts=posts)
 
 
 @app.route("/post/new", methods=['GET', 'POST'])

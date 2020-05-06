@@ -367,6 +367,14 @@ ul {
   margin-bottom: 20px;
 }
 
+.content-section-article-user_page {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
 .article-title {
   color: #444444;
 }
@@ -420,6 +428,36 @@ a.article-title:hover {
 
 .btn-danger {
   color: white !important;
+}
+
+.btn-primary {
+  border-color: #283655;
+  background-color: #283655;
+}
+
+.btn-primary:hover {
+  background-color: #1d2535;
+  border-color: #283655;
+}
+
+.btn-primary:focus {
+  border-color: #283655;
+  background-color: #1d2535;
+}
+
+.btn-outline-primary {
+  border-color: #283655;
+  color: #283655;
+}
+
+.btn-outline-primary:hover {
+  background-color: #283655;
+  border-color: #283655;
+}
+
+.btn-outline-primary:focus {
+  border-color: #283655;
+  background-color: #283655;
 }
 
 body::-webkit-scrollbar-track {
