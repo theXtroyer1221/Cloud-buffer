@@ -231,7 +231,7 @@ def new_post():
     return render_template('create_post.html',
                            title="New post",
                            form=form,
-                           image_file=image_file)
+                           image_file=image_file, legend="Update post")
 
 
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
@@ -242,15 +242,23 @@ def post(post_id):
 
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
-@login_required
+@login_required 
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
         abort(403)
     form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash("Your post has been updated", "success")
+        return redirect(url_for("post", post_id=post.id))
+    if request.method == "GET":
+        form.title.data = post.title
+        form.content.data = post.content
     return render_template('create_post.html',
-                           title="Update existing post",
-                           form=form)
+                           title="Update existing post", legend="Update an existing post", form=form)
 
 
 @app.route("/user/<int:user_id>", methods=['GET', 'POST'])

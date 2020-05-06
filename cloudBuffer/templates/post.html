@@ -2,6 +2,11 @@
 <div class="container mt-5 pt-5">
   <div class="row">
     <div class="col-md-8">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
       <article class="media content-section-article">
         <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" width="125px" height="125px" />
         <div class="media-body">

@@ -8,7 +8,7 @@
             <form method="POST" action="" class="my-2 mt-2">
               {{ form.hidden_tag() }}
               <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Create a new post</legend>
+                <legend class="border-bottom mb-4">{{ legend }}</legend>
                 <div class="form-group">
                   {{ form.title.label(class="form-control-label") }} {% if form.title.errors %} {{ form.title(class="form-control form-control-lg is-invalid") }}
                   <div class="invalid-feedback">
@@ -19,13 +19,13 @@
                   {% else %} {{ form.title(class="form-control form-control-lg") }} {% endif %}
                 </div>
                 <div class="form-group">
-                  {{ form.content.label(class="form-control-label") }} {% if form.content.errors %} {{ form.content(class="form-control form-control-lg is-invalid") }}
+                  {{ form.content.label(class="form-control-label") }} {% if form.content.errors %} {{ form.content(class="form-control form-control-lg is-invalid", style="height: 250px;") }}
                   <div class="invalid-feedback">
                     {% for error in form.content.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
                   </div>
-                  {% else %} {{ form.content(class="form-control form-control-lg") }} {% endif %}
+                  {% else %} {{ form.content(class="form-control form-control-lg", style="height: 250px;") }} {% endif %}
                 </div>
               </fieldset>
               <div class="form-group">
