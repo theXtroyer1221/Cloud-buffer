@@ -214,6 +214,13 @@ def account():
                            form=form)
 
 
+@app.route("/user/<int:user_id>", methods=['GET', 'POST'])
+def user(user_id):
+    user = User.query.get_or_404(user_id)
+
+    return render_template("user.html", title=user.username, user=user)
+
+
 @app.route("/post/new", methods=['GET', 'POST'])
 @login_required
 def new_post():
@@ -231,7 +238,8 @@ def new_post():
     return render_template('create_post.html',
                            title="New post",
                            form=form,
-                           image_file=image_file, legend="Update post")
+                           image_file=image_file,
+                           legend="Update post")
 
 
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
@@ -242,7 +250,7 @@ def post(post_id):
 
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
-@login_required 
+@login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
@@ -258,14 +266,21 @@ def update_post(post_id):
         form.title.data = post.title
         form.content.data = post.content
     return render_template('create_post.html',
-                           title="Update existing post", legend="Update an existing post", form=form)
+                           title="Update existing post",
+                           legend="Update an existing post",
+                           form=form)
 
 
-@app.route("/user/<int:user_id>", methods=['GET', 'POST'])
-def user(user_id):
-    user = User.query.get_or_404(user_id)
-
-    return render_template("user.html", title=user.username, user=user)
+@app.route("/post/<int:post_id>/delete", methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash("Your post has been deleted", "success")
+    return redirect(url_for("blog"))
 
 
 @app.route("/logout")
