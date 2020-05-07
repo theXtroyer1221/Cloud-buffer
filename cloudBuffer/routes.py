@@ -151,7 +151,8 @@ def login():
     return render_template("login.html",
                            form=form,
                            data="data",
-                           title="Log in")
+                           title="Log in",
+                           post="post")
 
 
 @app.route("/signup", methods=['GET', 'POST'])
@@ -175,7 +176,8 @@ def signup():
     return render_template("signup.html",
                            form=form,
                            data="data",
-                           title="Sign up")
+                           title="Sign up",
+                           post="post")
 
 
 def save_picture(form_picture):
@@ -228,7 +230,8 @@ def user(username):
     return render_template("user.html",
                            title=user.username,
                            user=user,
-                           posts=posts)
+                           posts=posts,
+                           post="post")
 
 
 @app.route("/post/new", methods=['GET', 'POST'])
@@ -320,7 +323,8 @@ def reset_request():
         return redirect(url_for("login"))
     return render_template('reset_request.html',
                            title='Reset Password',
-                           form=form)
+                           form=form,
+                           post="post")
 
 
 @app.route("/reset_password/<token>", methods=['GET', 'POST'])
@@ -343,7 +347,8 @@ def reset_token(token):
         return redirect(url_for('login'))
     return render_template('reset_token.html',
                            title='Reset Password',
-                           form=form)
+                           form=form,
+                           post="post")
 
 
 @app.route("/logout")
