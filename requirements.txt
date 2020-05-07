@@ -6,5 +6,5 @@ Google-Images-Search
 flask-simple-geoip
 Flask-Bcrypt
 Flask-SQLAlchemy
-Flask-Login
+Flask-mail
 Pillow
