@@ -31,18 +31,18 @@
     <div class="container mb-5">
       <div class="row mb-1">
         <div class="col-lg-6 p-0">
-          <h1 class="display-4 mb-4">Weather in <br />{{data.name}}, <small>{{data["sys"]["country"]}}</small></h1>
-          <div class="d-flex mb-2">
+          <h1 class="display-4 mb-4 text-center-mobile">Weather in <br />{{data.name}}, <small>{{data["sys"]["country"]}}</small></h1>
+          <div class="d-flex mb-2 mx-auto-mobile weather-temp">
             <canvas id="weather-icon" width="75" height="75" class="mr-3"></canvas>
             <p id="weather-temprature" class="weather-temprature text-primary" style="--c: '°c';">{{data["main"]["temp"]|round|int}}</p>
           </div>
-          <p id="weather-feel" class="weather-feel" style="--c: '°c';">{{data["main"]["feels_like"]|round|int}}</p>
-          <p class="weather-desc"><small>{{data["weather"][0]["description"]}}</small></p>
+          <p id="weather-feel" class="weather-feel text-center-mobile" style="--c: '°c';">{{data["main"]["feels_like"]|round|int}}</p>
+          <p class="weather-desc text-center-mobile"><small>{{data["weather"][0]["description"]}}</small></p>
         </div>
         <div class="col-lg-6 p-0">
           <div>
             <img class="img-fluid w-100" src="{{img}}" alt="" style="height: 270px;" />
-            <p class="image-desc">The picture is the first result of the of google image serach of <b>{{query}} city {{data["sys"]["country"]}}</b></p>
+            <p class="image-desc text-center-mobile mt-2">The picture is the first result of the of google image serach of <b>{{query}} city {{data["sys"]["country"]}}</b></p>
           </div>
         </div>
       </div>
@@ -68,7 +68,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row text-center-mobile">
         <h1 class="text-primary">{{data.name}}, {{data["sys"]["country"]}} location</h1>
       </div>
       <hr />

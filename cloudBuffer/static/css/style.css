@@ -327,6 +327,57 @@ ul {
   margin-top: 8rem !important;
 }
 
+@media (max-width: 991px) {
+  .mt-5 {
+    margin-top: 7rem !important;
+  }
+  .mb-6 {
+    margin-bottom: 3rem !important;
+  }
+  .account-heading {
+    font-size: 2rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .media {
+    display: flow-root;
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .weather-temp {
+    text-align: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .search-header h1 {
+    text-align: center;
+  }
+  .text-center-mobile {
+    text-align: center !important;
+  }
+  .mx-auto-mobile {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .header-index .header-input {
+    width: 370px;
+  }
+  .search-header .search-input {
+    width: 370px !important;
+  }
+  .header-title {
+    font-size: 2rem;
+    margin-bottom: 7px;
+  }
+}
+
 .account-img {
   height: 125px;
   width: 125px;

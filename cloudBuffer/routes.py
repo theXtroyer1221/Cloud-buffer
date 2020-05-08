@@ -252,14 +252,17 @@ def new_post():
                            title="New post",
                            form=form,
                            image_file=image_file,
-                           legend="Update post")
+                           legend="Create a post")
 
 
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def post(post_id):
     post = Post.query.get_or_404(post_id)
 
-    return render_template("post.html", title=post.title, post=post, data="post_site")
+    return render_template("post.html",
+                           title=post.title,
+                           post=post,
+                           data="post_site")
 
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
@@ -359,7 +362,7 @@ def logout():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    data = "404"
+    data = 404
     return render_template('error.html',
                            e=e,
                            data=data,
