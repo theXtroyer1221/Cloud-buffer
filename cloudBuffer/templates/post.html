@@ -1,6 +1,14 @@
 {% extends 'base.html' %} {% block content %}
 <div class="container mt-5 pt-5">
   <div class="row">
+    <div class="col-md-1">
+      <div class="w-100">
+        <a class="twitter-share-button" data-size="large" href="https://twitter.com/intent/tweet?text=Hello%20world"></a>
+      </div>
+      <div>
+        <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+      </div>
+    </div>
     <div class="col-md-8">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
       <div class="alert alert-{{ category }}">
@@ -63,7 +71,7 @@
       </script>
       <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="media content-section-article d-block text-center">
         <h3 class="mt-4">Post published</h3>
         <br />
@@ -78,4 +86,7 @@
     </div>
   </div>
 </div>
+<script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v7.0"></script>
 {% endblock %}

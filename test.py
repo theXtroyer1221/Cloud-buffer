@@ -1,10 +1,17 @@
-from google_images_download import google_images_download
+from flask import Flask, jsonify
+from flask_simple_geoip import SimpleGeoIP
+from flask_geoip import GeoIP
 
-response = google_images_download.googleimagesdownload()
-absolute_image_paths = response.download({
-    "keywords": "London city",
-    "format": "jpg",
-    "limit": 4,
-    "print_urls": True,
-    "size": "medium"
-})
+app = Flask(__name__)
+app.config["GEOIP_CACHE"] = "MEMORY_CACHE"
+geoip = GeoIP(app)
+
+
+@app.route('/')
+def test():
+    # Retrieve geoip data for the given requester
+
+    return jsonify(geoip.country_name_by_addr('1.2.3.4'))
+
+
+app.run()

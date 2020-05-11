@@ -1,13 +1,14 @@
 from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm
 from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_user, current_user, logout_user, login_required
-from cloudBuffer.models import User, Post
 from cloudBuffer import app, bcrypt, db, mail
+from cloudBuffer.models import User, Post
 from flask_mail import Message
 
 from PIL import Image, ImageOps
 import requests
 import secrets
+import random
 import os
 
 from google_images_search import GoogleImagesSearch
@@ -62,7 +63,7 @@ def search(query):
         headers_list = request.headers.getlist("X-Forwarded-For")
         user_ip = headers_list[0] if headers_list else request.remote_addr
         url = 'http://api.ipstack.com/{}?access_key={}'.format(
-            "83.250.184.69", IP_STACK)
+            "12.32.32.11", IP_STACK)
         r = requests.get(url)
         j = r.json()
         query = j["city"]
@@ -205,12 +206,14 @@ def account():
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.biography = form.biography.data
         db.session.commit()
         flash("Account information has been updated", "success")
         return redirect(url_for("account"))
     elif request.method == "GET":
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.biography.data = current_user.biography
     image_file = url_for('static',
                          filename='profile_pics/' + current_user.image_file)
     return render_template("account.html",
@@ -234,6 +237,18 @@ def user(username):
                            post="post")
 
 
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    if current_user.admin is False:
+        abort(403)
+    else:
+        return render_template("dashboard.html",
+                               title="Admin dashboard - Cloudbuffer",
+                               User=User,
+                               Post=Post)
+
+
 @app.route("/post/new", methods=['GET', 'POST'])
 @login_required
 def new_post():
@@ -241,7 +256,8 @@ def new_post():
                          filename="profile_pics/" + current_user.image_file)
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data,
+        post = Post(id=random.randint(1000, 9999),
+                    title=form.title.data,
                     content=form.content.data,
                     author=current_user)
         db.session.add(post)

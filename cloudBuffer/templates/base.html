@@ -64,7 +64,7 @@
         </div>
       </nav>
       {% endif %}
-      {% if request.path == "/blog" or request.path == "/account" or request.path == "/post/new" or data == "post_site" or request.path == "/user/{}".format(title)  or request.path == "/reset_password" %}
+      {% if request.path == "/blog" or request.path == "/account" or request.path == "/dashboard" or request.path == "/post/new" or data == "post_site" or title == "Update existing post" or request.path == "/user/{}".format(title)  or request.path == "/reset_password" %}
       <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark fixed-top py-2 mobile-dark bg-dark mb-3">
         <div class="container">
           <a class="navbar-brand" href="{{url_for('index')}}"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
@@ -101,6 +101,9 @@
                 <div class="dropdown-menu slideIn animate" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="{{ url_for('account') }}"><i class="fas fa-user mr-2"></i> Account</a>
                   <a class="dropdown-item" href="{{ url_for('new_post') }}"><i class="fas fa-pen-alt mr-2"></i> Create a post</a>
+                  {% if current_user.admin %}
+                  <a class="dropdown-item" href="{{url_for('dashboard')}}"><i class="fas fa-server mr-2"></i> Admin dashboard</a>
+                  {% endif %}
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{{url_for('.logout')}}"><i class="fas fa-sign-out-alt mr-2"></i> Log out</a>
                 </div>
@@ -190,6 +193,7 @@
           </div>
         </div>
       </nav>
+      {% endif %}
       {% if data == 404 %}
       <h1>hello</h1>
       <nav id="navbar404" class="navbar navbar-expand-lg navbar-dark fixed-top py-2 mobile-dark bg-dark mb-3">
@@ -222,12 +226,15 @@
             <ul>
               <li class="nav-item dropdown">
                 <a href="#" class="d-flex mr-3 nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
+                  <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
                   <p class="navbar-username">{{ current_user.username }}</p>
                 </a>
                 <div class="dropdown-menu slideIn animate" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="{{ url_for('account') }}"><i class="fas fa-user mr-2"></i> Account</a>
                   <a class="dropdown-item" href="{{ url_for('new_post') }}"><i class="fas fa-pen-alt mr-2"></i> Create a post</a>
+                  {% if current_user.admin %}
+                  <a class="dropdown-item" href="{{url_for('dashboard')}}"><i class="fas fa-server mr-2"></i> Admin dashboard</a>
+                  {% endif %}
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{{url_for('.logout')}}"><i class="fas fa-sign-out-alt mr-2"></i> Log out</a>
                 </div>
@@ -242,7 +249,6 @@
           {% endif %}
         </div>
       </nav>
-      {% endif %}
       {% endif %}
       {% block content %}{% endblock %} 
       {% if request.path == "/" or request.path == "/blog"%}

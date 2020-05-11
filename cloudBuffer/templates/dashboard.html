@@ -1,0 +1,70 @@
+{% extends 'base.html' %} {% block content %}
+<section class="mt-5 pt-5">
+  <div class="container mt-3">
+    <h1 class="display-5">Admin Dashboard</h1>
+    <hr />
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card rounded">
+          <div class="card-body">
+            <blockquote class="blockquote text-center">
+              <h3>User count</h3>
+              <footer class="card-blockquote"><cite title="Source title">{{User.query.all()|length}}</cite></footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card rounded">
+          <div class="card-body">
+            <blockquote class="blockquote text-center">
+              <h3>User count</h3>
+              <footer class="card-blockquote"><cite title="Source title">{{Post.query.all()|length}}</cite></footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <blockquote class="blockquote">
+              <p>Quote</p>
+              <footer class="card-blockquote">Footer<cite title="Source title">Source title</cite></footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="w-50" />
+    <div class="row">
+      <h2>User list</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">User ID</th>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">Number of posts</th>
+            <th scope="col">Admin</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in User.query.all() %}
+          <tr>
+            <th scope="row">{{user.id}}</th>
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.posts|length}}</td>
+            {% if user.admin %}
+            <td>True</td>
+            {% else %}
+            <td>False</td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

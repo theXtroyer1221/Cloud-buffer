@@ -473,6 +473,10 @@ a.article-title:hover {
   font-size: 2.5rem;
 }
 
+.rounded {
+  border-radius: 10px !important;
+}
+
 .btn-secondary {
   color: white !important;
 }
