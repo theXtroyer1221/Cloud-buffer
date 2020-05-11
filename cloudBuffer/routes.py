@@ -237,6 +237,10 @@ def user(username):
                            post="post")
 
 
+def is_admin(user):
+    pass
+
+
 @app.route("/dashboard")
 @login_required
 def dashboard():
