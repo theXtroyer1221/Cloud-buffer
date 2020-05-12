@@ -55,11 +55,7 @@
             <td>{{user.username}}</td>
             <td>{{user.email}}</td>
             <td>{{user.posts|length}}</td>
-            {% if user.admin %}
-            <td>True</td>
-            {% else %}
-            <td>False</td>
-            {% endif %}
+            <td>{{user.admin}}</td>
           </tr>
           {% endfor %}
         </tbody>

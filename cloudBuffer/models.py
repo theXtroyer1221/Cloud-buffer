@@ -20,7 +20,7 @@ class User(db.Model, UserMixin):
                            default="default.jpg")
     biography = db.Column(db.Text, nullable=True)
     posts = db.relationship("Post", backref="author", lazy=True)
-    admin = db.Column(db.Boolean(), default=None)
+    admin = db.Column(db.Boolean(), default=False)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)

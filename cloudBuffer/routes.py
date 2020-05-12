@@ -237,20 +237,16 @@ def user(username):
                            post="post")
 
 
-def is_admin(user):
-    pass
-
-
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    if current_user.admin is False:
-        abort(403)
-    else:
+    if current_user.admin:
         return render_template("dashboard.html",
                                title="Admin dashboard - Cloudbuffer",
                                User=User,
                                Post=Post)
+    else:
+        abort(403)
 
 
 @app.route("/post/new", methods=['GET', 'POST'])
