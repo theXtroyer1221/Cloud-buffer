@@ -14,7 +14,16 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install for the project and how to install them
 
 ```
-Give examples
+python-dotenv
+flask
+requests
+Google-Images-Search
+flask_wtf
+flask-simple-geoip
+Flask-Bcrypt
+Flask-SQLAlchemy
+Flask-mail
+Pillow
 ```
 
 ### Installing
