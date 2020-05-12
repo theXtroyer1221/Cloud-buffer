@@ -1,4 +1,4 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm
 from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer import app, bcrypt, db, mail
@@ -237,10 +237,23 @@ def user(username):
                            post="post")
 
 
+def send_admin_mail(title, body):
+    msg = Message(f"{title} - CloudBuffer",
+                  sender="noreply@CloudBuffer.com",
+                  recipients=User.query.all().email)
+    msg.html = render_template("admin_email.html", user=user, body=body)
+    mail.send(msg)
+
+
 @app.route("/dashboard")
 @login_required
 def dashboard():
+    form = AdminEmailForm()
     if current_user.admin:
+        if form.validate_on_submit:
+            title = form.title.data
+            body = form.body.data
+            send_admin_mail(title, body)
         return render_template("dashboard.html",
                                title="Admin dashboard - Cloudbuffer",
                                User=User,

@@ -36,30 +36,99 @@
       </div>
     </div>
     <hr class="w-50" />
-    <div class="row">
+    <div class="mb-2">
       <h2>User list</h2>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">User ID</th>
-            <th scope="col">Username</th>
-            <th scope="col">Email</th>
-            <th scope="col">Number of posts</th>
-            <th scope="col">Admin</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for user in User.query.all() %}
-          <tr>
-            <th scope="row">{{user.id}}</th>
-            <td>{{user.username}}</td>
-            <td>{{user.email}}</td>
-            <td>{{user.posts|length}}</td>
-            <td>{{user.admin}}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">User ID</th>
+              <th scope="col">Username</th>
+              <th scope="col">Email</th>
+              <th scope="col">Number of posts</th>
+              <th scope="col">Admin</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in User.query.all() %}
+            <tr>
+              <th scope="row">{{user.id}}</th>
+              <a href="{{ url_for('user', username=user.username) }}"><td>{{user.username}}</td></a>
+              <td>{{user.email}}</td>
+              <td>{{user.posts|length}}</td>
+              <td>{{user.admin}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <h2>Posts</h2>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Post ID</th>
+              <th scope="col">Title</th>
+              <th scope="col">Date posted</th>
+              <th scope="col">Topic</th>
+              <th scope="col">Author</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for post in Post.query.all() %}
+            <tr>
+              <th scope="row">{{post.id}}</th>
+              <a href="{{ url_for('post', post_id=post.id) }}"><td>{{post.title}}</td></a>
+              <td>{{post.date_posted}}</td>
+              {% if post.Topic %}
+              <td>{{post.Topic}}</td>
+              {% else %}
+              <td>None</td>
+              {% endif %}
+              <td>{{post.author.username}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card card-signin">
+          <div class="card-body">
+            <div class="content-section">
+              <form method="POST" action="" class="my-2 mt-2">
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
+                  <legend class="border-bottom mb-4">Send an email to users</legend>
+                  <div class="form-group">
+                    {{ form.title.label(class="form-control-label") }} {% if form.title.errors %} {{ form.title(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                      {% for error in form.title.errors %}
+                      <span>{{ error }}</span>
+                      {% endfor %}
+                    </div>
+                    {% else %} {{ form.title(class="form-control form-control-lg") }} {% endif %}
+                  </div>
+                  <div class="form-group">
+                    {{ form.content.label(class="form-control-label") }} {% if form.content.errors %} {{ form.content(class="form-control form-control-lg is-invalid", style="height: 250px;") }}
+                    <div class="invalid-feedback">
+                      {% for error in form.content.errors %}
+                      <span>{{ error }}</span>
+                      {% endfor %}
+                    </div>
+                    {% else %} {{ form.content(class="form-control form-control-lg", style="height: 250px;") }} {% endif %}
+                  </div>
+                </fieldset>
+                <div class="form-group">
+                  {{ form.submit(class="btn btn-blog-dark") }}
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

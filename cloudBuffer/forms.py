@@ -80,6 +80,12 @@ class PostForm(FlaskForm):
     submit = SubmitField("Post")
 
 
+class AdminEmailForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    body = TextAreaField('Body', validators=[DataRequired()])
+    submit = SubmitField("Send")
+
+
 class RequestResetForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField("Request Password Reset")
