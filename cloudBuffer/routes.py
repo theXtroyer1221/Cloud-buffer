@@ -238,14 +238,15 @@ def user(username):
 
 
 def send_admin_mail(title, body):
+    users = [user.email for user in User.query.all()]
     msg = Message(f"{title} - CloudBuffer",
                   sender="noreply@CloudBuffer.com",
-                  recipients=User.query.all().email)
-    msg.html = render_template("admin_email.html", user=user, body=body)
+                  recipients=users)
+    msg.html = render_template("admin_email.html", body=body)
     mail.send(msg)
 
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=['GET', 'POST'])
 @login_required
 def dashboard():
     form = AdminEmailForm()
@@ -257,7 +258,8 @@ def dashboard():
         return render_template("dashboard.html",
                                title="Admin dashboard - Cloudbuffer",
                                User=User,
-                               Post=Post)
+                               Post=Post,
+                               form=form)
     else:
         abort(403)
 

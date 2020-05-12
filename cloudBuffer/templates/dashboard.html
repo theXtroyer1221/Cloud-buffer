@@ -1,6 +1,11 @@
 {% extends 'base.html' %} {% block content %}
 <section class="mt-5 pt-5">
   <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
+    <div class="alert alert-{{ category }} mb-2">
+      {{ message }}
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
     <h1 class="display-5">Admin Dashboard</h1>
     <hr />
     <div class="row">
@@ -112,13 +117,13 @@
                     {% else %} {{ form.title(class="form-control form-control-lg") }} {% endif %}
                   </div>
                   <div class="form-group">
-                    {{ form.content.label(class="form-control-label") }} {% if form.content.errors %} {{ form.content(class="form-control form-control-lg is-invalid", style="height: 250px;") }}
+                    {{ form.body.label(class="form-control-label") }} {% if form.body.errors %} {{ form.body(class="form-control form-control-lg is-invalid", style="height: 250px;") }}
                     <div class="invalid-feedback">
-                      {% for error in form.content.errors %}
+                      {% for error in form.body.errors %}
                       <span>{{ error }}</span>
                       {% endfor %}
                     </div>
-                    {% else %} {{ form.content(class="form-control form-control-lg", style="height: 250px;") }} {% endif %}
+                    {% else %} {{ form.body(class="form-control form-control-lg", style="height: 250px;") }} {% endif %}
                   </div>
                 </fieldset>
                 <div class="form-group">
