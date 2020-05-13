@@ -396,5 +396,26 @@ def page_not_found(e):
     data = 404
     return render_template('error.html',
                            e=e,
+                           h1="404",
                            data=data,
                            title="Page not found"), 404
+
+
+@app.errorhandler(403)
+def forbidden(e):
+    data = 403
+    return render_template('error.html',
+                           e=e,
+                           h1="Whoa! Staff only!",
+                           data=data,
+                           title="Page not accessible"), 403
+
+
+@app.errorhandler(500)
+def general_server_problem(e):
+    data = 500
+    return render_template('error.html',
+                           e=e,
+                           h1="Opps! Something went wrong (500)",
+                           data=data,
+                           title="Page not accessible"), 500
