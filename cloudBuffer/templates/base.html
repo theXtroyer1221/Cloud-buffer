@@ -251,7 +251,7 @@
       </nav>
       {% endif %}
       {% block content %}{% endblock %} 
-      {% if request.path == "/" or request.path == "/blog"%}
+      {% if request.path == "/" or request.path == "/blog" or request.path == "/dashboard" %}
       <footer class="mt-auto">
         <div class="footer-copyright text-center py-3 bg-dark text-white">
           © 2020 Copyright:

@@ -28,8 +28,10 @@
             </div>
             {% endif %}
           </div>
-          <h2 class="mb-2">{{ post.title }}</h2>
-          <p class="article-content">{{ post.content| safe }}</p>
+          <div>
+            <h2 class="mb-2">{{ post.title | safe}}</h2>
+            <p class="article-content">{{ post.content| safe }}</p>
+          </div>
         </div>
       </article>
       <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

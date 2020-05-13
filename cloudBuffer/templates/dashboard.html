@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block content %}
-<section class="mt-5 pt-5">
+<section class="my-5 pt-5">
   <div class="container mt-3">
     {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
     <div class="alert alert-{{ category }} mb-2">
@@ -23,7 +23,7 @@
         <div class="card rounded">
           <div class="card-body">
             <blockquote class="blockquote text-center">
-              <h3>User count</h3>
+              <h3>Post count</h3>
               <footer class="card-blockquote"><cite title="Source title">{{Post.query.all()|length}}</cite></footer>
             </blockquote>
           </div>
