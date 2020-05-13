@@ -80,6 +80,11 @@ class PostForm(FlaskForm):
     submit = SubmitField("Post")
 
 
+class SearchPostForm(FlaskForm):
+    search = StringField("Title", validators=[DataRequired()])
+    submit = SubmitField("Post")
+
+
 class AdminEmailForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     body = TextAreaField('Body', validators=[DataRequired()])

@@ -1,4 +1,4 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm
 from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer import app, bcrypt, db, mail
@@ -116,6 +116,7 @@ def search(query):
 
 @app.route("/blog")
 def blog():
+    form = SearchPostForm()
     page = request.args.get("page", 1, type=int)
     if current_user.is_authenticated:
         image_file = url_for("static",
@@ -125,11 +126,14 @@ def blog():
         image_file = None
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page,
                                                                   per_page=5)
+    if form.validate_on_submit():
+        Post.query.include()
     return render_template("blog.html",
                            data="data",
                            title="Blog",
                            image_file=image_file,
-                           posts=posts)
+                           posts=posts,
+                           form=form)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -250,18 +254,17 @@ def send_admin_mail(title, body):
 @login_required
 def dashboard():
     form = AdminEmailForm()
-    if current_user.admin:
-        if form.validate_on_submit:
-            title = form.title.data
-            body = form.body.data
-            send_admin_mail(title, body)
-        return render_template("dashboard.html",
-                               title="Admin dashboard - Cloudbuffer",
-                               User=User,
-                               Post=Post,
-                               form=form)
-    else:
+    if not current_user.admin:
         abort(403)
+    if form.validate_on_submit():
+        title = form.title.data
+        body = form.body.data
+        send_admin_mail(title, body)
+    return render_template("dashboard.html",
+                           title="Admin dashboard - Cloudbuffer",
+                           User=User,
+                           Post=Post,
+                           form=form)
 
 
 @app.route("/post/new", methods=['GET', 'POST'])
