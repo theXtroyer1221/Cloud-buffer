@@ -113,7 +113,6 @@ def search(query):
                                form=form,
                                location_form=location_form)
 
-
 @app.route("/blog")
 def blog():
     form = SearchPostForm()
@@ -126,6 +125,7 @@ def blog():
         image_file = None
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page,
                                                                   per_page=5)
+
     if form.validate_on_submit():
         Post.query.include()
     return render_template("blog.html",
@@ -135,6 +135,11 @@ def blog():
                            posts=posts,
                            form=form)
 
+@app.route('/posts')
+def posts_json():
+	res = Post.query.all()
+	list_posts = [r.title.as_dict() for r in res]
+	return jsonify(list_posts)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():

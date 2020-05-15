@@ -78,4 +78,20 @@
     </div>
   </div>
 </div>
+<script>
+  $(document).ready(function () {
+    var posts = [];
+    function loadPosts() {
+      $.getJSON("/posts", function (data, status, xhr) {
+        for (var i = 0; i < data.length; i++) {
+          posts.push(data[i].name);
+        }
+      });
+    }
+    loadPosts();
+
+    $("#search").autocomplete({
+      source: posts,
+    });
+</script>
 {% endblock %}
