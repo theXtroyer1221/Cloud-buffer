@@ -1,8 +1,9 @@
-from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+import flask_whooshalchemy as wa
+from flask_bcrypt import Bcrypt
 from flask_mail import Mail
+from flask import Flask
 
 import json
 import requests
@@ -16,7 +17,7 @@ load_dotenv()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Cloud Buffer"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 db = SQLAlchemy(app)
