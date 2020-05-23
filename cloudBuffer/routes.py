@@ -1,5 +1,5 @@
 from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm
-from flask import render_template, request, redirect, url_for, flash, abort
+from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer import app, bcrypt, db, mail
 from cloudBuffer.models import User, Post
@@ -113,7 +113,7 @@ def search(query):
                                form=form,
                                location_form=location_form)
 
-@app.route("/blog")
+@app.route("/blog",  methods=['GET', 'POST'])
 def blog():
     form = SearchPostForm()
     page = request.args.get("page", 1, type=int)
@@ -126,19 +126,17 @@ def blog():
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page,
                                                                   per_page=5)
 
-    if form.validate_on_submit():
-        Post.query.include()
     return render_template("blog.html",
                            data="data",
                            title="Blog",
                            image_file=image_file,
                            posts=posts,
-                           form=form)
+                           form=form, result=post_query.id)
 
 @app.route('/posts')
 def posts_json():
 	res = Post.query.all()
-	list_posts = [r.title.as_dict() for r in res]
+	list_posts = [r.as_dict() for r in res]
 	return jsonify(list_posts)
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -293,7 +291,6 @@ def new_post():
                            image_file=image_file,
                            legend="Create a post")
 
-
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -309,7 +306,10 @@ def post(post_id):
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
-        abort(403)
+        if not current_user.admin:
+            abort(403)
+        else:
+            pass
     form = PostForm()
     if form.validate_on_submit():
         post.title = form.title.data

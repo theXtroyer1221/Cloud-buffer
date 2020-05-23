@@ -82,7 +82,7 @@ class PostForm(FlaskForm):
 
 class SearchPostForm(FlaskForm):
     search = StringField("Title", validators=[DataRequired()])
-    submit = SubmitField("Post")
+    submit = SubmitField("Search")
 
 
 class AdminEmailForm(FlaskForm):

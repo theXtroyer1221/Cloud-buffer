@@ -29,6 +29,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <!-- jquery and ajax -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
   </head>
   {% if request.path == "/" %}
   <body data-spy="scroll" data-target=".navbar" data-offset="50">
@@ -277,48 +281,9 @@
 
       <!-- Optional JavaScript -->
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
       <!-- Font awesome -->
       <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
-      <script>
-        var location_btn = document.getElementById("location_submit");
-
-        location_btn.addEventListener("click", checkLocation);
-
-        function checkLocation() {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(sendLocation);
-          } else {
-            console.log("Your browser is outdated and doesnt support the location button feature.");
-          }
-        }
-
-        function sendLocation(position) {
-          console.log(position.coords.latitude);
-
-          pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-
-          //$.ajax({
-          //  type: "POST",
-          //  url: "/lolol",
-          //  contentType: "application/json",
-          //  data: JSON.stringify({location: pos}),
-          //  dataType: "json",
-          //  success: function(response) {
-          //    console.log(response);
-          //  },
-          //  error: function(err) {
-          //    console.log(err);
-          //  }
-          //}); 
-          //
-        }
-      </script>
       <script id="dsq-count-scr" src="//cloud-buffer.disqus.com/count.js" async></script>
     </body>
   </body>  

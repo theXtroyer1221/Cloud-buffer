@@ -25,14 +25,13 @@
       {% endif %} {% else %} ... {% endif %} {% endfor %}
     </div>
     <div class="col-md-4">
-      <div class="card mb-4">
-        <h5 class="card-header">Search</h5>
+      <div class="card mb-4 rounded">
+        <h5 class="card-header">Search for posts</h5>
         <div class="card-body">
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search for..." />
-            <span class="input-group-btn">
-              <button class="btn btn-secondary" type="button">Go!</button>
-            </span>
+            <form method="POST" action="" class="d-flex w-100">
+              {{form.search(class="form-control", style="border-top-right-radius: 0px; border-bottom-right-radius: 0px;")}} {{form.submit(class="btn btn-primary")}}
+            </form>
           </div>
         </div>
       </div>
@@ -84,7 +83,7 @@
     function loadPosts() {
       $.getJSON("/posts", function (data, status, xhr) {
         for (var i = 0; i < data.length; i++) {
-          posts.push(data[i].name);
+          posts.push(data[i].title);
         }
       });
     }
@@ -93,5 +92,6 @@
     $("#search").autocomplete({
       source: posts,
     });
+  });
 </script>
 {% endblock %}

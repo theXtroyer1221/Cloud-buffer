@@ -279,3 +279,19 @@ a.article-title:hover {
     background-color: #283655;
   }
 }
+
+.ui-autocomplete {
+  border-radius: 3px !important;
+  overflow: hidden !important;
+  background: #eeeeee !important;
+}
+
+.ui-autocomplete select {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.ui-widget {
+  font-family: $font1 !important;
+  background: white !important;
+}
