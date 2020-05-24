@@ -25,8 +25,8 @@ login_manager = LoginManager(app)
 login_manager.login_view = "login"
 login_manager.login_message_category = "info"
 
-whooshee = Whooshee(app)
-app.config["WHOOSH_BASE"] = "whoosh"
+#whooshee = Whooshee(app)
+#app.config["WHOOSH_BASE"] = "whoosh"
 
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
