@@ -1,6 +1,6 @@
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
-from cloudBuffer import db, login_manager, app, whooshee
+from cloudBuffer import db, login_manager, app
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -36,7 +36,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
-@whooshee.register_model('title', 'content')
+#@whooshee.register_model('title', 'content')
 class Post(db.Model):
     __searchable__ = ['title', "content"]
     id = db.Column(db.Integer, primary_key=True)
