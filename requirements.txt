@@ -8,3 +8,5 @@ Flask-Bcrypt
 Flask-SQLAlchemy
 Flask-mail
 Pillow
+flask_whooshalchemy
+flask_whooshee
