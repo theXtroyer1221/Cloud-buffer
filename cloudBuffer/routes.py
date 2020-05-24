@@ -9,6 +9,7 @@ from PIL import Image, ImageOps
 import requests
 import secrets
 import random
+import json
 import os
 
 from google_images_search import GoogleImagesSearch
@@ -125,13 +126,10 @@ def blog():
         image_file = None
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page,
                                                                   per_page=5)
-
-    return render_template("blog.html",
-                           data="data",
-                           title="Blog",
-                           image_file=image_file,
-                           posts=posts,
-                           form=form, result=post_query.id)
+    if form.validate_on_submit():
+        post_query = Post.query.filter_by(title=form.search.data).first()
+        return redirect(url_for('post', post_id=post_query.id))
+    return render_template("blog.html", data="data", title="Blog", image_file=image_file, posts=posts, form=form)
 
 @app.route('/posts')
 def posts_json():
