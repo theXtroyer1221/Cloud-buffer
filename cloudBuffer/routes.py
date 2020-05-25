@@ -116,8 +116,8 @@ def search(query):
 
 @app.route("/blog",  methods=['GET', 'POST'])
 def blog():
-    with open("cloudBuffer/message.json", "r"):
-        message = json.loads()
+    with open("cloudBuffer/message.json", "r") as f:
+        message = json.load(f)
     form = SearchPostForm()
     page = request.args.get("page", 1, type=int)
     if current_user.is_authenticated:
