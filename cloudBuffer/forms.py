@@ -86,10 +86,15 @@ class SearchPostForm(FlaskForm):
 
 
 class AdminEmailForm(FlaskForm):
+    identifier = StringField()
     title = StringField('Title', validators=[DataRequired()])
     body = TextAreaField('Body', validators=[DataRequired()])
     submit = SubmitField("Send")
 
+class MessageForm(FlaskForm):
+    identifier = StringField()
+    content = TextAreaField('Content')
+    send = SubmitField("Send")
 
 class RequestResetForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])

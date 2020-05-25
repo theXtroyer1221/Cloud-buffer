@@ -1,4 +1,4 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer import app, bcrypt, db, mail
@@ -116,6 +116,8 @@ def search(query):
 
 @app.route("/blog",  methods=['GET', 'POST'])
 def blog():
+    with open("cloudBuffer/message.json", "r"):
+        message = json.loads()
     form = SearchPostForm()
     page = request.args.get("page", 1, type=int)
     if current_user.is_authenticated:
@@ -129,7 +131,7 @@ def blog():
     if form.validate_on_submit():
         post_query = Post.query.filter_by(title=form.search.data).first()
         return redirect(url_for('post', post_id=post_query.id))
-    return render_template("blog.html", data="data", title="Blog", image_file=image_file, posts=posts, form=form)
+    return render_template("blog.html", data="data", title="Blog", image_file=image_file, posts=posts, form=form, message=message)
 
 @app.route('/posts')
 def posts_json():
@@ -255,17 +257,25 @@ def send_admin_mail(title, body):
 @login_required
 def dashboard():
     form = AdminEmailForm()
+    messageForm = MessageForm()
     if not current_user.admin:
         abort(403)
-    if form.validate_on_submit():
+    if form.identifier.data == 'form' and form.validate_on_submit():
         title = form.title.data
         body = form.body.data
         send_admin_mail(title, body)
+    if messageForm.identifier.data == 'messageForm' and messageForm.validate_on_submit():
+        content = messageForm.content.data
+        print(content)
+        with open("cloudBuffer\message.json", "w") as f:
+            content_obj = {"content": content}
+            data = json.dump(content_obj, f, indent=4)
+        flash("Success! The blog page has been updated with the message", "success")
     return render_template("dashboard.html",
                            title="Admin dashboard - Cloudbuffer",
                            User=User,
                            Post=Post,
-                           form=form)
+                           form=form, messageForm=messageForm)
 
 
 @app.route("/post/new", methods=['GET', 'POST'])
