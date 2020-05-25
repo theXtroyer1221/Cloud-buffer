@@ -24,7 +24,7 @@
       <a class="btn btn-outline-primary mb-4" href="{{url_for('blog', page=page_num)}}"> {{page_num}}</a>
       {% endif %} {% else %} ... {% endif %} {% endfor %}
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 sticky-top" id="sidebar">
       <div class="card mb-4 rounded">
         <h5 class="card-header">Search for posts</h5>
         <div class="card-body">
@@ -68,10 +68,12 @@
           </div>
         </div>
       </div>
-      <div class="card my-4 bg-info">
+      <div class="card my-4 alert-info">
         <h5 class="card-header">Side Widget</h5>
         <div class="card-body">
-          {{message["content"]}}
+          {{message["content"]|safe}} <br />
+          <hr class="w-25" style="background-color: #73959a !important;" />
+          <p><i>The side widget displays message directly from the admins.</i></p>
         </div>
       </div>
     </div>

@@ -130,7 +130,11 @@ def blog():
                                                                   per_page=5)
     if form.validate_on_submit():
         post_query = Post.query.filter_by(title=form.search.data).first()
-        return redirect(url_for('post', post_id=post_query.id))
+        if post_query:
+            return redirect(url_for('post', post_id=post_query.id))
+        else:
+            flash(f"No article found with the name {form.search.data}", "danger")
+            return redirect(url_for("blog"))
     return render_template("blog.html", data="data", title="Blog", image_file=image_file, posts=posts, form=form, message=message)
 
 @app.route('/posts')
