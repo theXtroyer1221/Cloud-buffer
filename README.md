@@ -51,19 +51,19 @@ To run the website fully okay, you need to acquire api-keys to the diffrent api'
 
 ### Running the project
 
-Installing all the projects will make you able to run the project. Go to the mai directory of the prject and run the **run.py** file
+Installing all the projects will make you able to run the project. Go to the main directory of the prject and run the **run.py** file
 
 ```
 python run.py
 ```
 
-*Be careful that the app is originally ran on debug mode one and development server. The app is also does run on host 0.0.0.0, to change that go and cange the un.py file. These settings are not recommended for production*
+*Be careful that the app is originally ran on debug mode one and development server. The app is also does run on host 0.0.0.0, to change that go and cange the run.py file. These settings are not recommended for production*
 
 ### Built With
 
+- [Python](https://www.python.org/) - Programming language used 
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/) - The web framework used
-- [Maven](https://maven.apache.org/) - Dependency Management
-- [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+- [Openweather API](https://openweathermap.org/) - The weather api used
 
 ## Contributing
 
