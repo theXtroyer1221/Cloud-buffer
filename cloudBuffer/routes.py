@@ -310,7 +310,7 @@ def post(post_id):
     return render_template("post.html",
                            title=post.title,
                            post=post,
-                           data="post_site")
+                           data="post_site", Post=Post)
 
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])

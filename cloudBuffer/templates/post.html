@@ -12,10 +12,10 @@
   <div class="row">
     <div class="col-md-1">
       <div class="w-100">
-        <a class="twitter-share-button" data-size="large" href="https://twitter.com/intent/tweet?text=Hello%20world"></a>
+        <a class="twitter-share-button" data-size="large" href="https://twitter.com/intent/tweet?text=Check%20this%20article%20on%20Cloud%20buffer%20%20world"></a>
       </div>
       <div>
-        <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+        <div class="fb-share-button" data-href="{{request.url}}" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=HELLOSDasda" class="fb-xfbml-parse-ignore">Share</a></div>
       </div>
     </div>
     <div class="col-md-8">
@@ -37,9 +37,30 @@
             </div>
             {% endif %}
           </div>
-          <div>
+          <div class="mb-4">
             <h2 class="mb-2">{{ post.title | safe}}</h2>
             <p class="article-content">{{ post.content| safe }}</p>
+          </div>
+          <div>
+            <hr />
+            <div class="mb-4">
+              <a href="{{url_for('user', username=post.author.username)}}"><h5 class="mb-1 font-weight-bold">{{post.author.username}}</h5></a>
+              <p>{{post.author.biography}}</p>
+            </div>
+            <h5 class="mb-3 font-weight-bold">Share this story</h5>
+            <div class="btn-group mb-4" role="group" aria-label="Basic example">
+              <a href="https://www.facebook.com/sharer/sharer.php?u={{request.url}}" class="btn btn-outline-primary p-2"><i class="fab fa-facebook"></i></a>
+              <a href="https://twitter.com/intent/tweet?text=Check%20this%20article%20on%20Cloud%20buffer%20&url={{request.url}}" class="btn btn-outline-primary p-2"><i class="fab fa-twitter"></i></a>
+              <a tabindex="0" onclick="copyToClipboard()" class="btn btn-outline-primary p-2" data-toggle="popover" data-placement="top" data-content="Url link copied!"><i class="fas fa-link"></i></a>
+            </div>
+            <div>
+              <h5 class="font-weight-bold mb-2">More from Cloud buffer</h5>
+              <ul class="ml-5 mb-3" style="list-style-type: disc !important;">
+                {% for i in range(5) %} {% set posts = Post.query.all()[i] %} {% if post.id != posts.id %}
+                <li class="py-2"><a href="{{url_for('post', post_id=posts.id)}}">{{posts.title |safe}}</a></li>
+                {% endif %} {% endfor %}
+              </ul>
+            </div>
           </div>
         </div>
       </article>
@@ -97,6 +118,21 @@
     </div>
   </div>
 </div>
+<script>
+  function copyToClipboard() {
+    var copyText = "{{request.url}}";
+    const el = document.createElement("textarea");
+    el.value = copyText;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+  }
+
+  $(".popover-dismiss").popover({
+    trigger: "focus",
+  });
+</script>
 <script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
 <div id="fb-root"></div>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v7.0"></script>

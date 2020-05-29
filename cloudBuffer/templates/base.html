@@ -280,9 +280,17 @@
         };
       </script>
       {% endif %}
-
+      <script>
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
+        $(function () {
+          $('[data-toggle="popover"]').popover()
+        })
+      </script>
       <!-- Optional JavaScript -->
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
       <!-- disqus -->
       <script id="dsq-count-scr" src="//cloud-buffer.disqus.com/count.js" async></script>
