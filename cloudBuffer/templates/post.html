@@ -53,17 +53,17 @@
               <a href="https://twitter.com/intent/tweet?text=Check%20this%20article%20on%20Cloud%20buffer%20&url={{request.url}}" class="btn btn-outline-primary p-2"><i class="fab fa-twitter"></i></a>
               <a tabindex="0" onclick="copyToClipboard()" class="btn btn-outline-primary p-2" data-toggle="popover" data-placement="top" data-content="Url link copied!"><i class="fas fa-link"></i></a>
             </div>
-            <div>
-              <h5 class="font-weight-bold mb-2">More from Cloud buffer</h5>
-              <ul class="ml-5 mb-3" style="list-style-type: disc !important;">
-                {% for i in range(5) %} {% set posts = Post.query.all()[i] %} {% if post.id != posts.id %}
-                <li class="py-2"><a href="{{url_for('post', post_id=posts.id)}}">{{posts.title |safe}}</a></li>
-                {% endif %} {% endfor %}
-              </ul>
-            </div>
           </div>
         </div>
       </article>
+      <div>
+        <h5 class="font-weight-bold mb-2">More from Cloud buffer</h5>
+        <ul class="ml-5 mb-3" style="list-style-type: disc !important;">
+          {% for i in range(5) %} {% set posts = Post.query.all()[i] %} {% if post.id != posts.id %}
+          <li class="py-2"><a href="{{url_for('post', post_id=posts.id)}}">{{posts.title |safe}}</a></li>
+          {% endif %} {% endfor %}
+        </ul>
+      </div>
       <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content p-1">
