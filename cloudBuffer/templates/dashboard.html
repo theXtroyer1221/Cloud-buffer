@@ -10,39 +10,54 @@
     <hr />
     <div class="row">
       <div class="col-md-4">
-        <div class="card rounded">
+        <div class="card rounded my-2" style="border-left: 0.25rem solid #4e73df !important;">
           <div class="card-body">
-            <blockquote class="blockquote text-center">
-              <h3>User count</h3>
-              <footer class="card-blockquote"><cite title="Source title">{{User.query.all()|length}}</cite></footer>
-            </blockquote>
+            <div class="row align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Number of users in website</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{User.query.all()|length}}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-user fa-2x text-gray-300"></i>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card rounded">
+        <div class="card rounded my-2" style="border-left: 0.25rem solid #1cc88a !important;">
           <div class="card-body">
-            <blockquote class="blockquote text-center">
-              <h3>Post count</h3>
-              <footer class="card-blockquote"><cite title="Source title">{{Post.query.all()|length}}</cite></footer>
-            </blockquote>
+            <div class="row align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Number of posts in website</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{Post.query.all()|length}}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-sticky-note fa-2x text-gray-300"></i>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card">
+        <div class="card rounded my-2" style="border-left: 0.25rem solid #e74a3b !important;">
           <div class="card-body">
-            <blockquote class="blockquote">
-              <p>Quote</p>
-              <footer class="card-blockquote">Footer<cite title="Source title">Source title</cite></footer>
-            </blockquote>
+            <div class="row align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Latest post date</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{Post.query.order_by(Post.date_posted.desc()).first().date_posted.strftime("%m/%d/%Y, %H:%M")}}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-sticky-note fa-2x text-gray-300"></i>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <hr class="w-50" />
     <div class="mb-2">
-      <h2>User list</h2>
+      <h2 class="mb-1">User list</h2>
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
@@ -67,7 +82,7 @@
           </tbody>
         </table>
       </div>
-      <h2>Posts</h2>
+      <h2 class="mb-1">Posts</h2>
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
@@ -100,7 +115,7 @@
     <hr />
     <div class="row">
       <div class="col-md-6">
-        <div class="card card-signin">
+        <div class="card card-signin shadow" style="border-radius: 5px !important;">
           <div class="card-body">
             <div class="content-section">
               <form method="POST" action="" class="my-2 mt-2" id="email">
@@ -135,7 +150,7 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="card card-signin">
+        <div class="card card-signin shadow" style="border-radius: 5px !important;">
           <div class="card-body">
             <div class="content-section">
               <form method="POST" action="" class="my-2 mt-2" id="message">
