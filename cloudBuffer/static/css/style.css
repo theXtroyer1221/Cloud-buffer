@@ -516,7 +516,6 @@ a.article-title:hover {
 }
 
 .ui-autocomplete {
-  z-index: 99 !important;
   border-radius: 3px !important;
   overflow: hidden !important;
   background: #eeeeee !important;
@@ -531,22 +530,6 @@ a.article-title:hover {
 .ui-widget {
   font-family: "Montserrat", sans-serif !important;
   background: white !important;
-}
-
-.text-primary {
-  color: #4e73df !important;
-}
-
-.text-xs {
-  font-size: 0.7rem;
-}
-
-.text-gray-800 {
-  color: #5a5c69 !important;
-}
-
-.text-gray-300 {
-  color: #dddfeb !important;
 }
 
 body::-webkit-scrollbar-track {
