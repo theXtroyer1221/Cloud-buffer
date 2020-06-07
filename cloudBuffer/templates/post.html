@@ -137,20 +137,25 @@
             <div class="d-block">
               {% if post.comments|length > 0 %} {% for comment in post.comments %} {% if current_user.is_authenticated and "@{}".format(current_user.username.replace(" ", "_")) in comment.content %}
               <div class="d-flex w-100" style="background: #ffff1780;">
-                <img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
+                <a href="{{url_for('user', username=comment.author.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" /></a>
                 <div>
-                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>
+                  {% if comment.author == post.author %}
+                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a> • Author {% else %} {% if current_user == comment.author%} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a> • You {% else %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {% endif %}
                   <p class="mb-1">{{comment.content}}</p>
                   <span class="text-secondary"
-                    >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M')}} • <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'><i class="fa fa-twitter" aria-hidden="true"></i> Tweet</a></span
-                  >
+                    >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M')}} • <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'><i class="fa fa-twitter" aria-hidden="true"></i></a
+                  ></span>
                 </div>
               </div>
               {% else %}
               <div class="d-flex w-100">
-                <img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
+                <a href="{{url_for('user', username=comment.author.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" /></a>
                 <div>
-                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>
+                  <div class="justify-content-between d-flex">
+                    {% if comment.author == post.author %}
+                    <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • Author</a> {% else %} {% if current_user == comment.author%} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • You</a> {% else %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {% endif %}
+                    <a href="#"><i class="fas fa-ellipsis-h"></i></a>
+                  </div>
                   <p class="mb-1">{{comment.content}}</p>
                   <span class="text-secondary"
                     >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M')}} • <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'><i class="fa fa-twitter" aria-hidden="true"></i></a
