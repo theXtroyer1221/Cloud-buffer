@@ -1,1 +1,1 @@
-web: gunicorn run:cloudbuffer
+web: gunicorn run:app
