@@ -309,6 +309,8 @@ def post(post_id):
     post = Post.query.get_or_404(post_id)
     if form.validate_on_submit():
         comment = Comment(content=form.content.data, author=current_user, post=post)
+        db.session.add(comment)
+        db.session.commit()
     return render_template("post.html",
                            title=post.title,
                            post=post,
