@@ -10,3 +10,4 @@ Flask-mail
 Pillow
 flask_whooshalchemy
 flask_whooshee
+gunicorn 
