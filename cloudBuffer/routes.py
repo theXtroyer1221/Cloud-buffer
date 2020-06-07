@@ -1,4 +1,4 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer import app, bcrypt, db, mail
@@ -305,12 +305,14 @@ def new_post():
 
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def post(post_id):
+    form = AddCommentForm()
     post = Post.query.get_or_404(post_id)
-
+    if form.validate_on_submit():
+        comment = Comment(content=form.content.data, author=current_user, post=post)
     return render_template("post.html",
                            title=post.title,
                            post=post,
-                           data="post_site", Post=Post)
+                           data="post_site", Post=Post, form=form)
 
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])

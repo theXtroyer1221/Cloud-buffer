@@ -84,6 +84,9 @@ class SearchPostForm(FlaskForm):
     search = StringField("Title", validators=[DataRequired()])
     submit = SubmitField("Search")
 
+class AddCommentForm(FlaskForm):
+    content = StringField("Content", validators=[DataRequired(), Length(min=5, max=140)])
+    submit = SubmitField("Post")
 
 class AdminEmailForm(FlaskForm):
     identifier = StringField()
@@ -106,7 +109,6 @@ class RequestResetForm(FlaskForm):
             raise ValidationError(
                 "There is no account with that email. You must register first."
             )
-
 
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
