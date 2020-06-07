@@ -108,6 +108,7 @@
               </div>
               <div class="text-secondary">{{post.comments|length}} comments {% if post.comments|length == 0 %}• be the first to comment{% endif %}</div>
             </div>
+            {% if current_user.is_authenticated%}
             <div class="d-flex mb-4">
               <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
               <form method="POST" action="" class="w-100 d-flex">
@@ -126,8 +127,15 @@
                 </div>
               </form>
             </div>
+            {% else %}
+            <div class="w-100 mb-4 card alert-info">
+              <div class="card-body text-info lead">
+                <a href="{{ url_for('login') }}">Login</a> to participate in the discussion <small><a href="{{ url_for('signup') }}">Dont have an account?</a></small>
+              </div>
+            </div>
+            {% endif %}
             <div class="d-block">
-              {% if post.comments|length > 0 %} {% for comment in post.comments %} {% if "@{}".format(current_user.username.replace(" ", "_")) in comment.content %}
+              {% if post.comments|length > 0 %} {% for comment in post.comments %} {% if current_user.is_authenticated and "@{}".format(current_user.username.replace(" ", "_")) in comment.content %}
               <div class="d-flex w-100" style="background: #ffff1780;">
                 <img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
                 <div>
