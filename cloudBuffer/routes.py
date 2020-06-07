@@ -2,7 +2,7 @@ from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, Logi
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer import app, bcrypt, db, mail
-from cloudBuffer.models import User, Post
+from cloudBuffer.models import User, Post, Comment
 from flask_mail import Message
 
 from PIL import Image, ImageOps

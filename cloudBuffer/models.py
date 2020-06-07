@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
                            default="default.jpg")
     biography = db.Column(db.Text, nullable=True)
     posts = db.relationship("Post", backref="author", lazy=True)
+    comments = db.relationship("Comment", backref="author", lazy=True)
     admin = db.Column(db.Boolean(), default=False)
 
     def get_reset_token(self, expires_sec=1800):
@@ -46,6 +47,7 @@ class Post(db.Model):
                             default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     topic = db.Column(db.String())
+    comments = db.relationship("Comment", backref="post", lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def __repr__(self):
@@ -53,3 +55,13 @@ class Post(db.Model):
 
     def as_dict(self):
         return {'id': self.id, 'title': self.title}
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(140))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"Comment('{self.content}', '{self.timestamp}')"
