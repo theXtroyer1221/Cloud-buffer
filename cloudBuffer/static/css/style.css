@@ -532,6 +532,17 @@ a.article-title:hover {
   background: white !important;
 }
 
+.comment .points {
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.comment:hover .points {
+  opacity: 1;
+}
+
 body::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.15);
           box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.15);

@@ -295,3 +295,16 @@ a.article-title:hover {
   font-family: $font1 !important;
   background: white !important;
 }
+
+.comment {
+  .points {
+    transition: all 0.2s ease;
+    opacity: 0;
+    cursor: pointer;
+  }
+  &:hover {
+    .points {
+      opacity: 1;
+    }
+  }
+}

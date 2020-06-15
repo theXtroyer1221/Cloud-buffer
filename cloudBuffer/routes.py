@@ -248,8 +248,11 @@ def user(username):
                            post="post")
 
 
-def send_admin_mail(title, body):
-    users = [user.email for user in User.query.all()]
+def send_admin_mail(title, body, recipients=None):
+    if recipients == None:
+        users = [user.email for user in User.query.all()]
+    else:
+        users = [recipients]
     msg = Message(f"{title} - CloudBuffer",
                   sender="noreply@CloudBuffer.com",
                   recipients=users)
@@ -316,6 +319,16 @@ def post(post_id):
                            post=post,
                            data="post_site", Post=Post, form=form)
 
+@app.route("/comment/<int:comment_id>/delete", methods=['POST'])
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    if comment.author != current_user:
+        abort(403)
+    db.session.delete(comment)
+    db.session.commit()
+    flash("Your post has been deleted", "success")
+    return redirect(url_for("blog"))
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -347,7 +360,12 @@ def update_post(post_id):
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
-        abort(403)
+        if not current_user.admin:
+            abort(403)
+    if current_user.admin:
+        title = "Your post has been deleted"
+        body = f"Your post ({post.title}) has been removed by the admins from our website. This can be the caused of violating the terms of posting in ouyr website where the post could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats. Please respect the action taken by admins. The post has been only removed without any warning. You are still free to post on the website. For more question feel free to contact us."
+        send_admin_mail(title, body, post.author.email)
     db.session.delete(post)
     db.session.commit()
     flash("Your post has been deleted", "success")

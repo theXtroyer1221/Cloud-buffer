@@ -136,7 +136,7 @@
             {% endif %}
             <div class="d-block">
               {% if post.comments|length > 0 %} {% for comment in post.comments %} {% if current_user.is_authenticated and "@{}".format(current_user.username.replace(" ", "_")) in comment.content %}
-              <div class="d-flex w-100" style="background: #ffff1780;">
+              <div class="d-flex w-100 comment" style="background: #ffff1780;">
                 <a href="{{url_for('user', username=comment.author.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" /></a>
                 <div>
                   {% if comment.author == post.author %}
@@ -148,19 +148,31 @@
                 </div>
               </div>
               {% else %}
-              <div class="d-flex w-100">
-                <a href="{{url_for('user', username=comment.author.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" /></a>
-                <div>
-                  <div class="justify-content-between d-flex">
-                    {% if comment.author == post.author %}
-                    <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • Author</a> {% else %} {% if current_user == comment.author%} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • You</a> {% else %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {% endif %}
-                    <a href="#"><i class="fas fa-ellipsis-h"></i></a>
+              <div class="comment d-flex">
+                <div class="d-flex w-100">
+                  <a href="{{url_for('user', username=comment.author.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" /></a>
+                  <div>
+                    <div class="justify-content-between d-flex">
+                      {% if comment.author == post.author %}
+                      <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • Author</a> {% else %} {% if current_user == comment.author%} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • You</a> {% else %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {% endif %}
+                    </div>
+                    <p class="mb-1">{{comment.content}}</p>
+                    <span class="text-secondary"
+                      >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M')}} • <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'><i class="fa fa-twitter" aria-hidden="true"></i></a
+                    ></span>
                   </div>
-                  <p class="mb-1">{{comment.content}}</p>
-                  <span class="text-secondary"
-                    >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M')}} • <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'><i class="fa fa-twitter" aria-hidden="true"></i></a
-                  ></span>
                 </div>
+                {% if comment.author == current_user %}
+                <div id="comment-bullet">
+                  <span class="dropdown-toggle points" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></span>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href=""><i class="fas fa-edit"></i> Edit</a>
+                    <form action="{{ url_for('delete_comment', comment_id=comment.id) }}" method="POST">
+                      <input class="dropdown-item text-danger" type="submit" value="Delete" />
+                    </form>
+                  </div>
+                </div>
+                {% endif %}
               </div>
               {% endif %}
               <hr class="w-100" />
