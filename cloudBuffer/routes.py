@@ -85,14 +85,14 @@ def search(query):
         search_query = f"{query} city {search_country}"
 
         gis = GoogleImagesSearch(GCS_DEVELOPER_KEY, GCS_CX)
-        google_search_params = {
+        _google_search_params = {
             'q': search_query,
             'num': 1,
             'safe': 'off',
             'imgSize': 'xlarge'
         }
         try:
-            gis.search(search_params=google_search_params)
+            gis.search(search_params=_google_search_params)
         except:
             img = "../static/images/notfound.jpg"
 
@@ -253,9 +253,7 @@ def send_admin_mail(title, body, recipients=None):
         users = [user.email for user in User.query.all()]
     else:
         users = [recipients]
-    msg = Message(f"{title} - CloudBuffer",
-                  sender="noreply@CloudBuffer.com",
-                  recipients=users)
+    msg = Message(f"{title} - CloudBuffer", recipients=users)
     msg.html = render_template("admin_email.html", body=body)
     mail.send(msg)
 
@@ -364,7 +362,7 @@ def delete_post(post_id):
             abort(403)
     if current_user.admin:
         title = "Your post has been deleted"
-        body = f"Your post ({post.title}) has been removed by the admins from our website. This can be the caused of violating the terms of posting in ouyr website where the post could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats. Please respect the action taken by admins. The post has been only removed without any warning. You are still free to post on the website. For more question feel free to contact us."
+        body = f"Your post ({post.title}) has been removed by the admins from our website. This can be the cause of violating the terms of posting in our website where the post could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats. Please respect the action taken by admins. The post has been only removed without any warning. You are still free to post on the website. For more question feel free to contact us."
         send_admin_mail(title, body, post.author.email)
     db.session.delete(post)
     db.session.commit()
