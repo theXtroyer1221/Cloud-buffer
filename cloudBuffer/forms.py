@@ -88,6 +88,10 @@ class AddCommentForm(FlaskForm):
     content = StringField("Content", validators=[DataRequired(), Length(min=5, max=140)])
     submit = SubmitField("Post")
 
+class EditCommentForm(FlaskForm):
+    content = TextAreaField("Content", validators=[DataRequired(), Length(min=5, max=140)])
+    submit = SubmitField("Edit")   
+
 class AdminEmailForm(FlaskForm):
     identifier = StringField()
     title = StringField('Title', validators=[DataRequired()])

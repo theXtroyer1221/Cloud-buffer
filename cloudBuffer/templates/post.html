@@ -151,12 +151,15 @@
               <div class="comment d-flex">
                 <div class="d-flex w-100">
                   <a href="{{url_for('user', username=comment.author.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" /></a>
-                  <div>
+                  <div class="w-100">
                     <div class="justify-content-between d-flex">
                       {% if comment.author == post.author %}
                       <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • Author</a> {% else %} {% if current_user == comment.author%} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • You</a> {% else %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {% endif %}
                     </div>
-                    <p class="mb-1">{{comment.content}}</p>
+                    <div>
+                      <p class="mb-1 {{comment.id}}">{{comment.content}}</p>
+                      <form class="d-flex w-100" method="POST" action="{{ url_for('edit_comment', comment_id=comment.id) }}" id="{{comment.timestamp.strftime('%H:%M:%S:%f')}}">{{editform.hidden_tag()}} {{editform.content(class="form-control w-100 mr-2", style="height:65px", id=comment.id)}} {{editform.submit(class="btn btn-primary", id=comment.id+10)}}</form>
+                    </div>
                     <span class="text-secondary"
                       >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M')}} • <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'><i class="fa fa-twitter" aria-hidden="true"></i></a
                     ></span>
@@ -166,13 +169,30 @@
                 <div id="comment-bullet">
                   <span class="dropdown-toggle points" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></span>
                   <div class="dropdown-menu">
-                    <a class="dropdown-item" href=""><i class="fas fa-edit"></i> Edit</a>
+                    <button class="dropdown-item" id="{{comment.id}}editComment"><i class="fas fa-edit"></i> Edit</button>
                     <form action="{{ url_for('delete_comment', comment_id=comment.id) }}" method="POST">
                       <input class="dropdown-item text-danger" type="submit" value="Delete" />
                     </form>
                   </div>
                 </div>
                 {% endif %}
+                <script>
+                  $(document).ready(function () {
+                    $("#{{comment.id}}").val("{{comment.content}}").hide();
+                    $("#{{comment.id+10}}").hide();
+                    $("#{{comment.id}}editComment").click(function () {
+                      if ($("#{{comment.id}}").is(":hidden")) {
+                        $("#{{comment.id}}").show();
+                        $("#{{comment.id+10}}").show();
+                        $(".{{comment.id}}").hide();
+                      } else {
+                        $(".{{comment.id}}").show();
+                        $("#{{comment.id+10}}").hide();
+                        $("#{{comment.id}}").hide();
+                      }
+                    });
+                  });
+                </script>
               </div>
               {% endif %}
               <hr class="w-100" />

@@ -1,4 +1,4 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer import app, bcrypt, db, mail
@@ -307,15 +307,17 @@ def new_post():
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def post(post_id):
     form = AddCommentForm()
+    editform = EditCommentForm()
     post = Post.query.get_or_404(post_id)
     if form.validate_on_submit():
         comment = Comment(content=form.content.data, author=current_user, post=post)
         db.session.add(comment)
         db.session.commit()
+    commentformplaceholder = "placeholder"
     return render_template("post.html",
                            title=post.title,
                            post=post,
-                           data="post_site", Post=Post, form=form)
+                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder)
 
 @app.route("/comment/<int:comment_id>/delete", methods=['POST'])
 @login_required
@@ -325,8 +327,22 @@ def delete_comment(comment_id):
         abort(403)
     db.session.delete(comment)
     db.session.commit()
-    flash("Your post has been deleted", "success")
-    return redirect(url_for("blog"))
+    flash("Your comment has been deleted", "success")
+    return redirect(url_for("post", post_id=comment.post_id))
+
+@app.route("/comment/<int:comment_id>/update", methods=['GET', 'POST'])
+@login_required
+def edit_comment(comment_id):
+    editform = EditCommentForm()
+    comment = Comment.query.get_or_404(comment_id)
+    if comment.author != current_user:
+        if not current_user.admin:
+            abort(403)
+    if editform.validate_on_submit():
+        comment.content = editform.content.data
+        db.session.commit()
+    flash("Your comment has been updated", "success")
+    return redirect(url_for("post", post_id=comment.post_id))
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
