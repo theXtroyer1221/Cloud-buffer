@@ -70,7 +70,7 @@
         </div>
       </nav>
       {% endif %}
-      {% if request.path == "/blog" or request.path == "/account" or request.path == "/dashboard" or request.path == "/post/new" or data == "post_site" or title == "Update existing post" or request.path == "/user/{}".format(title)  or request.path == "/reset_password" %}
+      {% if request.path == "/blog" or request.path == "/account" or request.path == "/dashboard" or request.path == "/post/new" or data == "post_site" or title == "Update existing post" or request.path == "/user/{}".format(title)  or request.path == "/reset_password" or request.path == "/terms"%}
       <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark fixed-top py-2 mobile-dark bg-dark mb-3">
         <div class="container">
           <a class="navbar-brand" href="{{url_for('index')}}"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
@@ -257,7 +257,7 @@
       </nav>
       {% endif %}
       {% block content %}{% endblock %} 
-      {% if request.path == "/" or request.path == "/blog" or request.path == "/dashboard" or data == "post_site"%}
+      {% if request.path == "/" or request.path == "/blog" or request.path == "/dashboard" or data == "post_site" or request.path == "/terms"%}
       <footer class="mt-auto">
         <div class="footer-copyright text-center py-3 bg-dark text-white">
           © 2020 Copyright:
