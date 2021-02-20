@@ -1,6 +1,6 @@
 {
     "python.formatting.provider": "yapf",
-    "python.pythonPath": "/home/gitpod/.pyenv/shims/python3",
+    "python.pythonPath": "C:\\Users\\Jad Alnabki\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
     "sqltools.connections": [
         {
             "database": "${workspaceFolder}\\site.db",
@@ -9,5 +9,7 @@
         }
     ],
     "sqltools.useNodeRuntime": true,
-    "editor.fontSize": 16
+    "editor.fontSize": 16,
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
 }
