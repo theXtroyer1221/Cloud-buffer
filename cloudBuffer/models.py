@@ -72,12 +72,17 @@ class Comment(db.Model):
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140))
+    description = db.Column(db.Text, nullable=True)
+    image_file = db.Column(db.String(20),
+                           nullable=False,
+                           default="default.jpg")
+    language = db.Column(db.String(), default="International")
     users = db.relationship("User", secondary=user_group, backref=db.backref("groups", lazy='dynamic'))
     posts = db.relationship("Grouppost", backref="author", lazy=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"Group('{self.title}', '{self.user.count()}')"
+        return f"Group('{self.title}', '{len(self.user)}')"
 
 class Grouppost(db.Model):
     __searchable__ = ['title', "content"]

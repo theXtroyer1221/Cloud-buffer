@@ -1,6 +1,6 @@
 {
     "python.formatting.provider": "yapf",
-    "python.pythonPath": "C:\\Users\\Jad Alnabki\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+    "python.pythonPath": "f:\\projects\\Cloud-buffer\\env\\Scripts\\python.exe",
     "sqltools.connections": [
         {
             "database": "${workspaceFolder}\\site.db",

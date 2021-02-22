@@ -1,0 +1,79 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container pt-5 mt-5">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card card-signin">
+        <div class="card-body">
+          <div class="content-section">
+            <form method="POST" action="" class="my-2 mt-2">
+              {{ form.hidden_tag() }}
+              <fieldset class="form-group">
+                <legend class="border-bottom mb-4">{{ legend }}</legend>
+                <div class="form-group">
+                  {{ form.title.label(class="form-control-label") }} {% if form.title.errors %} {{ form.title(class="form-control form-control-lg is-invalid") }}
+                  <div class="invalid-feedback">
+                    {% for error in form.title.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                  </div>
+                  {% else %} {{ form.title(class="form-control form-control-lg") }} {% endif %}
+                </div>
+                <div class="form-group">
+                  {{ form.description.label(class="form-control-label") }} {% if form.description.errors %} {{ form.description(class="form-control form-control-lg is-invalid", style="height: 250px;") }}
+                  <div class="invalid-feedback">
+                    {% for error in form.description.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                  </div>
+                  {% else %} {{ form.description(class="form-control form-control-lg", style="height: 250px;") }} {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.language.label(class="form-control-label") }}  
+                    {{ form.language(class="form-control form-control-lg", style="height: 250px;") }} 
+                </div>
+                <div class="form-group">
+                    {{ form.picture.label() }}
+                    {{ form.picture(class="form-control-file") }}
+                    {% if form.picture.errors %}
+                        {% for error in form.picture.errors %}
+                            <span class="text-danger">{{ error }}</span></br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+              </fieldset>
+              <div class="form-group">
+                {{ form.submit(class="btn btn-blog-dark") }}
+              </div>
+            </form>
+          </div> 
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-signin mb-4">
+        <div class="card-body">
+          <h4 class="mb-4">Creating new groups on CloudBuffer blog</h4>
+          <ol class="ml-3">
+            <li>No NSFW content</li>
+            <hr />
+            <li>Create groups that have an actual meaning</li>
+            <hr />
+            <li>Pick a fitting title and description for the group</li>
+          </ol>
+        </div>
+      </div>
+      <div class="card mb-4 rounded">
+        <h5 class="card-header">Find CloudBuffer on social media</h5>
+        <div class="card-body d-flex justify-content-center">
+          <div class="text-white">
+            <a class="btn btn-primary mr-1" href="www.facebook.com"><i class="fab fa-facebook fa-2x"></i></a>
+            <a class="btn btn-primary mx-1" href="https://twitter.com/theXtoyer"><i class="fab fa-twitter fa-2x"></i></a>
+            <a class="btn btn-primary mx-1" href="https://discord.gg/GbZr5c6"><i class="fab fa-discord fa-2x"></i></a>
+            <a class="btn btn-primary ml-1" href="https://github.com/theXtroyer1221/Cloud-buffer"><i class="fab fa-github fa-2x"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+</div>

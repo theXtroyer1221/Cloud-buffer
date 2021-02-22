@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, SubmitField, HiddenField, PasswordField, BooleanField, TextAreaField
+from wtforms import StringField, SubmitField, HiddenField, PasswordField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
-from cloudBuffer.models import User, Post
+from cloudBuffer.models import User, Post, Group
 
 
 class SearchForm(FlaskForm):
@@ -91,6 +91,23 @@ class AddCommentForm(FlaskForm):
 class EditCommentForm(FlaskForm):
     content = TextAreaField("Content", validators=[DataRequired(), Length(min=5, max=140)])
     submit = SubmitField("Edit")   
+
+from cloudBuffer.languages import language_list
+class GroupForm(FlaskForm):
+    title = StringField('Username',
+                           validators=[DataRequired(),
+                                       Length(min=2, max=20)])
+    description = StringField('Description', validators=[DataRequired(), Length(min=2, max=50)])
+    language = SelectField('Language', choices=language_list)
+    picture = FileField('Group profile picture',
+                        validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
+    submit = SubmitField('Sign Up')
+
+    def validate_title(self, title):
+        group = Group.query.filter_by(title=title.data).first()
+        if group:
+            raise ValidationError(
+                "That group title is already taken, please choose another one")
 
 class AdminEmailForm(FlaskForm):
     identifier = StringField()

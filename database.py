@@ -1,4 +1,5 @@
 from cloudBuffer.models import db, User, Post
+from cloudBuffer import bcrypt
 from tkinter import *
 from tkinter import messagebox
 

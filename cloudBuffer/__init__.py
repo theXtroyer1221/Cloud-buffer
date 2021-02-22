@@ -12,8 +12,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-#from werkzeug.contrib.fixers import ProxyFix
-
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Cloud Buffer"
 app.config["TEMPLATES_AUTO_RELOAD"] = True

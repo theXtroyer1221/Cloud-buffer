@@ -1,8 +1,8 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer import app, bcrypt, db, mail
-from cloudBuffer.models import User, Post, Comment
+from cloudBuffer.models import User, Post, Comment, Group, Grouppost
 from flask_mail import Message
 
 from PIL import Image, ImageOps
@@ -384,6 +384,29 @@ def delete_post(post_id):
     db.session.commit()
     flash("Your post has been deleted", "success")
     return redirect(url_for("blog"))
+
+@app.route("/group/new", methods=['GET', 'POST'])
+@login_required
+def new_group():
+    image_file = url_for("static",
+                         filename="profile_pics/" + current_user.image_file)
+    form = GroupForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            group_picture = save_picture(form.picture.data)
+        group = Group(id=random.randint(1000, 99999),
+                    title=form.title.data,
+                    description=form.description.data,
+                    language=form.language.data)
+        db.session.add(group)
+        db.session.commit()
+        flash("The group has been created successfully", "success")
+        return redirect(url_for("blog"))
+    return render_template('create_group.html',
+                           title="New group",
+                           form=form,
+                           image_file=image_file,
+                           legend="Create a new group")
 
 
 def send_reset_email(user):
