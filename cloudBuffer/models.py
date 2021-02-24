@@ -1,7 +1,7 @@
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from datetime import datetime
 from cloudBuffer import db, login_manager, app
 from flask_login import UserMixin
+from datetime import datetime
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -22,6 +22,7 @@ class User(db.Model, UserMixin):
                            default="default.jpg")
     biography = db.Column(db.Text, nullable=True)
     posts = db.relationship("Post", backref="author", lazy=True)
+    groupposts = db.relationship("Grouppost", backref="group_author", lazy=True)
     comments = db.relationship("Comment", backref="author", lazy=True)
     admin = db.Column(db.Boolean(), default=False)
 
@@ -82,7 +83,7 @@ class Group(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"Group('{self.title}', '{len(self.user)}')"
+        return f"Group('{self.title}', '{len(self.users)}')"
 
 class Grouppost(db.Model):
     __searchable__ = ['title', "content"]

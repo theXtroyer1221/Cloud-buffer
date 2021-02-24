@@ -1,14 +1,16 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, GroupPostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
-from cloudBuffer import app, bcrypt, db, mail
 from cloudBuffer.models import User, Post, Comment, Group, Grouppost
+from cloudBuffer import app, bcrypt, db, mail
 from flask_mail import Message
+from datetime import datetime
 
 from PIL import Image, ImageOps
 import requests
 import secrets
 import random
+import numpy as np
 import json
 import os
 
@@ -385,6 +387,20 @@ def delete_post(post_id):
     flash("Your post has been deleted", "success")
     return redirect(url_for("blog"))
 
+def save_group_pic(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, "static/profile_pics",
+                                picture_fn)
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.resize(output_size)
+    i.save(picture_path)
+
+    return picture_fn
+
+
 @app.route("/group/new", methods=['GET', 'POST'])
 @login_required
 def new_group():
@@ -392,13 +408,15 @@ def new_group():
                          filename="profile_pics/" + current_user.image_file)
     form = GroupForm()
     if form.validate_on_submit():
-        if form.picture.data:
-            group_picture = save_picture(form.picture.data)
+        title_name = form.title.data.replace(" ", "_").lower()
+        group_picture = save_group_pic(form.picture.data)
         group = Group(id=random.randint(1000, 99999),
-                    title=form.title.data,
+                    title=title_name,
                     description=form.description.data,
-                    language=form.language.data)
+                    language=form.language.data,)
         db.session.add(group)
+        db.session.commit()
+        group.image_file = group_picture 
         db.session.commit()
         flash("The group has been created successfully", "success")
         return redirect(url_for("blog"))
@@ -406,8 +424,42 @@ def new_group():
                            title="New group",
                            form=form,
                            image_file=image_file,
-                           legend="Create a new group")
+                           legend="Create a new group", data="post_site")
 
+@app.route("/group/<title>", methods=['GET', 'POST'])
+def group(title):
+    group = Group.query.filter_by(title=title).first_or_404()
+    grp_img = url_for("static",
+                    filename="profile_pics/" + group.image_file)
+    form = GroupPostForm()
+    #page = request.args.get("page", 1, type=int)
+    posts = Grouppost.query.filter_by(group=group.id).all()
+    return render_template("group_page.html",
+                           title=group.title,
+                           group=group,
+                           post="post", group_img=grp_img, data="post_site", form=form, posts=posts)
+
+@app.route("/group/<title>/post/new", methods=['GET', 'POST'])
+@login_required
+def group_post_new(title):
+    group = Group.query.filter_by(title=title).first_or_404()
+    grp_img = url_for("static",
+                    filename="profile_pics/" + group.image_file)
+    form = GroupPostForm()
+    if form.validate_on_submit():
+        post = Grouppost(id=random.randint(1000, 99999),
+                    title=form.title.data,
+                    content=form.content.data,
+                    user_id=current_user.id,
+                    group_id=group.id)
+        db.session.add(post)
+        db.session.commit()
+        flash("The post has been created successfully", "success")
+        return redirect(url_for("group", title=group.title))
+    return render_template("create_group_post.html",
+                           title=group.title,
+                           group=group,
+                           post="post", group_img=grp_img, data="post_site", form=form, legend="Create a group post")
 
 def send_reset_email(user):
     token = user.get_reset_token()

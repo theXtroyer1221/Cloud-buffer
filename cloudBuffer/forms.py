@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flask_login import current_user
 from wtforms import StringField, SubmitField, HiddenField, PasswordField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
@@ -79,7 +79,6 @@ class PostForm(FlaskForm):
     content = TextAreaField("Content", validators=[DataRequired()])
     submit = SubmitField("Post")
 
-
 class SearchPostForm(FlaskForm):
     search = StringField("Title", validators=[DataRequired()])
     submit = SubmitField("Search")
@@ -108,6 +107,12 @@ class GroupForm(FlaskForm):
         if group:
             raise ValidationError(
                 "That group title is already taken, please choose another one")
+
+class GroupPostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField("Content", validators=[DataRequired()])
+    submit = SubmitField("Post")
+
 
 class AdminEmailForm(FlaskForm):
     identifier = StringField()

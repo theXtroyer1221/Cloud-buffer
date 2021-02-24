@@ -1,0 +1,114 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container pt-5 mt-5">
+  <div class="row">
+    <div class="col-md-8">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+      <div class="content-section">
+        <div class="account-body" style="display: flex">
+          {% if current_user.is_authenticated %}
+          <img
+            class="rounded-circle article-img"
+            src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"
+            width="125px"
+            height="125px"
+          />
+          {% else %}
+          <img
+            class="rounded-circle article-img"
+            src="{{ url_for('static', filename='profile_pics/' + 'default.jpg') }}"
+            width="125px"
+            height="125px"
+          />
+          {% endif %}
+          <a class="w-100" href="{{url_for('group_post_new', title=group.title)}}">
+            <form method="POST" action="" class="mt-2">
+              {{ form.hidden_tag() }}
+              <fieldset class="form-group m-0">
+                <div class="form-group m-0 mb-2">
+                  {% if form.title.errors %} {{ form.title(class="form-control form-control-lg is-invalid") }}
+                  <div class="invalid-feedback">
+                    {% for error in form.title.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                  </div>
+                  {% else %} {% if current_user.is_authenticated %} {{ form.title(class="form-control form-control-lg",
+                  placeholder="Write a Group post") }} {% else %} {{ form.title(class="form-control form-control-lg",
+                  placeholder="Login to write a group post") }} {% endif %}{% endif %}
+                </div>
+              </fieldset>
+            </form>
+          </a>
+        </div>
+        {% if not group.posts %}
+        <div class="d-block">
+          <h1 class="text-secondary text-center py-5 bg-light"><i class="far fa-folder-open"></i> Looks empty here</h1>
+        </div>
+        {% else %} {% for post in group.posts %}
+        <article class="media content-section-article">
+          <div class="media-body">
+            <div class="article-metadata mb-2">
+              <a class="mr-2" href="{{ url_for('user', username=post.user_id.username) }}">{{ post.author }}</a>
+              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2>
+              <a class="article-title mb-2" href="{{ url_for('post', post_id=post.id) }}">{{ post.title | safe }}</a>
+            </h2>
+            <div class="article-content text-truncate" style="max-height: 350px">{{ post.content| safe }}</div>
+          </div>
+        </article>
+        {% endfor %} {% endif %}
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-img-top">
+        <img
+          src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}"
+          alt=""
+          width="100%"
+          height="125px"
+          style="border-top-right-radius: 15px !important; border-top-left-radius: 15px !important"
+        />
+      </div>
+      <div class="content-section account-body" style="border-radius: 0 !important">
+        <div class="media mb-2">
+          <div class="media-body">
+            <h2 class="account-heading">About community</h2>
+            <p class="text-secondary">{{ group.title }}</p>
+            {% if group.description is not none %}
+            <p class="my-2">{{ group.description }}</p>
+            {% endif %}
+            <div style="display: inline-grid">
+              <p style="font-size: 20px; display: flex; margin: auto !important">{{group.users|count}}</p>
+              <p>Members</p>
+            </div>
+            <hr />
+            <p class="mt-4">
+              <i class="fa fa-plus mr-2" aria-hidden="true"></i> Created {{group.date_created.strftime('%Y-%m-%d')}}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% if group.users|count > 0 %}
+      <div class="content-section account-body">
+        <legend>Members of the group</legend>
+        <hr />
+        {% for user in group.users %}
+        <div class="my-2">
+          <img
+            class="rounded-circle"
+            src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}"
+            alt=""
+            width="75px"
+            height="75px"
+          />
+        </div>
+        <hr />
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

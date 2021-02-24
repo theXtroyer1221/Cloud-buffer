@@ -1,8 +1,5 @@
 language_list = [
-    ('aa', 'Afar'),
-    ('ab', 'Abkhazian'),
     ('af', 'Afrikaans'),
-    ('ak', 'Akan'),
     ('sq', 'Albanian'),
     ('am', 'Amharic'),
     ('ar', 'Arabic'),
