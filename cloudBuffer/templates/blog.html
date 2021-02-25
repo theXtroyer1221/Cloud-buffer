@@ -41,37 +41,24 @@
           </div>
         </div>
       </div>
-      <div class="card my-4">
-        <h5 class="card-header">Categories</h5>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-lg-6">
-              <ul class="list-unstyled mb-0">
-                <li>
-                  <a href="#">Web Design</a>
-                </li>
-                <li>
-                  <a href="#">HTML</a>
-                </li>
-                <li>
-                  <a href="#">Freebies</a>
-                </li>
-              </ul>
-            </div>
-            <div class="col-lg-6">
-              <ul class="list-unstyled mb-0">
-                <li>
-                  <a href="#">JavaScript</a>
-                </li>
-                <li>
-                  <a href="#">CSS</a>
-                </li>
-                <li>
-                  <a href="#">Tutorials</a>
-                </li>
-              </ul>
-            </div>
+      <div class="card my-4 rounded">
+        <h5 class="card-header">Groups you follow</h5>
+        <div class="card-body pb-0">
+          {% for group in current_user.groups %}
+          <div class="my-2 d-flex">
+            <img
+              class="rounded-circle mr-3"
+              src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}"
+              alt=""
+              width="75px"
+              height="75px"
+            />
+            <a href="{{url_for('group', title=group.title)}}" class="d-flex" style="align-self: center; font-size: 25px"
+              >{{ group.title }}</a
+            >
           </div>
+          <hr />
+          {% endfor %}
         </div>
       </div>
       <div class="card my-4 alert-info">

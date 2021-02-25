@@ -26,6 +26,14 @@ class User(db.Model, UserMixin):
     comments = db.relationship("Comment", backref="author", lazy=True)
     admin = db.Column(db.Boolean(), default=False)
 
+    def follow(self, group):
+        if self not in group.users:
+            group.users.append(self)
+
+    def unfollow(self, group):
+        if self in group.users:
+            group.users.remove(self)
+
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')

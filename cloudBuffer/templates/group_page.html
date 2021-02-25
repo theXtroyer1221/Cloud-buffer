@@ -79,9 +79,24 @@
             {% if group.description is not none %}
             <p class="my-2">{{ group.description }}</p>
             {% endif %}
-            <div style="display: inline-grid">
-              <p style="font-size: 20px; display: flex; margin: auto !important">{{group.users|count}}</p>
-              <p>Members</p>
+            <div class="row">
+              <div class="col-6" style="display: inline-grid">
+                <p style="font-size: 20px; display: flex; margin: auto !important">{{group.users|count}}</p>
+                <p style="display: flex; margin: auto !important">Members</p>
+              </div>
+              {% if current_user in group.users %}
+              <div class="col-6" style="display: flex; align-items: center">
+                <form action="{{ url_for('unfollow', title=group.title) }}" method="post" style="display: flex; margin: auto">
+                  {{ form.hidden_tag() }} {{ form.submit(value='Unfollow', class="btn btn-primary") }}
+                </form>
+              </div>
+              {% else %}
+              <div class="col-6" style="display: flex; align-items: center">
+                <form action="{{ url_for('follow', title=group.title) }}" method="post" style="display: flex; margin: auto">
+                  {{ form.hidden_tag() }} {{ form.submit(value='Follow', class="btn btn-blog-dark") }}
+                </form>
+              </div>
+              {% endif %}
             </div>
             <hr />
             <p class="mt-4">
@@ -91,18 +106,21 @@
         </div>
       </div>
       {% if group.users|count > 0 %}
-      <div class="content-section account-body">
+      <div class="content-section account-body" style="overflow: scroll; height: 500px">
         <legend>Members of the group</legend>
         <hr />
         {% for user in group.users %}
-        <div class="my-2">
+        <div class="my-2 d-flex">
           <img
-            class="rounded-circle"
+            class="rounded-circle mr-3"
             src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}"
             alt=""
             width="75px"
             height="75px"
           />
+          <a href="{{url_for('user', username=user.username)}}" class="d-flex" style="align-self: center; font-size: 25px"
+            >{{ user.username }}</a
+          >
         </div>
         <hr />
         {% endfor %}

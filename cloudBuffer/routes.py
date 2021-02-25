@@ -1,4 +1,4 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, GroupPostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, GroupPostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer.models import User, Post, Comment, Group, Grouppost
@@ -432,12 +432,13 @@ def group(title):
     grp_img = url_for("static",
                     filename="profile_pics/" + group.image_file)
     form = GroupPostForm()
+    null_form = EmptyForm()
     #page = request.args.get("page", 1, type=int)
     posts = Grouppost.query.filter_by(group=group.id).all()
     return render_template("group_page.html",
                            title=group.title,
                            group=group,
-                           post="post", group_img=grp_img, data="post_site", form=form, posts=posts)
+                           post="post", group_img=grp_img, data="post_site", form=form, posts=posts, empty_form=null_form)
 
 @app.route("/group/<title>/post/new", methods=['GET', 'POST'])
 @login_required
@@ -460,6 +461,41 @@ def group_post_new(title):
                            title=group.title,
                            group=group,
                            post="post", group_img=grp_img, data="post_site", form=form, legend="Create a group post")
+
+@app.route('/follow/<title>', methods=['GET', 'POST'])
+@login_required
+def follow(title):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        group = Group.query.filter_by(title=title).first()
+        if group is None:
+            flash('The group "{}" was not found.'.format(title))
+            return redirect(url_for('blog'))
+        if current_user in group.users:
+            flash('You are already following this group!', "warning")
+            return redirect(url_for('group', title=title))
+        current_user.follow(group)
+        db.session.commit()
+        flash('You have successfully joined {}!'.format(title), "success")
+        return redirect(url_for('group', title=title))
+    else:
+        return redirect(url_for('blog'))
+
+@app.route('/unfollow/<title>', methods=['POST'])
+@login_required
+def unfollow(title):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        group = Group.query.filter_by(title=title).first()
+        if group is None:
+            flash('The group "{}" was not found.'.format(title), "danger")
+            return redirect(url_for('blog'))
+        current_user.unfollow(group)
+        db.session.commit()
+        flash('You have unfollowed {}'.format(title), "success")
+        return redirect(url_for('group', title=title))
+    else:
+        return redirect(url_for('blog'))
 
 def send_reset_email(user):
     token = user.get_reset_token()

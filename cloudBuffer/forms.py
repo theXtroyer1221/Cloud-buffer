@@ -125,6 +125,9 @@ class MessageForm(FlaskForm):
     content = TextAreaField('Content')
     send = SubmitField("Send")
 
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')
+
 class RequestResetForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField("Request Password Reset")
