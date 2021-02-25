@@ -107,6 +107,7 @@
                 <div class="dropdown-menu slideIn animate" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="{{ url_for('account') }}"><i class="fas fa-user mr-2"></i> Account</a>
                   <a class="dropdown-item" href="{{ url_for('new_post') }}"><i class="fas fa-pen-alt mr-2"></i> Create a post</a>
+                  <a class="dropdown-item" href="{{ url_for('new_group') }}"><i class="fas fa-users mr-2"></i> Create a group</a>
                   {% if current_user.admin %}
                   <a class="dropdown-item" href="{{url_for('dashboard')}}"><i class="fas fa-server mr-2"></i> Admin dashboard</a>
                   {% endif %}
@@ -238,6 +239,7 @@
                 <div class="dropdown-menu slideIn animate" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="{{ url_for('account') }}"><i class="fas fa-user mr-2"></i> Account</a>
                   <a class="dropdown-item" href="{{ url_for('new_post') }}"><i class="fas fa-pen-alt mr-2"></i> Create a post</a>
+                  <a class="dropdown-item" href="{{ url_for('new_group') }}"><i class="fas fa-users mr-2"></i> Create a group</a>
                   {% if current_user.admin %}
                   <a class="dropdown-item" href="{{url_for('dashboard')}}"><i class="fas fa-server mr-2"></i> Admin dashboard</a>
                   {% endif %}

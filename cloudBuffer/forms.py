@@ -96,7 +96,7 @@ class GroupForm(FlaskForm):
     title = StringField('Username',
                            validators=[DataRequired(),
                                        Length(min=2, max=20)])
-    description = StringField('Description', validators=[DataRequired(), Length(min=2, max=50)])
+    description = StringField('Description', validators=[DataRequired(), Length(min=2, max=100)])
     language = SelectField('Language', choices=language_list)
     picture = FileField('Group profile picture',
                         validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
