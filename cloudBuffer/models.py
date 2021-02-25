@@ -12,6 +12,7 @@ user_group = db.Table(
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
 )
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
@@ -24,6 +25,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship("Post", backref="author", lazy=True)
     groupposts = db.relationship("Grouppost", backref="group_author", lazy=True)
     comments = db.relationship("Comment", backref="author", lazy=True)
+    groupcomments = db.relationship("Groupcomment", backref="author", lazy=True)
     admin = db.Column(db.Boolean(), default=False)
 
     def follow(self, group):
@@ -104,7 +106,7 @@ class Grouppost(db.Model):
     topic = db.Column(db.String())
     comments = db.relationship("Groupcomment", backref="post", lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    group =  db.Column(db.Integer, db.ForeignKey("group.id"), nullable=False)
+    group_id =  db.Column(db.Integer, db.ForeignKey("group.id"), nullable=False)
 
     def __repr__(self):
         return f"GroupPost('{self.title}', '{self.date_posted}', '{self.group}')"

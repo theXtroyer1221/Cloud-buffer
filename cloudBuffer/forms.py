@@ -112,8 +112,12 @@ class GroupPostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField("Content", validators=[DataRequired()])
     submit = SubmitField("Post")
-
-
+class AddGroupCommentForm(FlaskForm):
+    content = StringField("Content", validators=[DataRequired(), Length(min=5, max=140)])
+    submit = SubmitField("Post")
+class EditGroupCommentForm(FlaskForm):
+    content = TextAreaField("Content", validators=[DataRequired(), Length(min=5, max=140)])
+    submit = SubmitField("Edit")   
 class AdminEmailForm(FlaskForm):
     identifier = StringField()
     title = StringField('Title', validators=[DataRequired()])

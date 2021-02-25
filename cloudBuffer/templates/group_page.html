@@ -49,11 +49,18 @@
         <article class="media content-section-article">
           <div class="media-body">
             <div class="article-metadata mb-2">
-              <a class="mr-2" href="{{ url_for('user', username=post.user_id.username) }}">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+              <small class="text-muted">Posted by </small>
+              <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}"
+                >{{ post.group_author.username }}</a
+              >
+              <small class="text-muted"
+                >{{ post.date_posted.strftime('%Y-%m-%d') }} at {{ post.date_posted.strftime('%H:%M %p') }}</small
+              >
             </div>
             <h2>
-              <a class="article-title mb-2" href="{{ url_for('post', post_id=post.id) }}">{{ post.title | safe }}</a>
+              <a class="article-title mb-2" href="{{ url_for('group_post', title=group.title, post_id=post.id) }}"
+                >{{ post.title | safe }}</a
+              >
             </h2>
             <div class="article-content text-truncate" style="max-height: 350px">{{ post.content| safe }}</div>
           </div>
@@ -106,7 +113,7 @@
         </div>
       </div>
       {% if group.users|count > 0 %}
-      <div class="content-section account-body" style="overflow: scroll; height: 500px">
+      <div class="content-section account-body" style="overflow: auto; height: 500px">
         <legend>Members of the group</legend>
         <hr />
         {% for user in group.users %}
@@ -115,10 +122,10 @@
             class="rounded-circle mr-3"
             src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}"
             alt=""
-            width="75px"
-            height="75px"
+            width="65px"
+            height="65px"
           />
-          <a href="{{url_for('user', username=user.username)}}" class="d-flex" style="align-self: center; font-size: 25px"
+          <a href="{{url_for('user', username=user.username)}}" class="d-flex" style="align-self: center; font-size: 20px"
             >{{ user.username }}</a
           >
         </div>

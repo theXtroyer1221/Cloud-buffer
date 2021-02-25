@@ -1,7 +1,7 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, GroupPostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, GroupPostForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
-from cloudBuffer.models import User, Post, Comment, Group, Grouppost
+from cloudBuffer.models import User, Post, Comment, Group, Grouppost, Groupcomment
 from cloudBuffer import app, bcrypt, db, mail
 from flask_mail import Message
 from datetime import datetime
@@ -319,7 +319,7 @@ def post(post_id):
     return render_template("post.html",
                            title=post.title,
                            post=post,
-                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder)
+                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder, grouppost=False)
 
 @app.route("/comment/<int:comment_id>/delete", methods=['POST'])
 @login_required
@@ -419,7 +419,7 @@ def new_group():
         group.image_file = group_picture 
         db.session.commit()
         flash("The group has been created successfully", "success")
-        return redirect(url_for("blog"))
+        return redirect(url_for("group", title=group.title))
     return render_template('create_group.html',
                            title="New group",
                            form=form,
@@ -434,7 +434,7 @@ def group(title):
     form = GroupPostForm()
     null_form = EmptyForm()
     #page = request.args.get("page", 1, type=int)
-    posts = Grouppost.query.filter_by(group=group.id).all()
+    posts = Grouppost.query.filter_by(group_id=group.id).all()
     return render_template("group_page.html",
                            title=group.title,
                            group=group,
@@ -461,6 +461,53 @@ def group_post_new(title):
                            title=group.title,
                            group=group,
                            post="post", group_img=grp_img, data="post_site", form=form, legend="Create a group post")
+
+@app.route("/group/<title>/<int:post_id>", methods=['GET', 'POST'])
+def group_post(title, post_id):
+    form = AddGroupCommentForm()
+    editform = EditGroupCommentForm()
+    grouppost = Grouppost.query.get_or_404(post_id)
+    if form.validate_on_submit():
+        groupcomment = Groupcomment(id=random.randint(1000, 99999),
+                    content=form.content.data,
+                    author=current_user, 
+                    post=grouppost)
+        db.session.add(groupcomment)
+        db.session.commit()
+    commentformplaceholder = "placeholder"
+    return render_template("post.html",
+                           title=grouppost.title,
+                           post=grouppost,
+                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder, grouppost=True)
+
+@app.route("/groupcomment/<int:comment_id>/update", methods=['GET', 'POST'])
+@login_required
+def edit_group_comment(comment_id):
+    editform = EditCommentForm()
+    comment = Groupcomment.query.get_or_404(comment_id)
+    if comment.author != current_user:
+        if not current_user.admin:
+            abort(403)
+    if editform.validate_on_submit():
+        comment.content = editform.content.data
+        db.session.commit()
+    find_post = comment.post_id
+    group = Grouppost.query.get_or_404(find_post)
+    flash("Your comment has been updated", "success")
+    return redirect(url_for("group_post", title=group.author.title, post_id=comment.post_id))
+
+@app.route("/groupcomment/<int:comment_id>/delete", methods=['POST'])
+@login_required
+def delete_group_comment(comment_id):
+    comment = Groupcomment.query.get_or_404(comment_id)
+    if comment.author != current_user:
+        abort(403)
+    db.session.delete(comment)
+    db.session.commit()
+    find_post = comment.post_id
+    group = Grouppost.query.get_or_404(find_post)
+    flash("Your comment has been deleted", "success")
+    return redirect(url_for("group_post", title=group.author.title, post_id=comment.post_id))
 
 @app.route('/follow/<title>', methods=['GET', 'POST'])
 @login_required

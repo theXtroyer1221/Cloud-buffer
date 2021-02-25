@@ -41,26 +41,30 @@
           </div>
         </div>
       </div>
+      {% if current_user.is_authenticated %}
       <div class="card my-4 rounded">
         <h5 class="card-header">Groups you follow</h5>
         <div class="card-body pb-0">
-          {% for group in current_user.groups %}
+          {% if current_user.groups|list|count <= 0 %}
+          <p class="text-center text-secondary bg-light py-4 mb-4">Your group list is empty, try joining new groups</p>
+          {% else %} {% for group in current_user.groups %}
           <div class="my-2 d-flex">
             <img
               class="rounded-circle mr-3"
               src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}"
               alt=""
-              width="75px"
-              height="75px"
+              width="65px"
+              height="65px"
             />
-            <a href="{{url_for('group', title=group.title)}}" class="d-flex" style="align-self: center; font-size: 25px"
+            <a href="{{url_for('group', title=group.title)}}" class="d-flex" style="align-self: center; font-size: 22px"
               >{{ group.title }}</a
             >
           </div>
           <hr />
-          {% endfor %}
+          {% endfor %} {% endif %}
         </div>
       </div>
+      {% endif %}
       <div class="card my-4 alert-info">
         <h5 class="card-header">Side Widget</h5>
         <div class="card-body">
