@@ -89,6 +89,7 @@ class Group(db.Model):
                            default="default.jpg")
     language = db.Column(db.String(), default="International")
     users = db.relationship("User", secondary=user_group, backref=db.backref("groups", lazy='dynamic'))
+    moderators = db.relationship("User", secondary=user_group, backref=db.backref("mod_groups", lazy='dynamic'))
     posts = db.relationship("Grouppost", backref="author", lazy=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
