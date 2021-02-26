@@ -1,4 +1,4 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, GroupPostForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, UpdateGroupForm, GroupPostForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer.models import User, Post, Comment, Group, Grouppost, Groupcomment
@@ -413,7 +413,8 @@ def new_group():
         group = Group(id=random.randint(1000, 99999),
                     title=title_name,
                     description=form.description.data,
-                    language=form.language.data,)
+                    language=form.language.data,
+                    moderators=[current_user])
         db.session.add(group)
         db.session.commit()
         group.image_file = group_picture 
@@ -439,6 +440,32 @@ def group(title):
                            title=group.title,
                            group=group,
                            post="post", group_img=grp_img, data="post_site", form=form, posts=posts, empty_form=null_form)
+
+@app.route("/group/<title>/edit", methods=['GET', 'POST'])
+@login_required
+def edit_group(title):
+    group = Group.query.filter_by(title=title).first()
+    form = UpdateGroupForm()
+    if form.validate_on_submit():
+        if form.image_file.data:
+            picture_file = save_group_pic(form.image_file.data)
+            group.image_file = picture_file
+        group.title = form.title.data
+        group.description = form.description.data
+        group.language = form.language.data
+        db.session.commit()
+        flash("Group information has been updated", "success")
+        return redirect(url_for("group", title=group.title))
+    elif request.method == "GET":
+        form.title.data = group.title
+        form.description.data = group.description
+        form.language.data = group.language
+    image_file = url_for('static',
+                         filename='profile_pics/' + current_user.image_file)
+    return render_template("edit_group.html",
+                           title="Edit group information",
+                           image_file=image_file,
+                           form=form, group=group, data="post_site")
 
 @app.route("/group/<title>/post/new", methods=['GET', 'POST'])
 @login_required
@@ -475,10 +502,11 @@ def group_post(title, post_id):
         db.session.add(groupcomment)
         db.session.commit()
     commentformplaceholder = "placeholder"
+    group = Group.query.filter_by(id=grouppost.group_id).first()
     return render_template("post.html",
                            title=grouppost.title,
                            post=grouppost,
-                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder, grouppost=True)
+                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder, grouppost=True, group=group)
 
 @app.route("/groupcomment/<int:comment_id>/update", methods=['GET', 'POST'])
 @login_required

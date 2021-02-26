@@ -26,9 +26,7 @@
       </div>
       <div>
         <div class="fb-share-button" data-href="{{request.url}}" data-layout="button" data-size="large">
-          <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=HELLOSDasda" class="fb-xfbml-parse-ignore"
-            >Share</a
-          >
+          <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=HELLOSDasda" class="fb-xfbml-parse-ignore">Share</a>
         </div>
       </div>
     </div>
@@ -59,9 +57,13 @@
         </a>
         <div class="media-body">
           <div class="article-metadata mb-2">
-            {% if grouppost %}
-            <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}">{{ post.group_author.username }}</a>
+            {% if grouppost %} {% if post.group_author in group.moderators or post.group_author.admin %}
+            <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}"
+              ><i class="fas fa-user-shield"></i> {{ post.group_author.username }}</a
+            >
             {% else %}
+            <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}">{{ post.group_author.username }}</a>
+            {% endif %} {% else %}
             <a class="mr-2" href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a>
             {% endif %}
             <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
@@ -195,8 +197,8 @@
                     <span>{{ error }}</span>
                     {% endfor %}
                   </div>
-                  {% else %} {{ form.content(class="form-control", style="height:50px;", placeholder="Add a comment...") }} {%
-                  endif %}
+                  {% else %} {{ form.content(class="form-control", style="height:50px;", placeholder="Add a comment...") }} {% endif
+                  %}
                 </div>
                 <div class="form-group">
                   {{ form.submit(class="btn btn-blog-dark", style="height: 50px; border-radius: 1rem !important;") }}
@@ -255,9 +257,9 @@
                       {% if comment.author == post.group_author %}
                       <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • Author</a> {%
                       else %} {% if current_user == comment.author%}
-                      <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • You</a> {%
-                      else %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{%
-                      endif %} {% endif %}
+                      <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • You</a> {% else
+                      %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %}
+                      {% endif %}
                     </div>
                     <div>
                       <p class="mb-1 {{comment.id}}">{{comment.content}}</p>

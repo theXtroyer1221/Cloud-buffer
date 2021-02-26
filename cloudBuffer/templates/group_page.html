@@ -50,9 +50,13 @@
           <div class="media-body">
             <div class="article-metadata mb-2">
               <small class="text-muted">Posted by </small>
+              {% if post.group_author in group.moderators or post.group_author.admin %}
               <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}"
-                >{{ post.group_author.username }}</a
+                ><i class="fas fa-user-shield"></i> {{ post.group_author.username }}</a
               >
+              {% else %}
+              <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}">{{ post.group_author.username }}</a>
+              {% endif %}
               <small class="text-muted"
                 >{{ post.date_posted.strftime('%Y-%m-%d') }} at {{ post.date_posted.strftime('%H:%M %p') }}</small
               >
@@ -109,6 +113,12 @@
             <p class="mt-4">
               <i class="fa fa-plus mr-2" aria-hidden="true"></i> Created {{group.date_created.strftime('%Y-%m-%d')}}
             </p>
+            {% if current_user in group.moderators or current_user.admin %}
+            <hr />
+            <a href="{{url_for('edit_group', title=group.title)}}" class="btn btn-primary text-white w-100"
+              >Edit group - Moderator dashboard</a
+            >
+            {% endif %}
           </div>
         </div>
       </div>

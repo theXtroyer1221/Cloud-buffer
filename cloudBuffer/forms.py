@@ -100,7 +100,24 @@ class GroupForm(FlaskForm):
     language = SelectField('Language', choices=language_list)
     picture = FileField('Group profile picture',
                         validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
-    submit = SubmitField('Sign Up')
+    submit = SubmitField('Create group')
+
+    def validate_title(self, title):
+        group = Group.query.filter_by(title=title.data).first()
+        if group:
+            raise ValidationError(
+                "That group title is already taken, please choose another one")
+
+
+class UpdateGroupForm(FlaskForm):
+    title = StringField('Username',
+                           validators=[DataRequired(),
+                                       Length(min=2, max=20)])
+    description = StringField('Description', validators=[DataRequired(), Length(min=2, max=100)])
+    language = SelectField('Language', choices=language_list)
+    image_file = FileField('Group profile picture',
+                        validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
+    submit = SubmitField('Save changes')
 
     def validate_title(self, title):
         group = Group.query.filter_by(title=title.data).first()

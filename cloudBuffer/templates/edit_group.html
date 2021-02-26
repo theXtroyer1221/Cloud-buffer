@@ -1,0 +1,67 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container pt-5 mt-5">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="content-section account-body">
+        <div class="media mb-2">
+          <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" />
+          <div class="media-body">
+            <div>
+              <h2 class="account-heading mb-1">{{ group.title }}</h2>
+              <p class="text-secondary">{{ group.description }}</p>
+              <div style="display: inline-grid">
+                <p style="font-size: 20px; display: flex; margin: auto !important">{{group.users|count}}</p>
+                <p style="display: flex; margin: auto !important">Members</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+      <div class="content-section account-body">
+        <form method="POST" action="" enctype="multipart/form-data">
+          {{ form.hidden_tag() }}
+          <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Group information</legend>
+            <div class="form-group">
+              {{ form.title.label(class="form-control-label") }} {% if form.title.errors %} {{ form.title(class="form-control
+              form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.title.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+              {% else %} {{ form.title(class="form-control form-control-lg") }} {% endif %}
+            </div>
+            <div class="form-group">
+              {{ form.description.label(class="form-control-label") }} {% if form.description.errors %} {{
+              form.description(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.description.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+              {% else %} {{ form.description(class="form-control form-control-lg") }} {% endif %}
+            </div>
+            <div class="form-group">
+              {{ form.language.label(class="form-control-label") }} {{ form.language(class="form-control form-control-lg") }}
+            </div>
+            <div class="form-group">
+              {{ form.image_file.label() }} {{ form.image_file(class="form-control-file btn") }} {% if form.image_file.errors %} {%
+              for error in form.image_file.errors %}
+              <span class="text-danger">{{ error }}</span>
+              {% endfor %} {% endif %}
+            </div>
+          </fieldset>
+          <div class="form-group">{{ form.submit(class="btn btn-blog-dark") }}</div>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div style="border: 1px solid #dddddd; height: 100%; border-radius: 20px"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

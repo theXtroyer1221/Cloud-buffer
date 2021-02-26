@@ -13,6 +13,12 @@ user_group = db.Table(
     db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
 )
 
+mod_group = db.Table(
+    'mod_group', db.Model.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
+)
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
@@ -89,7 +95,7 @@ class Group(db.Model):
                            default="default.jpg")
     language = db.Column(db.String(), default="International")
     users = db.relationship("User", secondary=user_group, backref=db.backref("groups", lazy='dynamic'))
-    moderators = db.relationship("User", secondary=user_group, backref=db.backref("mod_groups", lazy='dynamic'))
+    moderators = db.relationship("User", secondary=mod_group, backref=db.backref("mod_groups", lazy='dynamic'))
     posts = db.relationship("Grouppost", backref="author", lazy=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
