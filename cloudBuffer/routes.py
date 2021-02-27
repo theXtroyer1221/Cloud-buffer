@@ -1,4 +1,4 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, UpdateGroupForm, GroupPostForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, UpdateGroupForm, AddAdminForm, GroupPostForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer.models import User, Post, Comment, Group, Grouppost, Groupcomment
@@ -409,7 +409,6 @@ def new_group():
     form = GroupForm()
     if form.validate_on_submit():
         title_name = form.title.data.replace(" ", "_").lower()
-        group_picture = save_group_pic(form.picture.data)
         group = Group(id=random.randint(1000, 99999),
                     title=title_name,
                     description=form.description.data,
@@ -417,8 +416,10 @@ def new_group():
                     moderators=[current_user])
         db.session.add(group)
         db.session.commit()
-        group.image_file = group_picture 
-        db.session.commit()
+        if form.picture.data:
+            group_picture = save_group_pic(form.picture.data)
+            group.image_file = group_picture 
+            db.session.commit()
         flash("The group has been created successfully", "success")
         return redirect(url_for("group", title=group.title))
     return render_template('create_group.html',
@@ -446,6 +447,7 @@ def group(title):
 def edit_group(title):
     group = Group.query.filter_by(title=title).first()
     form = UpdateGroupForm()
+    form2 = AddAdminForm()
     if form.validate_on_submit():
         if form.image_file.data:
             picture_file = save_group_pic(form.image_file.data)
@@ -465,7 +467,28 @@ def edit_group(title):
     return render_template("edit_group.html",
                            title="Edit group information",
                            image_file=image_file,
-                           form=form, group=group, data="post_site")
+                           form=form, form2=form2, group=group, data="post_site")
+
+@app.route("/group/<int:group_id>/delete", methods=['POST'])
+@login_required
+def delete_group(group_id):
+    group = Group.query.get_or_404(group_id)
+    if current_user not in group.moderators:
+        if not current_user.admin:
+            abort(403)
+    if current_user.admin:
+        title = f"Your group ({group.title}) has been deleted"
+        body = f"Your group ({group.title}) has been removed by the admins from our website. This can be the cause of violating the terms of service in our website where the group could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats in its content. Please respect the action taken by admins. The group has been only removed without any warning. You are still free to create on the website. For more question feel free to contact us."
+        for user in group.moderators:
+            emails = []
+            emails.append(user.email)
+            emails.append('jaddou2005@gmail.com')
+            emails_final = tuple(emails)
+        send_admin_mail(title, body, emails_final)
+    db.session.delete(group)
+    db.session.commit()
+    flash("Your Group has been deleted", "warning")
+    return redirect(url_for("blog"))
 
 @app.route("/group/<title>/post/new", methods=['GET', 'POST'])
 @login_required

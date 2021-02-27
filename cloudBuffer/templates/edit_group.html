@@ -60,7 +60,72 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div style="border: 1px solid #dddddd; height: 100%; border-radius: 20px"></div>
+      <div class="content-section account-body" style="overflow: auto; max-height: 300px">
+        <legend>Moderators of the group</legend>
+        <hr />
+        {% for user in group.moderators %}
+        <div class="my-2 d-flex">
+          <img
+            class="rounded-circle mr-3"
+            src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}"
+            alt=""
+            width="65px"
+            height="65px"
+          />
+          <a href="{{url_for('user', username=user.username)}}" class="d-flex" style="align-self: center; font-size: 20px"
+            >{{ user.username }}</a
+          >
+        </div>
+        <hr />
+        {% endfor %}
+      </div>
+      <div class="content-section account-body">
+        <legend>Add new Moderators</legend>
+        <hr />
+        <form action="">
+          {{ form.hidden_tag() }}
+          <div class="form-group">
+            {{ form2.username.label() }} {{ form2.username(class="form-control form-control-lg") }} {% if form2.username.errors %}
+            {% for error in form2.username.errors %}
+            <span class="text-danger">{{ error }}</span>
+            {% endfor %} {% endif %}
+          </div>
+          <div class="form-group">
+            <div class="form-group">{{ form.submit(class="btn btn-blog-dark") }}</div>
+          </div>
+        </form>
+      </div>
+      <div class="content-section account-body border-danger">
+        <legend>Delete group</legend>
+        <p class="secondary">Delete '{{group.title}}' forever</p>
+        <hr />
+        <div class="form-group">
+          <a class="btn btn-danger mt-2 mb-1" data-toggle="modal" data-target="#deleteModal">Delete group</a>
+        </div>
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content p-1">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete {{group.title}}?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p class="text-danger">
+                  Are you sure you want to delete {{group.title}}? <b>The group will be deleted permanently.</b>
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="{{ url_for('delete_group', group_id=group.id) }}" method="POST">
+                  <input class="btn btn-danger" type="submit" value="Delete" />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

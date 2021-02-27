@@ -125,6 +125,10 @@ class UpdateGroupForm(FlaskForm):
             raise ValidationError(
                 "That group title is already taken, please choose another one")
 
+class AddAdminForm(FlaskForm):
+    username = StringField("User's Username", validators=[DataRequired()])
+    submit = SubmitField("Send")
+
 class GroupPostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField("Content", validators=[DataRequired()])
