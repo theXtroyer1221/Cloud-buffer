@@ -35,12 +35,13 @@ def index():
 
     if request.args.get("hfield", None):
         headers_list = request.headers.getlist("X-Forwarded-For")
-        user_ip = headers_list[0] if headers_list else request.remote_addr
-        url = 'http://api.ipstack.com/{}?access_key={}'.format(
-            "83.250.184.69", IP_STACK)
+        user_ip = request.remote_addr
+        url = 'https://freegeoip.app/json/{}'.format(user_ip)
+
         r = requests.get(url)
-        j = r.json()
-        query = j["city"]
+        j = json.loads(r.text)
+
+        query = j['city']
 
         return redirect(url_for("search", query=query))
 
