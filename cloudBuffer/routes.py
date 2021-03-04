@@ -383,6 +383,9 @@ def delete_post(post_id):
         title = "Your post has been deleted"
         body = f"Your post ({post.title}) has been removed by the admins from our website. This can be the cause of violating the terms of posting in our website where the post could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats. Please respect the action taken by admins. The post has been only removed without any warning. You are still free to post on the website. For more question feel free to contact us."
         send_admin_mail(title, body, post.author.email)
+    for comment in post.comments:
+        db.session.delete(comment)
+        db.session.commit()
     db.session.delete(post)
     db.session.commit()
     flash("Your post has been deleted", "success")
@@ -531,6 +534,53 @@ def group_post(title, post_id):
                            title=grouppost.title,
                            post=grouppost,
                            data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder, grouppost=True, group=group)
+
+@app.route("/group/<title>/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_group_post(title, post_id):
+    post = Grouppost.query.get_or_404(post_id)
+    group = Group.query.filter_by(id=post.group_id).first()
+    grp_img = url_for("static",
+                    filename="profile_pics/" + group.image_file)
+    if post.author != current_user:
+        if not current_user.admin:
+            abort(403)
+        else:
+            pass
+    form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash("Your post has been updated", "success")
+        return redirect(url_for("group_post", title=title, post_id=post_id))
+    if request.method == "GET":
+        form.title.data = post.title
+        form.content.data = post.content
+    return render_template("create_group_post.html",
+                           title=group.title,
+                           group=group,
+                           post="post", group_img=grp_img, data="post_site", form=form, legend="Update a group post")
+
+
+@app.route("/group/<title>/<int:post_id>/delete", methods=['POST'])
+@login_required
+def delete_group_post(title, post_id):
+    post = Grouppost.query.get_or_404(post_id)
+    if post.author != current_user:
+        if not current_user.admin:
+            abort(403)
+    if current_user.admin:
+        title = "Your group post has been deleted"
+        body = f"Your post ({post.title}) has been removed by the admins from our website. This can be the cause of violating the terms of posting in our website where the post could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats. Please respect the action taken by admins. The post has been only removed without any warning. You are still free to post on the website. For more question feel free to contact us."
+        #send_admin_mail(title, body, post.author.email)
+    for comment in post.comments:
+        db.session.delete(comment)
+        db.session.commit()
+    db.session.delete(post)
+    db.session.commit()
+    flash("Your post has been deleted", "success")
+    return redirect(url_for("group", title=title))
 
 @app.route("/groupcomment/<int:comment_id>/update", methods=['GET', 'POST'])
 @login_required
