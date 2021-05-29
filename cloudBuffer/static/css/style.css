@@ -532,6 +532,10 @@ a.article-title:hover {
   background: white !important;
 }
 
+.ui-front {
+  z-index: 9999 !important;
+}
+
 .comment .points {
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;

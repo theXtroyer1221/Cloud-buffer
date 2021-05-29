@@ -4,7 +4,13 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url_for('blog')}}">Blog</a></li>
+        {% if grouppost %}
+        <li class="breadcrumb-item">
+          <a href="{{url_for('user', username=post.group_author.username)}}">{{post.group_author.username}}</a>
+        </li>
+        {% else %}
         <li class="breadcrumb-item"><a href="{{url_for('user', username=post.author.username)}}">{{post.author.username}}</a></li>
+        {% endif %}
         <li class="breadcrumb-item active" aria-current="page">{{post.title}}</li>
       </ol>
     </nav>
@@ -12,27 +18,66 @@
   <div class="row mb-5 pb-5">
     <div class="col-md-1">
       <div class="w-100">
-        <a class="twitter-share-button" data-size="large" href="https://twitter.com/intent/tweet?text=Check%20this%20article%20on%20Cloud%20buffer%20%20world"></a>
+        <a
+          class="twitter-share-button"
+          data-size="large"
+          href="https://twitter.com/intent/tweet?text=Check%20this%20article%20on%20Cloud%20buffer%20%20world"
+        ></a>
       </div>
       <div>
-        <div class="fb-share-button" data-href="{{request.url}}" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=HELLOSDasda" class="fb-xfbml-parse-ignore">Share</a></div>
+        <div class="fb-share-button" data-href="{{request.url}}" data-layout="button" data-size="large">
+          <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=HELLOSDasda" class="fb-xfbml-parse-ignore">Share</a>
+        </div>
       </div>
     </div>
     <div class="col-md-8">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
-      <div class="alert alert-{{ category }}">
-        {{ message }}
-      </div>
+      <div class="alert alert-{{ category }}">{{ message }}</div>
       {% endfor %} {% endif %} {% endwith %}
       <article class="media content-section-article">
-        <a class="mr-2" href="{{url_for('user', username=post.author.username)}}"><img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" width="125px" height="125px" /></a>
+        {% if grouppost %}
+        <a class="mr-2" href="{{url_for('user', username=post.group_author.username)}}">
+          {% else %}
+          <a class="mr-2" href="{{url_for('user', username=post.author.username)}}"></a>
+          {% endif %} {% if grouppost %}
+          <img
+            class="rounded-circle article-img"
+            src="{{ url_for('static', filename='profile_pics/' + post.group_author.image_file) }}"
+            width="125px"
+            height="125px"
+          />
+          {% else %}
+          <img
+            class="rounded-circle article-img"
+            src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}"
+            width="125px"
+            height="125px"
+          />
+          {% endif %}
+        </a>
         <div class="media-body">
           <div class="article-metadata mb-2">
+            {% if grouppost %} {% if post.group_author in group.moderators or post.group_author.admin %}
+            <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}"
+              ><i class="fas fa-user-shield"></i> {{ post.group_author.username }}</a
+            >
+            {% else %}
+            <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}">{{ post.group_author.username }}</a>
+            {% endif %} {% else %}
             <a class="mr-2" href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a>
+            {% endif %}
             <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
-            {% if post.author == current_user or current_user.admin %}
+            {% if post.group_author == current_user or current_user.admin %}
             <div>
+              {% if grouppost %}
+              <a
+                class="btn btn-secondary btn-sm mt-2 mb-1"
+                href="{{url_for('update_group_post', title=group.title, post_id=post.id)}}"
+                >Update</a
+              >
+              {% else %}
               <a class="btn btn-secondary btn-sm mt-2 mb-1" href="{{url_for('update_post', post_id=post.id)}}">Update</a>
+              {% endif %}
               <a class="btn btn-danger btn-sm mt-2 mb-1" data-toggle="modal" data-target="#deleteModal">Delete</a>
             </div>
             {% endif %}
@@ -44,21 +89,46 @@
           <div>
             <hr />
             <div class="mb-4">
-              <a href="{{url_for('user', username=post.author.username)}}"><h5 class="mb-1 font-weight-bold">{{post.author.username}}</h5></a>
+              {% if grouppost %}
+              <a href="{{url_for('user', username=post.group_author.username)}}"
+                ><h5 class="mb-1 font-weight-bold">{{post.group_author.username}}</h5></a
+              >
+              {% else %}
+              <a href="{{url_for('user', username=post.author.username)}}"
+                ><h5 class="mb-1 font-weight-bold">{{post.author.username}}</h5></a
+              >
+              {% endif %} {% if grouppost %}
+              <p>{{post.group_author.biography}}</p>
+              {% else %}
               <p>{{post.author.biography}}</p>
+              {% endif %}
             </div>
             <h5 class="mb-3 font-weight-bold">Share this story</h5>
             <div class="btn-group mb-4" role="group" aria-label="Basic example">
-              <a href="https://www.facebook.com/sharer/sharer.php?u={{request.url}}" class="btn btn-outline-primary p-2"><i class="fab fa-facebook"></i></a>
-              <a href="https://twitter.com/intent/tweet?text=Check%20this%20article%20on%20Cloud%20buffer%20&url={{request.url}}" class="btn btn-outline-primary p-2"><i class="fab fa-twitter"></i></a>
-              <a tabindex="0" onclick="copyToClipboard()" class="btn btn-outline-primary p-2" data-toggle="popover" data-placement="top" data-content="Url link copied!"><i class="fas fa-link"></i></a>
+              <a href="https://www.facebook.com/sharer/sharer.php?u={{request.url}}" class="btn btn-outline-primary p-2"
+                ><i class="fab fa-facebook"></i
+              ></a>
+              <a
+                href="https://twitter.com/intent/tweet?text=Check%20this%20article%20on%20Cloud%20buffer%20&url={{request.url}}"
+                class="btn btn-outline-primary p-2"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a
+                tabindex="0"
+                onclick="copyToClipboard()"
+                class="btn btn-outline-primary p-2"
+                data-toggle="popover"
+                data-placement="top"
+                data-content="Url link copied!"
+                ><i class="fas fa-link"></i
+              ></a>
             </div>
           </div>
         </div>
       </article>
       <div>
         <h5 class="font-weight-bold mb-2">More from Cloud buffer</h5>
-        <ul class="ml-5 mb-3" style="list-style-type: disc !important;">
+        <ul class="ml-5 mb-3" style="list-style-type: disc !important">
           {% for i in range(5) %} {% set posts = Post.query.all()[i] %} {% if post.id != posts.id %}
           <li class="py-2"><a href="{{url_for('post', post_id=posts.id)}}">{{posts.title |safe}}</a></li>
           {% endif %} {% endfor %}
@@ -78,9 +148,15 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              {% if grouppost %}
+              <form action="{{ url_for('delete_group_post', title=group.title, post_id=post.id) }}" method="POST">
+                <input class="btn btn-danger" type="submit" value="Delete" />
+              </form>
+              {% else %}
               <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
                 <input class="btn btn-danger" type="submit" value="Delete" />
               </form>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -98,7 +174,13 @@
             <div class="row justify-content-between d-flex mb-3">
               <div class="d-flex">
                 <span class="text-secondary mr-2">Sort by</span>
-                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button
+                  class="btn btn-secondary btn-sm dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
                   Small button
                 </button>
                 <div class="dropdown-menu">
@@ -106,21 +188,31 @@
                   <a class="dropdown-item" href="">Newest</a>
                 </div>
               </div>
-              <div class="text-secondary">{{post.comments|length}} comments {% if post.comments|length == 0 %}• be the first to comment{% endif %}</div>
+              <div class="text-secondary">
+                {{post.comments|length}} comments {% if post.comments|length == 0 %}• be the first to comment{% endif %}
+              </div>
             </div>
             {% if current_user.is_authenticated%}
             <div class="d-flex mb-4">
-              <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
+              <img
+                src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"
+                alt="User image"
+                class="mr-2 navbar-image"
+                width="50px"
+                height="50px"
+              />
               <form method="POST" action="" class="w-100 d-flex">
                 {{form.hidden_tag()}}
                 <div class="form-group w-100">
-                  {% if form.content.errors %} {{ form.content(class="form-control is-invalid", style="height:50px;", placeholder="Add a comment...") }}
+                  {% if form.content.errors %} {{ form.content(class="form-control is-invalid", style="height:50px;",
+                  placeholder="Add a comment...") }}
                   <div class="invalid-feedback">
                     {% for error in form.content.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
                   </div>
-                  {% else %} {{ form.content(class="form-control", style="height:50px;", placeholder="Add a comment...") }} {% endif %}
+                  {% else %} {{ form.content(class="form-control", style="height:50px;", placeholder="Add a comment...") }} {% endif
+                  %}
                 </div>
                 <div class="form-group">
                   {{ form.submit(class="btn btn-blog-dark", style="height: 50px; border-radius: 1rem !important;") }}
@@ -130,49 +222,107 @@
             {% else %}
             <div class="w-100 mb-4 card alert-info">
               <div class="card-body text-info lead">
-                <a href="{{ url_for('login') }}">Login</a> to participate in the discussion <small><a href="{{ url_for('signup') }}">Dont have an account?</a></small>
+                <a href="{{ url_for('login') }}">Login</a> to participate in the discussion
+                <small><a href="{{ url_for('signup') }}">Dont have an account?</a></small>
               </div>
             </div>
             {% endif %}
             <div class="d-block">
-              {% if post.comments|length > 0 %} {% for comment in post.comments %} {% if current_user.is_authenticated and "@{}".format(current_user.username.replace(" ", "_")) in comment.content %}
-              <div class="d-flex w-100 comment" style="background: #ffff1780;">
-                <a href="{{url_for('user', username=comment.author.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" /></a>
+              {% if post.comments|length > 0 %} {% for comment in post.comments %} {% if current_user.is_authenticated and
+              "@{}".format(current_user.username.replace(" ", "_")) in comment.content %}
+              <div class="d-flex w-100 comment" style="background: #ffff1780">
+                <a href="{{url_for('user', username=comment.author.username)}}"
+                  ><img
+                    src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}"
+                    alt="User image"
+                    class="mr-2 navbar-image"
+                    width="50px"
+                    height="50px"
+                /></a>
                 <div>
-                  {% if comment.author == post.author %}
-                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a> • Author {% else %} {% if current_user == comment.author%} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a> • You {% else %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {% endif %}
+                  {% if comment.author == post.group_author %}
+                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a> • Author {% else
+                  %} {% if current_user == comment.author%}
+                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a> • You {% else %}
+                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {%
+                  endif %}
                   <p class="mb-1">{{comment.content}}</p>
                   <span class="text-secondary"
-                    >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M')}} • <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'><i class="fa fa-twitter" aria-hidden="true"></i></a
+                    >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M %p')}} •
+                    <a
+                      href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'
+                      ><i class="fa fa-twitter" aria-hidden="true"></i></a
                   ></span>
                 </div>
               </div>
               {% else %}
               <div class="comment d-flex">
                 <div class="d-flex w-100">
-                  <a href="{{url_for('user', username=comment.author.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" /></a>
+                  <a href="{{url_for('user', username=comment.author.username)}}"
+                    ><img
+                      src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}"
+                      alt="User image"
+                      class="mr-2 navbar-image"
+                      width="50px"
+                      height="50px"
+                  /></a>
                   <div class="w-100">
                     <div class="justify-content-between d-flex">
-                      {% if comment.author == post.author %}
-                      <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • Author</a> {% else %} {% if current_user == comment.author%} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • You</a> {% else %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {% endif %}
+                      {% if comment.author == post.group_author %}
+                      <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • Author</a> {%
+                      else %} {% if current_user == comment.author%}
+                      <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • You</a> {% else
+                      %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %}
+                      {% endif %}
                     </div>
                     <div>
                       <p class="mb-1 {{comment.id}}">{{comment.content}}</p>
-                      <form class="d-flex w-100" method="POST" action="{{ url_for('edit_comment', comment_id=comment.id) }}" id="{{comment.timestamp.strftime('%H:%M:%S:%f')}}">{{editform.hidden_tag()}} {{editform.content(class="form-control w-100 mr-2", style="height:65px", id=comment.id)}} {{editform.submit(class="btn btn-primary", id=comment.id+10)}}</form>
+                      {% if grouppost %}
+                      <form
+                        class="d-flex w-100"
+                        method="POST"
+                        action="{{ url_for('edit_group_comment', comment_id=comment.id) }}"
+                        id="{{comment.timestamp.strftime('%H:%M:%S:%f %p')}}"
+                      >
+                        {{editform.hidden_tag()}} {{editform.content(class="form-control w-100 mr-2", style="height:65px",
+                        id=comment.id)}} {{editform.submit(class="btn btn-primary", id=comment.id+10)}}
+                      </form>
+                      {% else %}
+                      <form
+                        class="d-flex w-100"
+                        method="POST"
+                        action="{{ url_for('edit_comment', comment_id=comment.id) }}"
+                        id="{{comment.timestamp.strftime('%H:%M:%S:%f %p')}}"
+                      >
+                        {{editform.hidden_tag()}} {{editform.content(class="form-control w-100 mr-2", style="height:65px",
+                        id=comment.id)}} {{editform.submit(class="btn btn-primary", id=comment.id+10)}}
+                      </form>
+                      {% endif %}
                     </div>
                     <span class="text-secondary"
-                      >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M')}} • <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'><i class="fa fa-twitter" aria-hidden="true"></i></a
+                      >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M %p')}} •
+                      <a
+                        href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'
+                        ><i class="fa fa-twitter" aria-hidden="true"></i></a
                     ></span>
                   </div>
                 </div>
                 {% if comment.author == current_user %}
                 <div id="comment-bullet">
-                  <span class="dropdown-toggle points" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></span>
+                  <span class="dropdown-toggle points" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    ><i class="fas fa-ellipsis-h"></i
+                  ></span>
                   <div class="dropdown-menu">
                     <button class="dropdown-item" id="{{comment.id}}editComment"><i class="fas fa-edit"></i> Edit</button>
+                    {% if grouppost %}
+                    <form action="{{ url_for('delete_group_comment', comment_id=comment.id) }}" method="POST">
+                      <input class="dropdown-item text-danger" type="submit" value="Delete" />
+                    </form>
+                    {% else %}
                     <form action="{{ url_for('delete_comment', comment_id=comment.id) }}" method="POST">
                       <input class="dropdown-item text-danger" type="submit" value="Delete" />
                     </form>
+                    {% endif %}
                   </div>
                 </div>
                 {% endif %}
@@ -197,7 +347,7 @@
               {% endif %}
               <hr class="w-100" />
               {% endfor %} {% else %}
-              <div class="py-5 text-center text-secondary" style="background: #efefef;">Be the first to comment</div>
+              <div class="py-5 text-center text-secondary" style="background: #efefef">Be the first to comment</div>
               {% endif %}
             </div>
           </div>
@@ -221,7 +371,9 @@
           (d.head || d.body).appendChild(s);
         })();
       </script>
-      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      <noscript
+        >Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript
+      >
     </div>
     <div class="col-md-3">
       <div class="media content-section-article d-block text-center">
@@ -230,7 +382,13 @@
         <h4 class="text-primary mb-4">{{ post.date_posted.strftime('%Y-%m-%d') }}</h4>
         <h3>Post author</h3>
         <br />
-        <h4 class="text-primary mb-4"><a class="mr-2" href="{{url_for('user', username=post.author.username)}}">{{ post.author.username }}</a></h4>
+        <h4 class="text-primary mb-4">
+          {% if grouppost %}
+          <a class="mr-2" href="{{url_for('user', username=post.group_author.username)}}">{{ post.group_author.username }}</a>
+          {% else %}
+          <a class="mr-2" href="{{url_for('user', username=post.author.username)}}">{{ post.author.username }}</a>
+          {% endif %}
+        </h4>
         <h3>Post ID</h3>
         <br />
         <h4 class="text-primary mb-4">{{ post.id }}</h4>

@@ -1,14 +1,16 @@
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, UpdateGroupForm, AddAdminForm, GroupPostForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
+from cloudBuffer.models import User, Post, Comment, Group, Grouppost, Groupcomment
 from cloudBuffer import app, bcrypt, db, mail
-from cloudBuffer.models import User, Post, Comment
 from flask_mail import Message
+from datetime import datetime
 
 from PIL import Image, ImageOps
 import requests
 import secrets
 import random
+import numpy as np
 import json
 import os
 
@@ -33,12 +35,13 @@ def index():
 
     if request.args.get("hfield", None):
         headers_list = request.headers.getlist("X-Forwarded-For")
-        user_ip = headers_list[0] if headers_list else request.remote_addr
-        url = 'http://api.ipstack.com/{}?access_key={}'.format(
-            "83.250.184.69", IP_STACK)
+        user_ip = request.remote_addr
+        url = 'https://freegeoip.app/json/{}'.format(user_ip)
+
         r = requests.get(url)
-        j = r.json()
-        query = j["city"]
+        j = json.loads(r.text)
+
+        query = j['city']
 
         return redirect(url_for("search", query=query))
 
@@ -317,7 +320,7 @@ def post(post_id):
     return render_template("post.html",
                            title=post.title,
                            post=post,
-                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder)
+                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder, grouppost=False)
 
 @app.route("/comment/<int:comment_id>/delete", methods=['POST'])
 @login_required
@@ -380,11 +383,278 @@ def delete_post(post_id):
         title = "Your post has been deleted"
         body = f"Your post ({post.title}) has been removed by the admins from our website. This can be the cause of violating the terms of posting in our website where the post could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats. Please respect the action taken by admins. The post has been only removed without any warning. You are still free to post on the website. For more question feel free to contact us."
         send_admin_mail(title, body, post.author.email)
+    for comment in post.comments:
+        db.session.delete(comment)
+        db.session.commit()
     db.session.delete(post)
     db.session.commit()
     flash("Your post has been deleted", "success")
     return redirect(url_for("blog"))
 
+def save_group_pic(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, "static/profile_pics",
+                                picture_fn)
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.resize(output_size)
+    i.save(picture_path)
+
+    return picture_fn
+
+
+@app.route("/group/new", methods=['GET', 'POST'])
+@login_required
+def new_group():
+    image_file = url_for("static",
+                         filename="profile_pics/" + current_user.image_file)
+    form = GroupForm()
+    if form.validate_on_submit():
+        title_name = form.title.data.replace(" ", "_").lower()
+        group = Group(id=random.randint(1000, 99999),
+                    title=title_name,
+                    description=form.description.data,
+                    language=form.language.data,
+                    moderators=[current_user])
+        db.session.add(group)
+        db.session.commit()
+        if form.picture.data:
+            group_picture = save_group_pic(form.picture.data)
+            group.image_file = group_picture 
+            db.session.commit()
+        flash("The group has been created successfully", "success")
+        return redirect(url_for("group", title=group.title))
+    return render_template('create_group.html',
+                           title="New group",
+                           form=form,
+                           image_file=image_file,
+                           legend="Create a new group", data="post_site")
+
+@app.route("/group/<title>", methods=['GET', 'POST'])
+def group(title):
+    group = Group.query.filter_by(title=title).first_or_404()
+    grp_img = url_for("static",
+                    filename="profile_pics/" + group.image_file)
+    form = GroupPostForm()
+    null_form = EmptyForm()
+    page = request.args.get("page", 1, type=int)
+    posts = Grouppost.query.filter_by(group_id=group.id).order_by(Grouppost.date_posted.desc()).paginate(page=page,per_page=10)
+    #.order_by(group.posts.date_posted())
+    return render_template("group_page.html",
+                           title=group.title,
+                           group=group,
+                           post="post", group_img=grp_img, data="post_site", form=form, posts=posts, empty_form=null_form)
+
+@app.route("/group/<title>/edit", methods=['GET', 'POST'])
+@login_required
+def edit_group(title):
+    group = Group.query.filter_by(title=title).first()
+    form = UpdateGroupForm()
+    form2 = AddAdminForm()
+    if form.validate_on_submit():
+        if form.image_file.data:
+            picture_file = save_group_pic(form.image_file.data)
+            group.image_file = picture_file
+        group.title = form.title.data
+        group.description = form.description.data
+        group.language = form.language.data
+        db.session.commit()
+        flash("Group information has been updated", "success")
+        return redirect(url_for("group", title=group.title))
+    elif request.method == "GET":
+        form.title.data = group.title
+        form.description.data = group.description
+        form.language.data = group.language
+    image_file = url_for('static',
+                         filename='profile_pics/' + current_user.image_file)
+    if form2.validate_on_submit():
+        username = form2.username.data.replace(" ", "_")
+        print(username)
+        user = User.query.filter_by(username=username).first()
+        print(user)
+        group.moderators.append(user)
+        flash("User has been added as a moderator", "success")
+        return redirect(url_for("edit_group", title=group.title))
+    return render_template("edit_group.html",
+                           title="Edit group information",
+                           image_file=image_file,
+                           form=form, form2=form2, group=group, data="post_site")
+
+@app.route("/group/<int:group_id>/delete", methods=['POST'])
+@login_required
+def delete_group(group_id):
+    group = Group.query.get_or_404(group_id)
+    if current_user not in group.moderators:
+        if not current_user.admin:
+            abort(403)
+    if current_user.admin:
+        title = f"Your group ({group.title}) has been deleted"
+        body = f"Your group ({group.title}) has been removed by the admins from our website. This can be the cause of violating the terms of service in our website where the group could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats in its content. Please respect the action taken by admins. The group has been only removed without any warning. You are still free to create on the website. For more question feel free to contact us."
+        for user in group.moderators:
+            emails = []
+            emails.append(user.email)
+            emails.append('jaddou2005@gmail.com')
+            emails_final = tuple(emails)
+        send_admin_mail(title, body, emails_final)
+    db.session.delete(group)
+    db.session.commit()
+    flash("Your Group has been deleted", "warning")
+    return redirect(url_for("blog"))
+
+@app.route("/group/<title>/post/new", methods=['GET', 'POST'])
+@login_required
+def group_post_new(title):
+    group = Group.query.filter_by(title=title).first_or_404()
+    grp_img = url_for("static",
+                    filename="profile_pics/" + group.image_file)
+    form = GroupPostForm()
+    if form.validate_on_submit():
+        post = Grouppost(id=random.randint(1000, 99999),
+                    title=form.title.data,
+                    content=form.content.data,
+                    user_id=current_user.id,
+                    group_id=group.id)
+        db.session.add(post)
+        db.session.commit()
+        flash("The post has been created successfully", "success")
+        return redirect(url_for("group", title=group.title))
+    return render_template("create_group_post.html",
+                           title=group.title,
+                           group=group,
+                           post="post", group_img=grp_img, data="post_site", form=form, legend="Create a group post")
+
+@app.route("/group/<title>/<int:post_id>", methods=['GET', 'POST'])
+def group_post(title, post_id):
+    form = AddGroupCommentForm()
+    editform = EditGroupCommentForm()
+    grouppost = Grouppost.query.get_or_404(post_id)
+    if form.validate_on_submit():
+        groupcomment = Groupcomment(id=random.randint(1000, 99999),
+                    content=form.content.data,
+                    author=current_user, 
+                    post=grouppost)
+        db.session.add(groupcomment)
+        db.session.commit()
+    commentformplaceholder = "placeholder"
+    group = Group.query.filter_by(id=grouppost.group_id).first()
+    return render_template("post.html",
+                           title=grouppost.title,
+                           post=grouppost,
+                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder, grouppost=True, group=group)
+
+@app.route("/group/<title>/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_group_post(title, post_id):
+    post = Grouppost.query.get_or_404(post_id)
+    group = Group.query.filter_by(id=post.group_id).first()
+    grp_img = url_for("static",
+                    filename="profile_pics/" + group.image_file)
+    if post.author != current_user:
+        if not current_user.admin:
+            abort(403)
+        else:
+            pass
+    form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash("Your post has been updated", "success")
+        return redirect(url_for("group_post", title=title, post_id=post_id))
+    if request.method == "GET":
+        form.title.data = post.title
+        form.content.data = post.content
+    return render_template("create_group_post.html",
+                           title=group.title,
+                           group=group,
+                           post="post", group_img=grp_img, data="post_site", form=form, legend="Update a group post")
+
+
+@app.route("/group/<title>/<int:post_id>/delete", methods=['POST'])
+@login_required
+def delete_group_post(title, post_id):
+    post = Grouppost.query.get_or_404(post_id)
+    group = Group.query.filter_by(id=post.group_id).first()
+    if post.author != current_user:
+        if not current_user.admin:
+            abort(403)
+    if current_user.admin:
+        title = "Your group post has been deleted"
+        body = f"Your post ({post.title}) has been removed by the admins from our website. This can be the cause of violating the terms of posting in our website where the post could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats. Please respect the action taken by admins. The post has been only removed without any warning. You are still free to post on the website. For more question feel free to contact us."
+        send_admin_mail(title, body, post.group_author.email)
+    for comment in post.comments:
+        db.session.delete(comment)
+        db.session.commit()
+    db.session.delete(post)
+    db.session.commit()
+    flash("Your post has been deleted", "success")
+    return redirect(url_for("group", title=group.title))
+
+@app.route("/groupcomment/<int:comment_id>/update", methods=['GET', 'POST'])
+@login_required
+def edit_group_comment(comment_id):
+    editform = EditCommentForm()
+    comment = Groupcomment.query.get_or_404(comment_id)
+    if comment.author != current_user:
+        if not current_user.admin:
+            abort(403)
+    if editform.validate_on_submit():
+        comment.content = editform.content.data
+        db.session.commit()
+    find_post = comment.post_id
+    group = Grouppost.query.get_or_404(find_post)
+    flash("Your comment has been updated", "success")
+    return redirect(url_for("group_post", title=group.author.title, post_id=comment.post_id))
+
+@app.route("/groupcomment/<int:comment_id>/delete", methods=['POST'])
+@login_required
+def delete_group_comment(comment_id):
+    comment = Groupcomment.query.get_or_404(comment_id)
+    if comment.author != current_user:
+        abort(403)
+    db.session.delete(comment)
+    db.session.commit()
+    find_post = comment.post_id
+    group = Grouppost.query.get_or_404(find_post)
+    flash("Your comment has been deleted", "success")
+    return redirect(url_for("group_post", title=group.author.title, post_id=comment.post_id))
+
+@app.route('/follow/<title>', methods=['GET', 'POST'])
+@login_required
+def follow(title):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        group = Group.query.filter_by(title=title).first()
+        if group is None:
+            flash('The group "{}" was not found.'.format(title))
+            return redirect(url_for('blog'))
+        if current_user in group.users:
+            flash('You are already following this group!', "warning")
+            return redirect(url_for('group', title=title))
+        current_user.follow(group)
+        db.session.commit()
+        flash('You have successfully joined {}!'.format(title), "success")
+        return redirect(url_for('group', title=title))
+    else:
+        return redirect(url_for('blog'))
+
+@app.route('/unfollow/<title>', methods=['POST'])
+@login_required
+def unfollow(title):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        group = Group.query.filter_by(title=title).first()
+        if group is None:
+            flash('The group "{}" was not found.'.format(title), "danger")
+            return redirect(url_for('blog'))
+        current_user.unfollow(group)
+        db.session.commit()
+        flash('You have unfollowed {}'.format(title), "success")
+        return redirect(url_for('group', title=title))
+    else:
+        return redirect(url_for('blog'))
 
 def send_reset_email(user):
     token = user.get_reset_token()
