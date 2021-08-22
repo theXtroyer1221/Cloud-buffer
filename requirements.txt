@@ -10,7 +10,7 @@ python-dotenv
 flask-migrate
 flask_whooshee
 email_validator
-Flask-SQLAlchemy
+Flask-sqlalchemy
 flask-simple-geoip
 flask_whooshalchemy
 Google-Images-Search
