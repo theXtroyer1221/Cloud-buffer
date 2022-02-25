@@ -6,6 +6,7 @@ requests
 flask_wtf
 Flask-mail
 Flask-login
+itsdangerous
 Flask-Bcrypt
 python-dotenv
 flask-migrate
