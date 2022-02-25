@@ -69,7 +69,15 @@
             <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             {% if post.group_author == current_user or current_user.admin %}
             <div>
+              {% if grouppost %}
+              <a
+                class="btn btn-secondary btn-sm mt-2 mb-1"
+                href="{{url_for('update_group_post', title=group.title, post_id=post.id)}}"
+                >Update</a
+              >
+              {% else %}
               <a class="btn btn-secondary btn-sm mt-2 mb-1" href="{{url_for('update_post', post_id=post.id)}}">Update</a>
+              {% endif %}
               <a class="btn btn-danger btn-sm mt-2 mb-1" data-toggle="modal" data-target="#deleteModal">Delete</a>
             </div>
             {% endif %}
@@ -140,9 +148,15 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              {% if grouppost %}
+              <form action="{{ url_for('delete_group_post', title=group.title, post_id=post.id) }}" method="POST">
+                <input class="btn btn-danger" type="submit" value="Delete" />
+              </form>
+              {% else %}
               <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
                 <input class="btn btn-danger" type="submit" value="Delete" />
               </form>
+              {% endif %}
             </div>
           </div>
         </div>

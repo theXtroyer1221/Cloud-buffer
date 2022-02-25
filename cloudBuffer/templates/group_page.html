@@ -45,7 +45,7 @@
         <div class="d-block">
           <h1 class="text-secondary text-center py-5 bg-light"><i class="far fa-folder-open"></i> Looks empty here</h1>
         </div>
-        {% else %} {% for post in group.posts %}
+        {% else %} {% for post in posts.items %}
         <article class="media content-section-article">
           <div class="media-body">
             <div class="article-metadata mb-2">
@@ -58,19 +58,25 @@
               <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}">{{ post.group_author.username }}</a>
               {% endif %}
               <small class="text-muted"
-                >{{ post.date_posted.strftime('%Y-%m-%d') }} at {{ post.date_posted.strftime('%H:%M %p') }}</small
+                >{{ post.date_posted.strftime('%Y-%m-%d') }} at {{ post.date_posted.strftime('%I:%M %p') }}</small
               >
             </div>
             <h2>
-              <a class="article-title mb-2" href="{{ url_for('group_post', title=group.title, post_id=post.id) }}"
+              <a class="article-title mb-3" href="{{ url_for('group_post', title=group.title, post_id=post.id) }}"
                 >{{ post.title | safe }}</a
               >
             </h2>
-            <div class="article-content text-truncate" style="max-height: 350px">{{ post.content| safe }}</div>
+            <div class="article-content text-truncate" style="max-height: 350px;">{{ post.content| safe }}</div>
           </div>
         </article>
         {% endfor %} {% endif %}
       </div>
+      {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %} {% if page_num %} {% if
+      posts.page == page_num %}
+      <a class="btn btn-primary mb-4" href="{{url_for('group', page=page_num, title=group.title)}}"> {{page_num}}</a>
+      {% else %}
+      <a class="btn btn-outline-primary mb-4" href="{{url_for('group', page=page_num, title=group.title)}}"> {{page_num}}</a>
+      {% endif %} {% else %} ... {% endif %} {% endfor %}
     </div>
     <div class="col-md-4">
       <div class="card-img-top">

@@ -4,7 +4,7 @@
     <div class="col-md-8">
       <div class="content-section account-body">
         <div class="media mb-2">
-          <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" />
+          <a href=" {{url_for('group', title=group.title)}} "><img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" /></a>
           <div class="media-body">
             <div>
               <h2 class="account-heading mb-1">{{ group.title }}</h2>
@@ -82,13 +82,16 @@
       <div class="content-section account-body">
         <legend>Add new Moderators</legend>
         <hr />
-        <form action="">
-          {{ form.hidden_tag() }}
+        <form method="POST" action="">
+          {{ form2.hidden_tag() }}
           <div class="form-group">
             {{ form2.username.label() }} {{ form2.username(class="form-control form-control-lg") }} {% if form2.username.errors %}
             {% for error in form2.username.errors %}
             <span class="text-danger">{{ error }}</span>
             {% endfor %} {% endif %}
+            <p style="font-size: 12px" class="text-secondary text-small mt-2">
+              Case sensetive names, Once the user is added, he can not be removed
+            </p>
           </div>
           <div class="form-group">
             <div class="form-group">{{ form.submit(class="btn btn-blog-dark") }}</div>
