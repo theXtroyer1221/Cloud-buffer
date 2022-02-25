@@ -6,7 +6,6 @@ requests
 flask_wtf
 Flask-mail
 Flask-login
-itsdangerous
 Flask-Bcrypt
 python-dotenv
 flask-migrate
@@ -15,4 +14,5 @@ email_validator
 Flask-sqlalchemy
 flask-simple-geoip
 flask_whooshalchemy
+itsdangerous==2.0.1
 Google-Images-Search
