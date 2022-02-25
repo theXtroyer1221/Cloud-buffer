@@ -10,32 +10,50 @@
     <hr />
     <div class="row">
       <div class="col-md-4">
-        <div class="card rounded">
+        <div class="card rounded shadow h-100 py-2" style="border-left: .25rem solid #283655;">
           <div class="card-body">
-            <blockquote class="blockquote text-center">
-              <h3>User count</h3>
-              <footer class="card-blockquote"><cite title="Source title">{{User.query.all()|length}}</cite></footer>
-            </blockquote>
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">
+                        User count</div>
+                      <div class="h3 mb-0 font-weight-bold text-gray-800">{{User.query.all()|length}}</div>
+                  </div>
+                  <div class="col-auto">
+                      <i class="fas fa-user fa-2x text-gray-300"></i>
+                  </div>
+              </div>
           </div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card rounded">
+        <div class="card rounded shadow h-100 py-2" style="border-left: .25rem solid #283655;">
           <div class="card-body">
-            <blockquote class="blockquote text-center">
-              <h3>Post count</h3>
-              <footer class="card-blockquote"><cite title="Source title">{{Post.query.all()|length}}</cite></footer>
-            </blockquote>
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">
+                        Post count</div>
+                      <div class="h3 mb-0 font-weight-bold text-gray-800">{{Post.query.all()|length}}</div>
+                  </div>
+                  <div class="col-auto">
+                      <i class="fas fa-newspaper fa-2x text-gray-300"></i>
+                  </div>
+              </div>
           </div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card">
+        <div class="card rounded shadow h-100 py-2" style="border-left: .25rem solid #283655;">
           <div class="card-body">
-            <blockquote class="blockquote">
-              <p>Quote</p>
-              <footer class="card-blockquote">Footer<cite title="Source title">Source title</cite></footer>
-            </blockquote>
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">
+                        Group count</div>
+                      <div class="h3 mb-0 font-weight-bold text-gray-800">{{Group.query.all()|length}}</div>
+                  </div>
+                  <div class="col-auto">
+                      <i class="fas fa-users fa-2x text-gray-300"></i>
+                  </div>
+              </div>
           </div>
         </div>
       </div>
@@ -58,7 +76,7 @@
             {% for user in User.query.all() %}
             <tr>
               <th scope="row">{{user.id}}</th>
-              <a href="{{ url_for('user', username=user.username) }}"><td>{{user.username}}</td></a>
+              <td><a class="text-reset" href="{{ url_for('user', username=user.username) }}">{{user.username}}</a></td>
               <td>{{user.email}}</td>
               <td>{{user.posts|length}}</td>
               <td>{{user.admin}}</td>
@@ -83,7 +101,7 @@
             {% for post in Post.query.all() %}
             <tr>
               <th scope="row">{{post.id}}</th>
-              <a href="{{ url_for('post', post_id=post.id) }}"><td>{{post.title}}</td></a>
+              <td><a class="text-reset" href="{{ url_for('post', post_id=post.id) }}">{{post.title}}</a></td>
               <td>{{post.date_posted}}</td>
               {% if post.Topic %}
               <td>{{post.Topic}}</td>

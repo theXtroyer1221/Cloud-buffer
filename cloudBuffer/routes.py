@@ -142,9 +142,9 @@ def blog():
 
 @app.route('/posts')
 def posts_json():
-	res = Post.query.all()
-	list_posts = [r.as_dict() for r in res]
-	return jsonify(list_posts)
+    res = Post.query.all()
+    list_posts = [r.as_dict() for r in res]
+    return jsonify(list_posts)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -283,6 +283,7 @@ def dashboard():
                            title="Admin dashboard - Cloudbuffer",
                            User=User,
                            Post=Post,
+                           Group=Group,
                            form=form, messageForm=messageForm)
 
 
@@ -474,8 +475,12 @@ def edit_group(title):
         print(username)
         user = User.query.filter_by(username=username).first()
         print(user)
-        group.moderators.append(user)
-        flash("User has been added as a moderator", "success")
+        if user is not None:
+            group.moderators.append(user)
+            db.session.commit()
+            flash("User has been added as a moderator", "success")
+        else:
+            flash(f"No user with the name '{form2.username.data}' was found, check the spelling", "warning")
         return redirect(url_for("edit_group", title=group.title))
     return render_template("edit_group.html",
                            title="Edit group information",

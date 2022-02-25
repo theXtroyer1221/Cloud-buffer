@@ -1,3 +1,7 @@
+import os
+import json
+import requests
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -6,9 +10,6 @@ from sqlalchemy import MetaData
 from flask_mail import Mail
 from flask import Flask
 
-import json
-import requests
-import os
 
 from dotenv import load_dotenv
 load_dotenv()

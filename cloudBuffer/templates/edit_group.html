@@ -4,7 +4,7 @@
     <div class="col-md-8">
       <div class="content-section account-body">
         <div class="media mb-2">
-          <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" />
+          <a href=" {{url_for('group', title=group.title)}} "><img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" /></a>
           <div class="media-body">
             <div>
               <h2 class="account-heading mb-1">{{ group.title }}</h2>
