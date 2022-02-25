@@ -1,0 +1,199 @@
+.header-index {
+  background-color: #ffd000;
+  background-image: url("../brand/overlay.svg"), linear-gradient(90deg, #00f2fe 0%, #03effe 2.1%, #24d2fe 29.3%, #3cbdfe 55.4%, #4ab0fe 79.6%, #4facfe 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 10rem;
+  padding-bottom: 0rem;
+
+  .form-div {
+    display: -webkit-inline-box;
+  }
+  .header-input {
+    border-radius: 50px;
+    border: 0;
+    width: 500px;
+    height: 50px;
+    margin-bottom: 5rem;
+    margin-right: -52px;
+    display: initial;
+  }
+  .header-button {
+    border-radius: 50px;
+    height: 51px;
+    width: 50px;
+    position: relative;
+    top: -2px;
+
+    /*&::before {
+      content: "";
+      width: 50px;
+      height: 50px;
+      border-radius: 50px;
+      position: absolute;
+      left: 5px;
+      background-color: black;
+    }*/
+
+    &::last-child {
+      background-color: #0069d9 !important;
+    }
+  }
+}
+
+.header-muted {
+  font-size: 17px !important;
+}
+
+.search-header {
+  margin-top: 56px;
+  padding-top: 6rem;
+  .form-div {
+    display: -webkit-inline-box;
+  }
+}
+
+.search-input {
+  border-radius: 50px !important;
+  border: 0 !important;
+  width: 500px !important;
+  height: 50px !important;
+  margin-right: -52px !important;
+  border: 2px solid rgba(0, 0, 0, 0.5) !important;
+  display: initial;
+}
+
+.search-button {
+  border-radius: 50px;
+  height: 51px;
+  width: 50px;
+  position: relative;
+  top: -2px;
+}
+
+.nav-part-dark {
+  border-radius: 5px;
+}
+
+.navbar {
+  transition: all 1s ease;
+}
+
+.nav-link {
+  transition: all 0.6s ease;
+}
+
+.sign-btns {
+  justify-content: flex-end;
+}
+
+@media (max-width: 991px) {
+  .sign-btns a {
+    margin-bottom: 5px;
+    width: 50%;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .sign-btns {
+    margin: auto;
+    display: flex;
+  }
+}
+
+.btn-blog {
+  background-color: transparent;
+  border: solid white 2px;
+  color: white;
+  margin-left: 5px;
+  margin-right: 5px;
+  &:hover {
+    animation: blinck 0.8s;
+    background-color: white;
+  }
+}
+
+.btn-blog-dark {
+  background-color: transparent;
+  border: solid #283655 2px;
+  color: #283655;
+  margin-left: 5px;
+  margin-right: 5px;
+  &:hover {
+    background-color: #283655;
+    color: white;
+  }
+}
+
+@keyframes blinck {
+  0% {
+    color: white;
+  }
+  100% {
+    color: black;
+  }
+}
+
+.navbar-username {
+  display: inline-table;
+  align-self: center;
+  color: white;
+}
+
+.navbar-image {
+  border-radius: 50%;
+}
+
+@media (min-width: 992px) {
+  .animate {
+    animation-duration: 0.3s;
+    -webkit-animation-duration: 0.3s;
+    animation-fill-mode: both;
+    -webkit-animation-fill-mode: both;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0rem);
+    opacity: 1;
+  }
+  0% {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes slideIn {
+  0% {
+    -webkit-transform: transform;
+    -webkit-opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    -webkit-opacity: 1;
+  }
+  0% {
+    -webkit-transform: translateY(1rem);
+    -webkit-opacity: 0;
+  }
+}
+
+.slideIn {
+  -webkit-animation-name: slideIn;
+  animation-name: slideIn;
+}
+
+.dropdown-toggle::after {
+  align-self: center;
+  color: white;
+  margin-left: 0.455rem;
+}
+
+.dropdown-item {
+  color: #283655 !important;
+  transition: all 0.4s ease !important;
+}

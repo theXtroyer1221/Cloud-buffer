@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    {% if title %}
+    <title>{{title}} - Cloud buffer</title>
+    {%else%} {% if request.path == "/" %}
+    <title>Weather forecast - Cloud Buffer</title>
+    {% else %} {% if data.cod == "404" %}
+    <title>City not found - Cloud Buffer</title>
+    {% endif %}
+    <title>Weather in {{query}} - Cloud Buffer</title>
+    {% endif %} {%endif%}
+    <link rel="icon" href="{{ url_for('static', filename='brand/icon.ico') }}" />
+    <link href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet" />
+    <!-- Bootstrap and Font awesome CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <script src="https://kit.fontawesome.com/9008cdf4dc.js" crossorigin="anonymous"></script>
+    <!-- Main css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <!-- Weather Icons -->
+    <script src="../static/js/skycons.js"></script>
+    <script src="../static/node_modules/moment/moment.js"></script>
+    <script src="../static/node_modules/moment-timezone/moment-timezone.js"></script>
+    <!-- leaflet mapping library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <!-- jquery and ajax -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    <!--Google Adsense -->
+    <script data-ad-client="ca-pub-4826446037389263" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  </head>
+  {% if request.path == "/" %}
+  <body data-spy="scroll" data-target=".navbar" data-offset="50">
+    {% else %}
+    <body onload="loading()" data-spy="scroll" data-target=".navbar" data-offset="50" style="height: 100vh;" class="d-flex flex-column">
+      {% endif %} 
+      {% if request.path == "/"%}
+      <nav id="navbar" class="navbar navbar-expand-lg navbar-dark fixed-top py-4 mobile-dark">
+        <div class="container">
+          <a class="navbar-brand" href="{{url_for('index')}}"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('index')}}"><i class="fa fa-home"></i> Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('blog')}}"><i class="fa fa-newspaper"></i> Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-question"></i> About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fas fa-hands-helping"></i> Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-phone" aria-hidden="true"></i> Contact</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      {% endif %}
+      {% if request.path == "/blog" or request.path == "/account" or request.path == "/dashboard" or request.path == "/post/new" or data == "post_site" or title == "Update existing post" or request.path == "/user/{}".format(title)  or request.path == "/reset_password" or request.path == "/terms" or request.path == "/group/new" %}
+      <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark fixed-top py-2 mobile-dark bg-dark mb-3">
+        <div class="container">
+          <a class="navbar-brand" href="{{url_for('index')}}"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('index')}}"><i class="fa fa-home"></i> Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('blog')}}"><i class="fa fa-newspaper"></i> Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-question"></i> About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fas fa-hands-helping"></i> Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-phone" aria-hidden="true"></i> Contact</a>
+              </li>
+            </ul>
+          </div>
+          {% if current_user.is_authenticated %}
+          <div class="navbar-collapse collapse" id="navbarResponsive">
+            <ul>
+              <li class="nav-item dropdown">
+                <a href="#" class="d-flex mr-3 nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
+                  <p class="navbar-username">{{ current_user.username }}</p>
+                </a>
+                <div class="dropdown-menu slideIn animate" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{{ url_for('account') }}"><i class="fas fa-user mr-2"></i> Account</a>
+                  <a class="dropdown-item" href="{{ url_for('new_post') }}"><i class="fas fa-pen-alt mr-2"></i> Create a post</a>
+                  <a class="dropdown-item" href="{{ url_for('new_group') }}"><i class="fas fa-users mr-2"></i> Create a group</a>
+                  {% if current_user.admin %}
+                  <a class="dropdown-item" href="{{url_for('dashboard')}}"><i class="fas fa-server mr-2"></i> Admin dashboard</a>
+                  {% endif %}
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{{url_for('.logout')}}"><i class="fas fa-sign-out-alt mr-2"></i> Log out</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+          {% else %}
+          <div class="navbar-collapse sign-btns">
+            <a name="Log in" class="btn btn-blog nav-link" href="{{url_for('.login')}}" role="button">Log in</a>
+            <a name="Sign up" class="btn btn-blog nav-link" href="{{url_for('.signup')}}" role="button">Sign up</a>
+          </div>
+          {% endif %}
+        </div>
+      </nav>
+      {% endif %}
+      {% if request.path == "/signup" or request.path == "/login" %}
+      {% if request.path == "/login" %}
+      <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark py-2 mobile-dark bg-dark mb-6">
+      {% else %}
+      <nav id="navbarBlog" class="navbar navbar-expand-lg navbar-dark py-2 mobile-dark bg-dark">
+      {% endif %}
+        <div class="container">
+          <a class="navbar-brand" href="{{url_for('index')}}"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('index')}}"><i class="fa fa-home"></i> Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('blog')}}"><i class="fa fa-newspaper"></i> Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-question"></i> About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fas fa-hands-helping"></i> Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-phone" aria-hidden="true"></i> Contact</a>
+              </li>
+            </ul>
+          </div>
+          <div class="navbar-collapse sign-btns">
+            <a name="Log in" class="btn btn-blog nav-link" href="{{url_for('.login')}}" role="button">Log in</a>
+            <a name="Sign up" class="btn btn-blog nav-link" href="{{url_for('.signup')}}" role="button">Sign up</a>
+          </div>
+        </div>
+      </nav>
+      {% endif %}
+      {% if  request.path == "/weather/{}".format(query) %}
+      <nav id="navbarSearch" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top py-2">
+        <div class="d-flex bg-dark px-5 nav-part-dark w-100">
+          <a class="navbar-brand" href="{{url_for('index')}}"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('index')}}"><i class="fa fa-home"></i> Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('blog')}}"><i class="fa fa-newspaper"></i> Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-question"></i> About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fas fa-hands-helping"></i> Services</a>
+              </li>
+              <li class="nav-item mr-2">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-phone" aria-hidden="true"></i> Contact</a>
+              </li>
+              <li class="nav item" style="height: 36px; margin-top: auto;">
+                <div class="onoffswitch">
+                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked onclick="celcuis_to_fehrenheit()" />
+                  <label class="onoffswitch-label" for="myonoffswitch">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch" style="height: 18px; margin-top: 8px;"></span>
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      {% endif %}
+      {% if data == 404 %}
+      <h1>hello</h1>
+      <nav id="navbar404" class="navbar navbar-expand-lg navbar-dark fixed-top py-2 mobile-dark bg-dark mb-3">
+        <div class="container">
+          <a class="navbar-brand" href="{{url_for('index')}}"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('index')}}"><i class="fa fa-home"></i> Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{{url_for('blog')}}"><i class="fa fa-newspaper"></i> Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-question"></i> About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fas fa-hands-helping"></i> Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-phone" aria-hidden="true"></i> Contact</a>
+              </li>
+            </ul>
+          </div>
+          {% if current_user.is_authenticated %}
+          <div class="navbar-collapse collapse" id="navbarResponsive">
+            <ul>
+              <li class="nav-item dropdown">
+                <a href="#" class="d-flex mr-3 nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User image" class="mr-2 navbar-image" width="50px" height="50px" />
+                  <p class="navbar-username">{{ current_user.username }}</p>
+                </a>
+                <div class="dropdown-menu slideIn animate" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{{ url_for('account') }}"><i class="fas fa-user mr-2"></i> Account</a>
+                  <a class="dropdown-item" href="{{ url_for('new_post') }}"><i class="fas fa-pen-alt mr-2"></i> Create a post</a>
+                  <a class="dropdown-item" href="{{ url_for('new_group') }}"><i class="fas fa-users mr-2"></i> Create a group</a>
+                  {% if current_user.admin %}
+                  <a class="dropdown-item" href="{{url_for('dashboard')}}"><i class="fas fa-server mr-2"></i> Admin dashboard</a>
+                  {% endif %}
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{{url_for('.logout')}}"><i class="fas fa-sign-out-alt mr-2"></i> Log out</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+          {% else %}
+          <div class="navbar-collapse sign-btns">
+            <a name="Log in" class="btn btn-blog nav-link" href="{{url_for('.login')}}" role="button">Log in</a>
+            <a name="Sign up" class="btn btn-blog nav-link" href="{{url_for('.signup')}}" role="button">Sign up</a>
+          </div>
+          {% endif %}
+        </div>
+      </nav>
+      {% endif %}
+      {% block content %}{% endblock %} 
+      {% if request.path == "/" or request.path == "/blog" or request.path == "/dashboard" or data == "post_site" or request.path == "/terms"%}
+      <footer class="mt-auto">
+        <div class="footer-copyright text-center py-3 bg-dark text-white">
+          © 2020 Copyright:
+          <a href="/" class="text-white"> Cloud Buffer</a>
+        </div>
+      </footer>
+      {% endif %} 
+      {% if request.path == "/" %}
+      <script>
+        var nav = document.getElementById("navbar");
+
+        window.onscroll = function () {
+          if (window.scrollY >= 100) {
+            nav.classList.remove("py-4");
+            nav.classList.add("bg-dark");
+          } else {
+            nav.classList.add("py-4");
+            nav.classList.remove("bg-dark");
+          }
+        };
+      </script>
+      {% endif %}
+      <script>
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
+        $(function () {
+          $('[data-toggle="popover"]').popover()
+        })
+      </script>
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <!-- disqus -->
+      <script id="dsq-count-scr" src="//cloud-buffer.disqus.com/count.js" async></script>
+    </body>
+  </body>  
+</html>

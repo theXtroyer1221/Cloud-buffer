@@ -1,0 +1,184 @@
+{% extends 'base.html' %} {% block content %}
+<section class="my-5 pt-5">
+  <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
+    <div class="alert alert-{{ category }} mb-2">
+      {{ message }}
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+    <h1 class="display-5">Admin Dashboard</h1>
+    <hr />
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card rounded shadow h-100 py-2" style="border-left: .25rem solid #283655;">
+          <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">
+                        User count</div>
+                      <div class="h3 mb-0 font-weight-bold text-gray-800">{{User.query.all()|length}}</div>
+                  </div>
+                  <div class="col-auto">
+                      <i class="fas fa-user fa-2x text-gray-300"></i>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card rounded shadow h-100 py-2" style="border-left: .25rem solid #283655;">
+          <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">
+                        Post count</div>
+                      <div class="h3 mb-0 font-weight-bold text-gray-800">{{Post.query.all()|length}}</div>
+                  </div>
+                  <div class="col-auto">
+                      <i class="fas fa-newspaper fa-2x text-gray-300"></i>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card rounded shadow h-100 py-2" style="border-left: .25rem solid #283655;">
+          <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">
+                        Group count</div>
+                      <div class="h3 mb-0 font-weight-bold text-gray-800">{{Group.query.all()|length}}</div>
+                  </div>
+                  <div class="col-auto">
+                      <i class="fas fa-users fa-2x text-gray-300"></i>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="w-50" />
+    <div class="mb-2">
+      <h2>User list</h2>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">User ID</th>
+              <th scope="col">Username</th>
+              <th scope="col">Email</th>
+              <th scope="col">Number of posts</th>
+              <th scope="col">Admin</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in User.query.all() %}
+            <tr>
+              <th scope="row">{{user.id}}</th>
+              <td><a class="text-reset" href="{{ url_for('user', username=user.username) }}">{{user.username}}</a></td>
+              <td>{{user.email}}</td>
+              <td>{{user.posts|length}}</td>
+              <td>{{user.admin}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <h2>Posts</h2>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Post ID</th>
+              <th scope="col">Title</th>
+              <th scope="col">Date posted</th>
+              <th scope="col">Topic</th>
+              <th scope="col">Author</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for post in Post.query.all() %}
+            <tr>
+              <th scope="row">{{post.id}}</th>
+              <td><a class="text-reset" href="{{ url_for('post', post_id=post.id) }}">{{post.title}}</a></td>
+              <td>{{post.date_posted}}</td>
+              {% if post.Topic %}
+              <td>{{post.Topic}}</td>
+              {% else %}
+              <td>None</td>
+              {% endif %}
+              <td>{{post.author.username}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card card-signin">
+          <div class="card-body">
+            <div class="content-section">
+              <form method="POST" action="" class="my-2 mt-2" id="email">
+                {{ form.identifier(hidden=True, value='form') }} {{ form.hidden_tag() }}
+                <fieldset class="form-group">
+                  <legend class="border-bottom mb-4">Send an email to users</legend>
+                  <div class="form-group">
+                    {{ form.title.label(class="form-control-label") }} {% if form.title.errors %} {{ form.title(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                      {% for error in form.title.errors %}
+                      <span>{{ error }}</span>
+                      {% endfor %}
+                    </div>
+                    {% else %} {{ form.title(class="form-control form-control-lg") }} {% endif %}
+                  </div>
+                  <div class="form-group">
+                    {{ form.body.label(class="form-control-label") }} {% if form.body.errors %} {{ form.body(class="form-control form-control-lg is-invalid", style="height: 250px;") }}
+                    <div class="invalid-feedback">
+                      {% for error in form.body.errors %}
+                      <span>{{ error }}</span>
+                      {% endfor %}
+                    </div>
+                    {% else %} {{ form.body(class="form-control form-control-lg", style="height: 250px;") }} {% endif %}
+                  </div>
+                </fieldset>
+                <div class="form-group">
+                  {{ form.submit(class="btn btn-blog-dark", form="email") }}
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card card-signin">
+          <div class="card-body">
+            <div class="content-section">
+              <form method="POST" action="" class="my-2 mt-2" id="message">
+                {{ messageForm.identifier(hidden=True, value='messageForm') }}{{ messageForm.hidden_tag() }}
+                <fieldset class="form-group">
+                  <legend class="border-bottom mb-4">Display message to users</legend>
+                  <div class="form-group">
+                    {{ messageForm.content.label(class="form-control-label") }} {% if messageForm.content.errors %} {{ messageForm.content(class="form-control form-control-lg is-invalid", form="message") }}
+                    <div class="invalid-feedback">
+                      {% for error in messageForm.content.errors %}
+                      <span>{{ error }}</span>
+                      {% endfor %}
+                    </div>
+                    {% else %} {{ messageForm.content(class="form-control form-control-lg") }} {% endif %}
+                  </div>
+                </fieldset>
+                <div class="form-group">
+                  {{ messageForm.send(class="btn btn-blog-dark", form="message") }}
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

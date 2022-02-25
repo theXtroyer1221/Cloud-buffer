@@ -1,0 +1,314 @@
+html,
+body,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  min-height: 100%;
+  width: 100%;
+  font-family: $font3;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 !important;
+  padding: 0;
+}
+
+h1 {
+  font-family: $font1 !important;
+}
+
+p {
+  font-family: $font3;
+}
+
+img {
+  object-fit: cover;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.bg-dark {
+  background-color: #283655 !important;
+}
+
+.vl {
+  height: 100%;
+  border: none;
+  border-left: 1px solid hsla(200, 10%, 50%, 100);
+  height: 100vh;
+  width: 1px;
+}
+
+.text-primary {
+  color: $color1 !important;
+}
+
+.bg-primary {
+  background-color: $color1 !important;
+}
+
+.bg-primary-2 {
+  background-color: $color3 !important;
+}
+
+@font-face {
+  font-family: font-awesome;
+  src: url(..\brand\Font\Awesome\5\Brands-Regular-400.otf);
+}
+
+#location_submit {
+  font-family: font-awesome;
+}
+
+.card-signin {
+  border-radius: 1rem;
+}
+
+.form-control {
+  border-radius: 1rem;
+  &:focus {
+    border-color: #283655;
+    box-shadow: 0 0 0 0.2rem #2836556b;
+  }
+}
+
+.mb-6 {
+  margin-bottom: 5rem !important;
+}
+
+.mt-6 {
+  margin-top: 8rem !important;
+}
+
+@media (max-width: 991px) {
+  .mt-5 {
+    margin-top: 7rem !important;
+  }
+
+  .mb-6 {
+    margin-bottom: 3rem !important;
+  }
+
+  .account-heading {
+    font-size: 2rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .media {
+    display: flow-root;
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .weather-temp {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .search-header h1 {
+    text-align: center;
+  }
+
+  .text-center-mobile {
+    text-align: center !important;
+  }
+
+  .mx-auto-mobile {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .header-index .header-input {
+    width: 370px;
+  }
+
+  .search-header .search-input {
+    width: 370px !important;
+  }
+
+  .header-title {
+    font-size: 2rem;
+    margin-bottom: 7px;
+  }
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+
+.account-body {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.file-btn input {
+  background-color: transparent;
+  border: solid #283655 2px;
+  color: #283655;
+  margin-left: 5px;
+  margin-right: 5px;
+  &:hover {
+    background-color: #283655;
+    color: white;
+  }
+}
+
+.content-section-article {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.content-section-article-user_page {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #444444;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+
+.rounded {
+  border-radius: 10px !important;
+}
+
+.btn-secondary {
+  color: white !important;
+}
+
+.btn-danger {
+  color: white !important;
+}
+
+.btn-primary {
+  border-color: #283655;
+  background-color: #283655;
+  &:hover {
+    background-color: #1d2535;
+    border-color: #283655;
+  }
+  &:focus {
+    border-color: #283655;
+    background-color: #1d2535;
+  }
+}
+
+.btn-outline-primary {
+  border-color: #283655;
+  color: #283655;
+  &:hover {
+    background-color: #283655;
+    border-color: #283655;
+  }
+  &:focus {
+    border-color: #283655;
+    background-color: #283655;
+  }
+}
+
+.ui-autocomplete {
+  border-radius: 3px !important;
+  overflow: hidden !important;
+  background: #eeeeee !important;
+}
+
+.ui-autocomplete select {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.ui-widget {
+  font-family: $font1 !important;
+  background: white !important;
+}
+
+.ui-front {
+  z-index: 9999 !important;
+}
+
+.comment {
+  .points {
+    transition: all 0.2s ease;
+    opacity: 0;
+    cursor: pointer;
+  }
+  &:hover {
+    .points {
+      opacity: 1;
+    }
+  }
+}

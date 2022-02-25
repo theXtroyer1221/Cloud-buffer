@@ -14,34 +14,56 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install for the project and how to install them
 
 ```
-Give examples
+python-dotenv
+flask
+requests
+Google-Images-Search
+flask_wtf
+flask-simple-geoip
+Flask-Bcrypt
+Flask-SQLAlchemy
+Flask-mail
+Pillow
 ```
 
 ### Installing
 
 A step by step series of examples that tell you how to get a development env running
 
-Say what the step will be
+You need to install all the python packages using pip. In the main directory, just run this command
 
 ```
-Give the example
+pip install -r requirementx.txt
 ```
 
-And repeat
+You might need to install another packages, please report the packages that the **requirement.txt** is missing
 
 ```
-until finished
+pip install [package]
 ```
 
-### Deployment
+To run the website fully okay, you need to acquire api-keys to the diffrent api's used in the program.
 
-Add additional notes about how to deploy this on a live system
+- [Openweather API](https://openweathermap.org/)
+- [ipstack](https://ipstack.com/)
+- [Google custom search](https://console.developers.google.com/projectselector2/apis/dashboard?pli=1&supportedpurview=project)
+*This is an api for the image search, for more information about setting it up read here https://pypi.org/project/Google-Images-Search/*
+
+### Running the project
+
+Installing all the projects will make you able to run the project. Go to the main directory of the prject and run the **run.py** file
+
+```
+python run.py
+```
+
+*Be careful that the app is originally ran on debug mode one and development server. The app is also does run on host 0.0.0.0, to change that go and cange the run.py file. These settings are not recommended for production*
 
 ### Built With
 
-- [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-- [Maven](https://maven.apache.org/) - Dependency Management
-- [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+- [Python](https://www.python.org/) - Programming language used 
+- [Flask](https://flask.palletsprojects.com/en/1.1.x/) - The web framework used
+- [Openweather API](https://openweathermap.org/) - The weather api used
 
 ## Contributing
 

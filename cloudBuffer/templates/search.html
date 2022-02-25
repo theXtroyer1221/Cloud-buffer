@@ -1,0 +1,178 @@
+{% extends 'base.html' %} {% block content%}
+<div id="page-container">
+  <section class="search-header mb-2">
+    <div class="container">
+      <h1 class="text-primary">Weather forecast</h1>
+      <hr />
+      <div class="form-div">
+        <form action="" method="GET">
+          {{form.search(class_="form-control search-input", placeholder="London, New York, Stockholm, Paris", value="London, New York, Stockholm, Paris", onfocus="this.value=''")}}
+          <button class="search-button btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+        </form>
+        <form action="" method="GET">
+          {{location_form.hfield(class_="d-none", value="123")}}
+          <button class="search-button btn btn-primary" type="submit" style="left: 5px;"><i class="fas fa-map-marker-alt"></i></button>
+        </form>
+      </div>
+    </div>
+  </section>
+  {% if data.cod == "404"%}
+  <hr />
+  <section class="py-5">
+    <div class="container text-center">
+      <h1 class="display-1 text-primary">404</h1>
+      <h1>City not found</h1>
+      <p class="lead">The clouds didint reach your search, try checking the name of the city</p>
+    </div>
+  </section>
+  {% else %}
+  <div id="loader"></div>
+  <section class="pt-5 animate-bottom" id="mainSection">
+    <div class="container mb-5">
+      <div class="row mb-1">
+        <div class="col-lg-6 p-0">
+          <h1 class="display-4 mb-4 text-center-mobile">Weather in <br />{{data.name}}, <small>{{data["sys"]["country"]}}</small></h1>
+          <div class="d-flex mb-2 mx-auto-mobile weather-temp">
+            <canvas id="weather-icon" width="75" height="75" class="mr-3"></canvas>
+            <p id="weather-temprature" class="weather-temprature text-primary" style="--c: '°c';">{{data["main"]["temp"]|round|int}}</p>
+          </div>
+          <p id="weather-feel" class="weather-feel text-center-mobile" style="--c: '°c';">{{data["main"]["feels_like"]|round|int}}</p>
+          <p class="weather-desc text-center-mobile"><small>{{data["weather"][0]["description"]}}</small></p>
+        </div>
+        <div class="col-lg-6 p-0">
+          <div>
+            <img class="img-fluid w-100" src="{{img}}" alt="" style="height: 270px;" />
+            <p class="image-desc text-center-mobile mt-2">The picture is the first result of the of google image serach of <b>{{query}} city {{data["sys"]["country"]}}</b></p>
+          </div>
+        </div>
+      </div>
+      <hr />
+
+      <div class="row mb-4">
+        <div class="col-lg-6">
+          <div class="d-flex">
+            <img class="mr-3" src="../static/images/humitidy.png" alt="humitidy" width="60" height="60" style="object-fit: contain;" />
+            <p class="weather-humidity">{{data["main"]["humidity"]}}%</p>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="d-flex">
+            <div class="wind d-flex mr-5">
+              <canvas id="wind-icon" width="75" height="75" class="mr-3"></canvas>
+              <p class="weather-wind">{{data["wind"]["speed"]}}</p>
+            </div>
+            <div class="d-flex">
+              <img class="mr-3" src="../static/images/pressure.png" alt="" height="75" width="75" />
+              <p class="weather-pressure">{{data["main"]["pressure"]}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row text-center-mobile">
+        <h1 class="text-primary">{{data.name}}, {{data["sys"]["country"]}} location</h1>
+      </div>
+      <hr />
+      <div class="row">
+        <div id="weatherMap"></div>
+      </div>
+    </div>
+    <footer>
+      <div class="footer-copyright text-center py-3 bg-dark text-white">
+        © 2020 Copyright:
+        <a href="/" class="text-white"> Cloud Buffer</a>
+      </div>
+    </footer>
+  </section>
+  {% set sunset = data["sys"]["sunset"] %} {% set lat = data["coord"]["lat"] %} {% set lon = data["coord"]["lon"] %}
+  <p class="d-none" id="weatherId">{% for i in data["weather"] %} {{ i['id']}} {% endfor %}</p>
+</div>
+<script>
+  var weatherMap = L.map("weatherMap").setView([{{lat|tojson}}, {{lon|tojson}}], 8);
+  L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OSM contributors",
+  }).addTo(weatherMap);
+  setTimeout(function () {
+    weatherMap.invalidateSize();
+  }, 2000);
+</script>
+<script>
+  var myVar;
+
+  function loading() {
+    myVar = setTimeout(showPage, 1400);
+  }
+
+  function showPage() {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("mainSection").style.display = "inherit";
+  }
+</script>
+<script>
+  function celcuis_to_fehrenheit() {
+    var temp = document.getElementById("weather-temprature");
+    var tempFeel = document.getElementById("weather-feel");
+    var switchy = document.getElementById("myonoffswitch");
+
+    var isChecked = switchy.checked;
+    if (isChecked == false) {
+      fehrenheit = temp.innerHTML * 1.8 + 32;
+      fehrenheitFeel = tempFeel.innerHTML * 1.8 + 32;
+
+      temp.innerHTML = Math.round(fehrenheit);
+      temp.style.setProperty("--c", "'°F'");
+      tempFeel.innerHTML = Math.round(fehrenheitFeel);
+      tempFeel.style.setProperty("--c", "'°F'");
+    } else if (isChecked == true) {
+      celcuis = (temp.innerHTML - 32) * (5 / 9);
+      celcuisFeel = (tempFeel.innerHTML - 32) * (5 / 9);
+
+      temp.innerHTML = Math.round(celcuis);
+      temp.style.setProperty("--c", "'°c'");
+      tempFeel.innerHTML = Math.round(celcuisFeel);
+      tempFeel.style.setProperty("--c", "'°c'");
+    }
+  }
+</script>
+<script>
+  console.log({{data| tojson}});
+
+  const weatherStatus = parseInt(weatherId.textContent);
+  console.log(weatherStatus)
+
+  var skycons = new Skycons({ color: "#4facfe" });
+  var skyconsWind = new Skycons({ color: "#4facfe" });
+
+  var sunset_time = {{ sunset| tojson}};
+  var sunset = new Date(sunset_time * 1000);
+
+  skyconsWind.add("wind-icon", Skycons.WIND);
+  skyconsWind.play();
+
+  skycons.add("weather-icon", Skycons.PARTLY_CLOUDY_NIGHT);
+  skycons.play();
+
+  if (weatherStatus == 800) {
+    skycons.set("weather-icon", Skycons.CLEAR_DAY);
+  } else if (weatherStatus == 801 || weatherStatus == 802) {
+    skycons.set("weather-icon", Skycons.PARTLY_CLOUDY_DAY);
+  } else if (weatherStatus == 803 || weatherStatus == 804) {
+    skycons.set("weather-icon", Skycons.CLOUDY);
+  } else if (weatherStatus == 500 || weatherStatus == 501) {
+    skycons.set("weather-icon", Skycons.RAIN);
+  } else if (weatherStatus == 502 || weatherStatus == 503 || weatherStatus == 504) {
+    skycons.set("weather-icon", Skycons.SLEET);
+  } else if (weatherStatus == 511) {
+    skycons.set("weather-icon", Skycons.SNOW);
+  } else if (weatherStatus == 520 || weatherStatus == 521 || weatherStatus == 522 || weatherStatus == 531) {
+    skycons.set("weather-icon", Skycons.SLEET);
+  } else if (weatherStatus == 600 || weatherStatus == 601 || weatherStatus == 602 || weatherStatus == 616) {
+    skycons.set("weather-icon", Skycons.SNOW);
+  } else if (weatherStatus == 611 || weatherStatus == 612 || weatherStatus == 613 || weatherStatus == 615) {
+    skycons.set("weather-icon", Skycons.SLEET);
+  } else if (weatherStatus == 701 || weatherStatus == 711 || weatherStatus == 721 || weatherStatus == 731 || weatherStatus == 741) {
+    skycons.set("weather-icon", Skycons.FOG);
+  } else {
+    skycons.set("weather-icon", Skycons.CLOUDY);
+  }
+</script>
+{% endif %} {% endblock %}
