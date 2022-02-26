@@ -14,4 +14,5 @@ email_validator
 Flask-sqlalchemy
 flask-simple-geoip
 flask_whooshalchemy
+itsdangerous==2.0.1
 Google-Images-Search
