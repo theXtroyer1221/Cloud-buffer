@@ -1,3 +1,4 @@
+from sqlalchemy import null
 from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, UpdateGroupForm, AddAdminForm, GroupPostForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
@@ -17,9 +18,8 @@ import os
 from google_images_search import GoogleImagesSearch
 
 GCS_DEVELOPER_KEY = os.environ.get('GCS_DEVELOPER_KEY')
+WEATHER_API = os.environ.get("WEATHER_API")
 GCS_CX = os.environ.get('GCS_CX')
-IP_STACK = os.environ.get("IP_STACK")
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -32,18 +32,17 @@ def index():
         query = request.args["search"]
 
         return redirect(url_for("search", query=query))
-
+    
     if request.args.get("hfield", None):
-        headers_list = request.headers.getlist("X-Forwarded-For")
-        user_ip = request.remote_addr
+        if request.headers.getlist("X-Forwarded-For"):
+            user_ip = request.headers.getlist("X-Forwarded-For")[0]
+        else:
+            user_ip = request.remote_addr
         url = 'https://freegeoip.app/json/{}'.format(user_ip)
-
         r = requests.get(url)
         j = json.loads(r.text)
-
         query = j['city']
-
-        return redirect(url_for("search", query=query))
+        redirect(url_for("search", query=query))
 
     return render_template("index.html",
                            form=form,
@@ -71,13 +70,13 @@ def search(query):
         url = 'https://freegeoip.app/json/{}'.format(user_ip)
         r = requests.get(url)
         j = json.loads(r.text)
-        query = j["city"]
-        return redirect(url_for("search", query=query))
+        query = j['city']
+        redirect(url_for("search", query=query))
 
     payload = {
         'q': query,
         'units': 'metric',
-        'appid': 'd4783db24d0d806b60afb366ceea4d7e'
+        'appid': WEATHER_API
     }
     r = requests.get('http://api.openweathermap.org/data/2.5/weather',
                      params=payload)
@@ -86,20 +85,19 @@ def search(query):
     if data["cod"] == 200:
         search_country = data["sys"]["country"]
         search_query = f"{query} city {search_country}"
-
+        print(search_query)
         gis = GoogleImagesSearch(GCS_DEVELOPER_KEY, GCS_CX)
         _google_search_params = {
             'q': search_query,
             'num': 1,
             'safe': 'off',
-            'imgSize': 'xlarge'
+            'imgSize': 'XLARGE'
         }
         try:
             gis.search(search_params=_google_search_params)
-        except:
+        except Exception as e:
             img = "../static/images/notfound.jpg"
-
-        img = "../static/images/notfound.jpg"
+            print(e)
 
         for image in gis.results():
             img = image.url

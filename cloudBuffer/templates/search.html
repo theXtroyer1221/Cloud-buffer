@@ -87,7 +87,7 @@
   <p class="d-none" id="weatherId">{% for i in data["weather"] %} {{ i['id']}} {% endfor %}</p>
 </div>
 <script>
-  var weatherMap = L.map("weatherMap").setView([{{lat|tojson}}, {{lon|tojson}}], 8);
+  var weatherMap = L.map("weatherMap").setView([{{lat|tojson}}, {{lon|tojson}}], 9);
   L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OSM contributors",
   }).addTo(weatherMap);
