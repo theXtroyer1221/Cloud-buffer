@@ -64,14 +64,14 @@ def search(query):
         return redirect(url_for("search", query=query))
 
     if request.args.get("hfield", None):
-        headers_list = request.headers.getlist("X-Forwarded-For")
-        user_ip = headers_list[0] if headers_list else request.remote_addr
-        url = 'http://api.ipstack.com/{}?access_key={}'.format(
-            "12.32.32.11", IP_STACK)
+        if request.headers.getlist("X-Forwarded-For"):
+            user_ip = request.headers.getlist("X-Forwarded-For")[0]
+        else:
+            user_ip = request.remote_addr
+        url = 'https://freegeoip.app/json/{}'.format(user_ip)
         r = requests.get(url)
-        j = r.json()
+        j = json.loads(r.text)
         query = j["city"]
-
         return redirect(url_for("search", query=query))
 
     payload = {
