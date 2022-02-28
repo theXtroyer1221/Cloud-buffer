@@ -4,7 +4,45 @@
     <div class="col-md-8">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
       <div class="alert alert-{{ category }}">{{ message }}</div>
-      {% endfor %} {% endif %} {% endwith %} {% for post in posts.items %}
+      {% endfor %} {% endif %} {% endwith %}
+      <div class="content-section">
+        <div class="account-body" style="display: flex">
+          {% if current_user.is_authenticated %}
+          <img
+            class="rounded-circle article-img"
+            src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"
+            width="125px"
+            height="125px"
+          />
+          {% else %}
+          <img
+            class="rounded-circle article-img"
+            src="{{ url_for('static', filename='profile_pics/' + 'default.jpg') }}"
+            width="125px"
+            height="125px"
+          />
+          {% endif %}
+          <a class="w-100" href="{{url_for('new_post')}}">
+            <form method="POST" action="" class="mt-2">
+              {{ writeform.hidden_tag() }}
+              <fieldset class="form-group m-0">
+                <div class="form-group m-0 mb-2">
+                  {% if writeform.title.errors %} {{ writeform.title(class="form-control form-control-lg is-invalid") }}
+                  <div class="invalid-feedback">
+                    {% for error in writeform.title.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                  </div>
+                  {% else %} {% if current_user.is_authenticated %} {{ writeform.title(class="form-control form-control-lg",
+                  placeholder="Write a new post") }} {% else %} {{ writeform.title(class="form-control form-control-lg",
+                  placeholder="Login to write a post") }} {% endif %}{% endif %}
+                </div>
+              </fieldset>
+            </form>
+          </a>
+        </div>
+      </div>
+      {% for post in posts.items %}
       <article class="media content-section-article">
         <a href="{{ url_for('user', username=post.author.username) }}"
           ><img

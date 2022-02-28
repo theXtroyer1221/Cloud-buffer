@@ -120,6 +120,7 @@ def blog():
     with open("cloudBuffer/message.json", "r") as f:
         message = json.load(f)
     form = SearchPostForm()
+    writeform = PostForm()
     page = request.args.get("page", 1, type=int)
     if current_user.is_authenticated:
         image_file = url_for("static",
@@ -136,7 +137,7 @@ def blog():
         else:
             flash(f"No article found with the name {form.search.data}", "danger")
             return redirect(url_for("blog"))
-    return render_template("blog.html", data="data", title="Blog", image_file=image_file, posts=posts, form=form, message=message)
+    return render_template("blog.html", data="data", title="Blog", image_file=image_file, posts=posts, form=form, writeform=writeform, message=message)
 
 @app.route('/posts')
 def posts_json():
