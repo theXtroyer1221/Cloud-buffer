@@ -1,5 +1,5 @@
 from sqlalchemy import null
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, UpdateGroupForm, AddAdminForm, GroupPostForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, UpdateGroupForm, AddAdminForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer.models import User, Post, Comment, Group, Grouppost, Groupcomment
@@ -517,7 +517,7 @@ def group_post_new(title):
     group = Group.query.filter_by(title=title).first_or_404()
     grp_img = url_for("static",
                     filename="profile_pics/" + group.image_file)
-    form = GroupPostForm()
+    form = PostForm()
     if form.validate_on_submit():
         post = Grouppost(id=random.randint(1000, 99999),
                     title=form.title.data,
@@ -528,7 +528,7 @@ def group_post_new(title):
         db.session.commit()
         flash("The post has been created successfully", "success")
         return redirect(url_for("group", title=group.title))
-    return render_template("create_group_post.html",
+    return render_template("create_post.html",
                            title=group.title,
                            group=group,
                            post="post", group_img=grp_img, data="post_site", form=form, legend="Create a group post")

@@ -129,10 +129,6 @@ class AddAdminForm(FlaskForm):
     username = StringField("User's Username", validators=[DataRequired()])
     submit = SubmitField("Send")
 
-class GroupPostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField("Content", validators=[DataRequired()])
-    submit = SubmitField("Post")
 class AddGroupCommentForm(FlaskForm):
     content = StringField("Content", validators=[DataRequired(), Length(min=5, max=140)])
     submit = SubmitField("Post")
