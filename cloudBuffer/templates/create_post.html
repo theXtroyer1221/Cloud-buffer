@@ -1,4 +1,6 @@
 {% extends 'base.html' %} {% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <div class="container pt-5 mt-5">
   <div class="row">
     <div class="col-md-8">
@@ -7,7 +9,7 @@
           <div class="content-section">
             <form method="POST" action="" class="my-2 mt-2">
               {{ form.hidden_tag() }}
-              <fieldset class="form-group">
+              <fieldset class="form-group mb-0">
                 <legend class="border-bottom mb-4">{{ legend }}</legend>
                 <div class="form-group">
                   {{ form.title.label(class="form-control-label") }} {% if form.title.errors %} {{ form.title(class="form-control form-control-lg is-invalid") }}
@@ -18,7 +20,7 @@
                   </div>
                   {% else %} {{ form.title(class="form-control form-control-lg") }} {% endif %}
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-0">
                   {{ form.content.label(class="form-control-label") }} {% if form.content.errors %} {{ form.content(class="form-control form-control-lg is-invalid", style="height: 250px;") }}
                   <div class="invalid-feedback">
                     {% for error in form.content.errors %}
@@ -47,7 +49,7 @@
             <hr />
             <li>No NSFW content</li>
             <hr />
-            <li>Try seeking intresting topics to talk about</li>
+            <li>Try seeking interesting topics to talk about</li>
             <hr />
             <li>Pick a fitting title for the post</li>
           </ol>
@@ -66,5 +68,8 @@
       </div>
     </div>
   </div>
-  {% endblock %}
 </div>
+<script>
+  var simplemde = new SimpleMDE({ element: document.getElementById("content"), autosave: {enabled:true}});
+</script>
+{% endblock %}

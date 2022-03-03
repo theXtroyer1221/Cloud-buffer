@@ -58,7 +58,6 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
-#@whooshee.register_model('title', 'content')
 class Post(db.Model):
     __searchable__ = ['title', "content"]
     id = db.Column(db.Integer, primary_key=True)
@@ -116,7 +115,7 @@ class Grouppost(db.Model):
     group_id =  db.Column(db.Integer, db.ForeignKey("group.id"), nullable=False)
 
     def __repr__(self):
-        return f"GroupPost('{self.title}', '{self.date_posted}', '{self.group}')"
+        return f"GroupPost('{self.title}', '{self.date_posted})"
 
     def as_dict(self):
         return {'id': self.id, 'title': self.title}

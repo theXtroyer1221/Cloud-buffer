@@ -255,7 +255,7 @@ def send_admin_mail(title, body, recipients=None):
         users = [user.email for user in User.query.all()]
     else:
         users = [recipients]
-    msg = Message(f"{title} - CloudBuffer", recipients=users)
+    msg = Message(f"{title} - CloudBuffer", recipients=users, sender="noreply@CloudBuffer.com")
     msg.html = render_template("admin_email.html", body=body)
     mail.send(msg)
 
@@ -502,7 +502,11 @@ def delete_group(group_id):
             emails.append('jaddou2005@gmail.com')
             emails_final = tuple(emails)
         send_admin_mail(title, body, emails_final)
+    posts = Grouppost.query.filter_by(group_id=group.id).all()
+    os.remove(f"cloudBuffer/static/profile_pics/{group.image_file}")
     db.session.delete(group)
+    for post in posts:
+        db.session.delete(post)
     db.session.commit()
     flash("Your Group has been deleted", "warning")
     return redirect(url_for("blog"))
