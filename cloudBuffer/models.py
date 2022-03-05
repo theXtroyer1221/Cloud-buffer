@@ -74,7 +74,7 @@ class Post(db.Model):
         return f"Post('{self.title}', '{self.date_posted}')"
 
     def as_dict(self):
-        return {'id': self.id, 'title': self.title}
+        return {'type': 'post', 'id': self.id, 'title': self.title}
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -100,6 +100,9 @@ class Group(db.Model):
 
     def __repr__(self):
         return f"Group('{self.title}', '{len(self.users)}')"
+
+    def as_dict(self):
+        return {'type': 'group', 'id': self.id, 'title': self.title, 'image': self.image_file}
 
 class Grouppost(db.Model):
     __searchable__ = ['title', "content"]

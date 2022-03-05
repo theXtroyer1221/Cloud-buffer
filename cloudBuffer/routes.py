@@ -8,10 +8,11 @@ from flask_mail import Message
 from datetime import datetime
 
 from PIL import Image, ImageOps
+import numpy as np
+import markdown
 import requests
 import secrets
 import random
-import numpy as np
 import json
 import os
 
@@ -131,17 +132,27 @@ def blog():
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page,
                                                                   per_page=5)
     if form.validate_on_submit():
-        post_query = Post.query.filter_by(title=form.search.data).first()
-        if post_query:
-            return redirect(url_for('post', post_id=post_query.id))
-        else:
-            flash(f"No article found with the name {form.search.data}", "danger")
-            return redirect(url_for("blog"))
+        if "Group:" in form.search.data:
+            search = form.search.data.removeprefix('Group: ')
+            query = Group.query.filter_by(title=search).first()
+            print(search, query)
+            if query:
+                return redirect(url_for('group', title=query.title))
+            else:
+                flash(f"No group found with the name {search}", "danger")
+                return redirect(url_for("blog"))
+        else:    
+            query = Post.query.filter_by(title=form.search.data).first()
+            if query:
+                return redirect(url_for('post', post_id=query.id))
+            else:
+                flash(f"No article found with the name {form.search.data}", "danger")
+                return redirect(url_for("blog"))
     return render_template("blog.html", data="data", title="Blog", image_file=image_file, posts=posts, form=form, writeform=writeform, message=message)
 
 @app.route('/posts')
 def posts_json():
-    res = Post.query.all()
+    res = Post.query.all() + Group.query.all()
     list_posts = [r.as_dict() for r in res]
     return jsonify(list_posts)
 
@@ -295,7 +306,7 @@ def new_post():
     if form.validate_on_submit():
         post = Post(id=random.randint(1000, 9999),
                     title=form.title.data,
-                    content=form.content.data,
+                    content=markdown.markdown(form.content.data),
                     author=current_user)
         db.session.add(post)
         db.session.commit()
@@ -359,7 +370,7 @@ def update_post(post_id):
     form = PostForm()
     if form.validate_on_submit():
         post.title = form.title.data
-        post.content = form.content.data
+        post.content = markdown.markdown(form.content.data)
         db.session.commit()
         flash("Your post has been updated", "success")
         return redirect(url_for("post", post_id=post.id))
@@ -437,7 +448,7 @@ def group(title):
     group = Group.query.filter_by(title=title).first_or_404()
     grp_img = url_for("static",
                     filename="profile_pics/" + group.image_file)
-    form = GroupPostForm()
+    form = PostForm()
     null_form = EmptyForm()
     page = request.args.get("page", 1, type=int)
     posts = Grouppost.query.filter_by(group_id=group.id).order_by(Grouppost.date_posted.desc()).paginate(page=page,per_page=10)

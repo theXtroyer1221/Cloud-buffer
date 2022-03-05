@@ -142,7 +142,12 @@
     function loadPosts() {
       $.getJSON("/posts", function (data, status, xhr) {
         for (var i = 0; i < data.length; i++) {
-          posts.push(data[i].title);
+          if (data[i].type == 'group') {
+            posts.push("Group: " + data[i].title);
+          } else {
+            posts.push(data[i].title);
+            console.log("La lo");
+          }
         }
       });
     }

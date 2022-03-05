@@ -1,5 +1,4 @@
 {% extends 'base.html' %} {% block content %}
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <div class="container pt-5 mt-5">
@@ -123,12 +122,12 @@
     </div>
   </div>
 </div>
-<script>
+<!--<script>
   document.getElementById('content').value = " ";
   var simplemde = new SimpleMDE({ element: document.getElementById("content"), autoDownloadFontAwesome: false});
   var existing = `{{form.content.data}}`;
   if (existing !== `None`) {
     simplemde.value(existing);
   }
-</script>
+</script>-->
 {% endblock %}

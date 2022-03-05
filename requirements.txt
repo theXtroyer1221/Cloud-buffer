@@ -1,6 +1,7 @@
 flask
 numpy
 Pillow
+markdown
 gunicorn 
 requests
 flask_wtf
