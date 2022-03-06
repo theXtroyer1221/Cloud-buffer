@@ -20,9 +20,9 @@ class locationSearch(FlaskForm):
 class RegistrationForm(FlaskForm):
     username = StringField('Username',
                            validators=[DataRequired(),
-                                       Length(min=2, max=20)])
+                                       Length(min=2, max=40)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField(
         'Confirm Password', validators=[DataRequired(),
                                         EqualTo('password')])
