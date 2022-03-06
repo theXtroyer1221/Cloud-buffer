@@ -54,7 +54,7 @@
         <div class="media-body">
           <div class="article-metadata mb-2">
             <a class="mr-2" href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a>
-            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            <small class="text-muted">{{ post.date_posted.strftime('%B %d, %Y') }}</small>
           </div>
           <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title | safe }}</a></h2>
           <div class="article-content text-truncate mt-3" style="max-height: 350px">{{ post.content| safe }}</div>
