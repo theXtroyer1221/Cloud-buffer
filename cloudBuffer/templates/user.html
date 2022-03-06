@@ -10,6 +10,7 @@
             <p class="text-secondary">{{ user.email }}</p>
             {% if user.biography is not none %}
             <p class="mt-2">{{ user.biography }}</p>
+            <p class="mt-2 text-secondary"><i class="fas fa-calendar-alt mr-2"></i> Joined {{ user.date_joined.strftime('%B %Y') }}</p>
             {% endif %}
           </div>
         </div>

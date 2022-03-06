@@ -28,6 +28,9 @@ class User(db.Model, UserMixin):
                            nullable=False,
                            default="default.jpg")
     biography = db.Column(db.Text, nullable=True)
+    date_joined = db.Column(db.DateTime,
+                            nullable=True,
+                            default=datetime.utcnow)
     posts = db.relationship("Post", backref="author", lazy=True)
     groupposts = db.relationship("Grouppost", backref="group_author", lazy=True)
     comments = db.relationship("Comment", backref="author", lazy=True)
