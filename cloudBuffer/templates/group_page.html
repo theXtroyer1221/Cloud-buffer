@@ -58,7 +58,7 @@
               <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}">{{ post.group_author.username }}</a>
               {% endif %}
               <small class="text-muted"
-                >{{ post.date_posted.strftime('%Y-%m-%d') }} at {{ post.date_posted.strftime('%I:%M %p') }}</small
+                >{{ post.date_posted.strftime('%B %d, %Y') }} at {{ post.date_posted.strftime('%I:%M %p') }}</small
               >
             </div>
             <h2>
