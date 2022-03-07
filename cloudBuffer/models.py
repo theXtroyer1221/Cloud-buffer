@@ -90,7 +90,7 @@ class Comment(db.Model):
         return f"Comment('{self.content}', '{self.timestamp}')"
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(140))
+    title = db.Column(db.String(30), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=True)
     image_file = db.Column(db.String(20),
                            nullable=False,
