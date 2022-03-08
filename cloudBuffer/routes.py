@@ -132,27 +132,37 @@ def blog():
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page,
                                                                   per_page=5)
     if form.validate_on_submit():
-        if "Group:" in form.search.data:
-            search = form.search.data.removeprefix('Group: ')
+        title = form.search.data
+        print(form.search.data)
+        if "Group:" in title:
+            search = title.removeprefix('Group: ')
             query = Group.query.filter_by(title=search).first()
-            print(search, query)
             if query:
                 return redirect(url_for('group', title=query.title))
             else:
                 flash(f"No group found with the name {search}", "danger")
                 return redirect(url_for("blog"))
-        else:    
-            query = Post.query.filter_by(title=form.search.data).first()
+        elif "Group post:" in title:
+            search = title.removeprefix('Group post: ')
+            query = Grouppost.query.filter_by(title=search).first()
+            if query:
+                return redirect(url_for('group_post', title=query.title, post_id=query.id))
+            else:
+                flash(f'No group post found with the name "{search}"', "danger")
+                return redirect(url_for("blog"))   
+        else:  
+            search = title.removeprefix("Post: ")  
+            query = Post.query.filter_by(title=search).first()
             if query:
                 return redirect(url_for('post', post_id=query.id))
             else:
-                flash(f"No article found with the name {form.search.data}", "danger")
+                flash(f"No article found with the name {title}", "danger")
                 return redirect(url_for("blog"))
     return render_template("blog.html", data="data", title="Blog", image_file=image_file, posts=posts, form=form, writeform=writeform, message=message)
 
 @app.route('/posts')
 def posts_json():
-    res = Post.query.all() + Group.query.all()
+    res = Post.query.all() + Group.query.all() + Grouppost.query.all()
     list_posts = [r.as_dict() for r in res]
     return jsonify(list_posts)
 
@@ -468,7 +478,9 @@ def edit_group(title):
         if form.image_file.data:
             picture_file = save_group_pic(form.image_file.data)
             group.image_file = picture_file
-        group.title = form.title.data
+        if form.title.data == title:
+            print("yes")
+            group.title = form.title.data
         group.description = form.description.data
         group.language = form.language.data
         db.session.commit()
@@ -481,10 +493,8 @@ def edit_group(title):
     image_file = url_for('static',
                          filename='profile_pics/' + current_user.image_file)
     if form2.validate_on_submit():
-        username = form2.username.data.replace(" ", "_")
-        print(username)
+        username = form2.username.data
         user = User.query.filter_by(username=username).first()
-        print(user)
         if user is not None:
             group.moderators.append(user)
             db.session.commit()
@@ -585,7 +595,7 @@ def update_group_post(title, post_id):
     if request.method == "GET":
         form.title.data = post.title
         form.content.data = post.content
-    return render_template("create_group_post.html",
+    return render_template("create_post.html",
                            title=group.title,
                            group=group,
                            post="post", group_img=grp_img, data="post_site", form=form, legend="Update a group post")

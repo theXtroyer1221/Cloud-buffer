@@ -3,8 +3,11 @@
   <div>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
+        {% if group %}
+        <li class="breadcrumb-item"><a href="{{url_for('group', title=group.title)}}">{{group.title}}</a></li>
+        {% else %}
         <li class="breadcrumb-item"><a href="{{url_for('blog')}}">Blog</a></li>
-        {% if grouppost %}
+        {% endif %} {% if grouppost %}
         <li class="breadcrumb-item">
           <a href="{{url_for('user', username=post.group_author.username)}}">{{post.group_author.username}}</a>
         </li>
@@ -66,15 +69,11 @@
             {% endif %} {% else %}
             <a class="mr-2" href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a>
             {% endif %}
-            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            <small class="text-muted">{{ post.date_posted.strftime('%B %d, %Y') }}</small>
             {% if post.group_author == current_user or current_user.admin %}
             <div>
               {% if grouppost %}
-              <a
-                class="btn btn-secondary btn-sm mt-2 mb-1"
-                href="{{url_for('update_group_post', title=group.title, post_id=post.id)}}"
-                >Update</a
-              >
+              <a class="btn btn-secondary btn-sm mt-2 mb-1" href="{{url_for('update_group_post', title=group.title, post_id=post.id)}}">Update</a>
               {% else %}
               <a class="btn btn-secondary btn-sm mt-2 mb-1" href="{{url_for('update_post', post_id=post.id)}}">Update</a>
               {% endif %}
@@ -90,13 +89,9 @@
             <hr />
             <div class="mb-4">
               {% if grouppost %}
-              <a href="{{url_for('user', username=post.group_author.username)}}"
-                ><h5 class="mb-1 font-weight-bold">{{post.group_author.username}}</h5></a
-              >
+              <a href="{{url_for('user', username=post.group_author.username)}}"><h5 class="mb-1 font-weight-bold">{{post.group_author.username}}</h5></a>
               {% else %}
-              <a href="{{url_for('user', username=post.author.username)}}"
-                ><h5 class="mb-1 font-weight-bold">{{post.author.username}}</h5></a
-              >
+              <a href="{{url_for('user', username=post.author.username)}}"><h5 class="mb-1 font-weight-bold">{{post.author.username}}</h5></a>
               {% endif %} {% if grouppost %}
               <p>{{post.group_author.biography}}</p>
               {% else %}
@@ -105,9 +100,7 @@
             </div>
             <h5 class="mb-3 font-weight-bold">Share this story</h5>
             <div class="btn-group mb-4" role="group" aria-label="Basic example">
-              <a href="https://www.facebook.com/sharer/sharer.php?u={{request.url}}" class="btn btn-outline-primary p-2"
-                ><i class="fab fa-facebook"></i
-              ></a>
+              <a href="https://www.facebook.com/sharer/sharer.php?u={{request.url}}" class="btn btn-outline-primary p-2"><i class="fab fa-facebook"></i></a>
               <a
                 href="https://twitter.com/intent/tweet?text=Check%20this%20article%20on%20Cloud%20buffer%20&url={{request.url}}"
                 class="btn btn-outline-primary p-2"
@@ -174,13 +167,7 @@
             <div class="row justify-content-between d-flex mb-3">
               <div class="d-flex">
                 <span class="text-secondary mr-2">Sort by</span>
-                <button
-                  class="btn btn-secondary btn-sm dropdown-toggle"
-                  type="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Small button
                 </button>
                 <div class="dropdown-menu">
@@ -188,9 +175,7 @@
                   <a class="dropdown-item" href="">Newest</a>
                 </div>
               </div>
-              <div class="text-secondary">
-                {{post.comments|length}} comments {% if post.comments|length == 0 %}• be the first to comment{% endif %}
-              </div>
+              <div class="text-secondary">{{post.comments|length}} comments {% if post.comments|length == 0 %}• be the first to comment{% endif %}</div>
             </div>
             {% if current_user.is_authenticated%}
             <div class="d-flex mb-4">
@@ -204,19 +189,15 @@
               <form method="POST" action="" class="w-100 d-flex">
                 {{form.hidden_tag()}}
                 <div class="form-group w-100">
-                  {% if form.content.errors %} {{ form.content(class="form-control is-invalid", style="height:50px;",
-                  placeholder="Add a comment...") }}
+                  {% if form.content.errors %} {{ form.content(class="form-control is-invalid", style="height:50px;", placeholder="Add a comment...") }}
                   <div class="invalid-feedback">
                     {% for error in form.content.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
                   </div>
-                  {% else %} {{ form.content(class="form-control", style="height:50px;", placeholder="Add a comment...") }} {% endif
-                  %}
+                  {% else %} {{ form.content(class="form-control", style="height:50px;", placeholder="Add a comment...") }} {% endif %}
                 </div>
-                <div class="form-group">
-                  {{ form.submit(class="btn btn-blog-dark", style="height: 50px; border-radius: 1rem !important;") }}
-                </div>
+                <div class="form-group">{{ form.submit(class="btn btn-blog-dark", style="height: 50px; border-radius: 1rem !important;") }}</div>
               </form>
             </div>
             {% else %}
@@ -241,16 +222,13 @@
                 /></a>
                 <div>
                   {% if comment.author == post.group_author %}
-                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a> • Author {% else
-                  %} {% if current_user == comment.author%}
-                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a> • You {% else %}
-                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {%
-                  endif %}
+                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a> • Author {% else %} {% if current_user ==
+                  comment.author%} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a> • You {% else %}
+                  <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {% endif %}
                   <p class="mb-1">{{comment.content}}</p>
                   <span class="text-secondary"
                     >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M %p')}} •
-                    <a
-                      href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'
+                    <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'
                       ><i class="fa fa-twitter" aria-hidden="true"></i></a
                   ></span>
                 </div>
@@ -269,11 +247,9 @@
                   <div class="w-100">
                     <div class="justify-content-between d-flex">
                       {% if comment.author == post.group_author %}
-                      <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • Author</a> {%
-                      else %} {% if current_user == comment.author%}
-                      <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • You</a> {% else
-                      %} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %}
-                      {% endif %}
+                      <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • Author</a> {% else %} {% if current_user ==
+                      comment.author%} <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}} • You</a> {% else %}
+                      <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {% endif %}
                     </div>
                     <div>
                       <p class="mb-1 {{comment.id}}">{{comment.content}}</p>
@@ -284,8 +260,8 @@
                         action="{{ url_for('edit_group_comment', comment_id=comment.id) }}"
                         id="{{comment.timestamp.strftime('%H:%M:%S:%f %p')}}"
                       >
-                        {{editform.hidden_tag()}} {{editform.content(class="form-control w-100 mr-2", style="height:65px",
-                        id=comment.id)}} {{editform.submit(class="btn btn-primary", id=comment.id+10)}}
+                        {{editform.hidden_tag()}} {{editform.content(class="form-control w-100 mr-2", style="height:65px", id=comment.id)}}
+                        {{editform.submit(class="btn btn-primary", id=comment.id+10)}}
                       </form>
                       {% else %}
                       <form
@@ -294,15 +270,14 @@
                         action="{{ url_for('edit_comment', comment_id=comment.id) }}"
                         id="{{comment.timestamp.strftime('%H:%M:%S:%f %p')}}"
                       >
-                        {{editform.hidden_tag()}} {{editform.content(class="form-control w-100 mr-2", style="height:65px",
-                        id=comment.id)}} {{editform.submit(class="btn btn-primary", id=comment.id+10)}}
+                        {{editform.hidden_tag()}} {{editform.content(class="form-control w-100 mr-2", style="height:65px", id=comment.id)}}
+                        {{editform.submit(class="btn btn-primary", id=comment.id+10)}}
                       </form>
                       {% endif %}
                     </div>
                     <span class="text-secondary"
                       >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M %p')}} •
-                      <a
-                        href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'
+                      <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'
                         ><i class="fa fa-twitter" aria-hidden="true"></i></a
                     ></span>
                   </div>
@@ -371,15 +346,13 @@
           (d.head || d.body).appendChild(s);
         })();
       </script>
-      <noscript
-        >Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript
-      >
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     </div>
     <div class="col-md-3">
       <div class="media content-section-article d-block text-center">
         <h3 class="mt-4">Post published</h3>
         <br />
-        <h4 class="text-primary mb-4">{{ post.date_posted.strftime('%Y-%m-%d') }}</h4>
+        <h4 class="text-primary mb-4">{{ post.date_posted.strftime('%B %d, %Y') }}</h4>
         <h3>Post author</h3>
         <br />
         <h4 class="text-primary mb-4">

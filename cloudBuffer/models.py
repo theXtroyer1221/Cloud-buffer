@@ -124,7 +124,7 @@ class Grouppost(db.Model):
         return f"GroupPost('{self.title}', '{self.date_posted})"
 
     def as_dict(self):
-        return {'id': self.id, 'title': self.title}
+        return {'type': 'grouppost', 'id': self.id, 'title': self.title}
 
 class Groupcomment(db.Model):
     id = db.Column(db.Integer, primary_key=True)

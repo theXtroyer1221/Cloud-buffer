@@ -110,7 +110,7 @@ class GroupForm(FlaskForm):
 
 
 class UpdateGroupForm(FlaskForm):
-    title = StringField('Username',
+    title = StringField('Title',
                            validators=[DataRequired(),
                                        Length(min=2, max=20)])
     description = StringField('Description', validators=[DataRequired(), Length(min=2, max=100)])
@@ -120,14 +120,16 @@ class UpdateGroupForm(FlaskForm):
     submit = SubmitField('Save changes')
 
     def validate_title(self, title):
-        group = Group.query.filter_by(title=title.data).first()
-        if group:
-            raise ValidationError(
-                "That group title is already taken, please choose another one")
+        if self.title == title:
+            pass
+        else:
+            group = Group.query.filter_by(title=title.data).first()
+            if group:
+                raise ValidationError("That group title is already taken, please choose another one")
 
 class AddAdminForm(FlaskForm):
     username = StringField("User's Username", validators=[DataRequired()])
-    submit = SubmitField("Send")
+    add_user = SubmitField("Submit User")
 
 class AddGroupCommentForm(FlaskForm):
     content = StringField("Content", validators=[DataRequired(), Length(min=5, max=140)])

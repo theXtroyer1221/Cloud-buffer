@@ -15,12 +15,7 @@
             height="125px"
           />
           {% else %}
-          <img
-            class="rounded-circle article-img"
-            src="{{ url_for('static', filename='profile_pics/' + 'default.jpg') }}"
-            width="125px"
-            height="125px"
-          />
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + 'default.jpg') }}" width="125px" height="125px" />
           {% endif %}
           <a class="w-100" href="{{url_for('new_post')}}">
             <form method="POST" action="" class="mt-2">
@@ -33,9 +28,8 @@
                     <span>{{ error }}</span>
                     {% endfor %}
                   </div>
-                  {% else %} {% if current_user.is_authenticated %} {{ writeform.title(class="form-control form-control-lg",
-                  placeholder="Write a new post") }} {% else %} {{ writeform.title(class="form-control form-control-lg",
-                  placeholder="Login to write a post") }} {% endif %}{% endif %}
+                  {% else %} {% if current_user.is_authenticated %} {{ writeform.title(class="form-control form-control-lg", placeholder="Write a new post") }}
+                  {% else %} {{ writeform.title(class="form-control form-control-lg", placeholder="Login to write a post") }} {% endif %}{% endif %}
                 </div>
               </fieldset>
             </form>
@@ -60,8 +54,8 @@
           <div class="article-content text-truncate mt-3" style="max-height: 350px">{{ post.content| safe }}</div>
         </div>
       </article>
-      {% endfor %} {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %} {% if page_num
-      %} {% if posts.page == page_num %}
+      {% endfor %} {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %} {% if page_num %} {% if posts.page ==
+      page_num %}
       <a class="btn btn-primary mb-4" href="{{url_for('blog', page=page_num)}}"> {{page_num}}</a>
       {% else %}
       <a class="btn btn-outline-primary mb-4" href="{{url_for('blog', page=page_num)}}"> {{page_num}}</a>
@@ -73,8 +67,8 @@
         <div class="card-body">
           <div class="input-group">
             <form method="POST" action="" class="d-flex w-100">
-              {{form.hidden_tag()}} {{form.search(class="form-control", style="border-top-right-radius: 0px;
-              border-bottom-right-radius: 0px;")}} {{form.submit(class="btn btn-primary")}}
+              {{form.hidden_tag()}} {{form.search(class="form-control", style="border-top-right-radius: 0px; border-bottom-right-radius: 0px;")}}
+              {{form.submit(class="btn btn-primary")}}
             </form>
           </div>
         </div>
@@ -87,16 +81,8 @@
           <p class="text-center text-secondary bg-light py-4 mb-4">Your group list is empty, try joining new groups</p>
           {% else %} {% for group in current_user.groups %}
           <div class="my-2 d-flex">
-            <img
-              class="rounded-circle mr-3"
-              src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}"
-              alt=""
-              width="65px"
-              height="65px"
-            />
-            <a href="{{url_for('group', title=group.title)}}" class="d-flex" style="align-self: center; font-size: 22px"
-              >{{ group.title }}</a
-            >
+            <img class="rounded-circle mr-3" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" alt="" width="65px" height="65px" />
+            <a href="{{url_for('group', title=group.title)}}" class="d-flex" style="align-self: center; font-size: 22px">{{ group.title }}</a>
           </div>
           <hr />
           {% endfor %} {% endif %}
@@ -118,9 +104,7 @@
             <a class="btn btn-primary mr-1" href="www.facebook.com"><i class="fab fa-facebook fa-2x"></i></a>
             <a class="btn btn-primary mx-1" href="https://twitter.com/theXtoyer"><i class="fab fa-twitter fa-2x"></i></a>
             <a class="btn btn-primary mx-1" href="https://discord.gg/GbZr5c6"><i class="fab fa-discord fa-2x"></i></a>
-            <a class="btn btn-primary ml-1" href="https://github.com/theXtroyer1221/Cloud-buffer"
-              ><i class="fab fa-github fa-2x"></i
-            ></a>
+            <a class="btn btn-primary ml-1" href="https://github.com/theXtroyer1221/Cloud-buffer"><i class="fab fa-github fa-2x"></i></a>
           </div>
         </div>
       </div>
@@ -142,11 +126,12 @@
     function loadPosts() {
       $.getJSON("/posts", function (data, status, xhr) {
         for (var i = 0; i < data.length; i++) {
-          if (data[i].type == 'group') {
+          if (data[i].type == "group") {
             posts.push("Group: " + data[i].title);
+          } else if (data[i].type == "grouppost") {
+            posts.push("Group post: " + data[i].title);
           } else {
-            posts.push(data[i].title);
-            console.log("La lo");
+            posts.push("Post: " + data[i].title);
           }
         }
       });
