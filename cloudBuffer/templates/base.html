@@ -8,7 +8,7 @@
     {%else%} {% if request.path == "/" %}
     <title>Weather forecast - Cloud Buffer</title>
     {% else %} {% if data.cod == "404" %}
-    <title>City not found - Cloud Buffer</title>
+    <title>Page not found - Cloud Buffer</title>
     {% endif %}
     <title>Weather in {{query}} - Cloud Buffer</title>
     {% endif %} {%endif%}
@@ -23,8 +23,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <!-- Weather Icons -->
     <script src="../static/js/skycons.js"></script>
-    <script src="../static/node_modules/moment/moment.js"></script>
-    <script src="../static/node_modules/moment-timezone/moment-timezone.js"></script>
     <!-- leaflet mapping library -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
     <!-- Make sure you put this AFTER Leaflet's CSS -->

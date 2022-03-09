@@ -237,6 +237,7 @@ def account():
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
+            os.remove(f"cloudBuffer/static/profile_pics/{current_user.image_file}")
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -440,10 +441,15 @@ def new_group():
                     language=form.language.data,
                     moderators=[current_user])
         db.session.add(group)
+        group.users.append(current_user)
+        group.moderators.append(current_user)
         db.session.commit()
         if form.picture.data:
             group_picture = save_group_pic(form.picture.data)
             group.image_file = group_picture 
+            db.session.commit()
+        else:
+            group.image_file = "default.jpg"
             db.session.commit()
         flash("The group has been created successfully", "success")
         return redirect(url_for("group", title=group.title))
@@ -517,6 +523,7 @@ def delete_group(group_id):
     if current_user.admin:
         title = f"Your group ({group.title}) has been deleted"
         body = f"Your group ({group.title}) has been removed by the admins from our website. This can be the cause of violating the terms of service in our website where the group could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats in its content. Please respect the action taken by admins. The group has been only removed without any warning. You are still free to create on the website. For more question feel free to contact us."
+        emails_final = ""
         for user in group.moderators:
             emails = []
             emails.append(user.email)
