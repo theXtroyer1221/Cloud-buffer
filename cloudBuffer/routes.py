@@ -534,7 +534,10 @@ def delete_group(group_id):
             emails_final = tuple(emails)
         send_admin_mail(title, body, emails_final)
     posts = Grouppost.query.filter_by(group_id=group.id).all()
-    os.remove(f"cloudBuffer/static/profile_pics/{group.image_file}")
+    if group.image_file == "default.jpg":
+        pass
+    else:
+        os.remove(f"cloudBuffer/static/profile_pics/{group.image_file}")
     db.session.delete(group)
     for post in posts:
         db.session.delete(post)
