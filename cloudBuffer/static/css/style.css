@@ -653,7 +653,7 @@ body::-webkit-scrollbar-thumb {
 #loader {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 65%;
   z-index: 1;
   width: 150px;
   height: 150px;
