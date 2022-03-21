@@ -48,7 +48,6 @@ def index():
         redirect(url_for("search", query=query))
 
     return render_template("index.html",
-                           query=query,
                            form=form,
                            location_form=location_form,
                            data="data")
