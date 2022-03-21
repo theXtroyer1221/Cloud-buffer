@@ -36,6 +36,7 @@ def index():
         return redirect(url_for("search", query=query))
 
     if request.args.get("hfield", None):
+        print("lol ya")
         if request.headers.getlist("X-Forwarded-For"):
             user_ip = request.headers.getlist("X-Forwarded-For")[0]
         else:
@@ -47,6 +48,7 @@ def index():
         redirect(url_for("search", query=query))
 
     return render_template("index.html",
+                           query=query,
                            form=form,
                            location_form=location_form,
                            data="data")
@@ -65,6 +67,7 @@ def search(query):
         return redirect(url_for("search", query=query))
 
     if request.args.get("hfield", None):
+        print("ya")
         if request.headers.getlist("X-Forwarded-For"):
             user_ip = request.headers.getlist("X-Forwarded-For")[0]
         else:

@@ -163,7 +163,7 @@
       {% endif %}
       {% if  request.path == "/weather/{}".format(query) %}
       <nav id="navbarSearch" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top py-2">
-        <div class="d-flex bg-dark px-5 nav-part-dark w-100">
+        <div class="d-inline-flex bg-dark px-5 nav-part-dark w-100 flex-wrap justify-content-between">
           <a class="navbar-brand" href="{{url_for('index')}}"><img src="{{ url_for('static', filename='brand/logo-hori.png') }}" alt="" height="50" /></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
