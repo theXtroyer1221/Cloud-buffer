@@ -84,13 +84,12 @@ def search(query):
 
     if data["cod"] == 200:
         search_country = data["sys"]["country"]
-        search_query = f"{query} city {search_country}"
+        search_query = f"{query} {search_country}"
         gis = GoogleImagesSearch(GCS_DEVELOPER_KEY, GCS_CX)
         _google_search_params = {
             'q': search_query,
             'num': 1,
             'safe': 'off',
-            #'imgSize': 'XLARGE'
         }
         try:
             gis.search(search_params=_google_search_params)
