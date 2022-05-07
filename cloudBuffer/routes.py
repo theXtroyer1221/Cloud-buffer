@@ -50,7 +50,8 @@ def index():
     return render_template("index.html",
                            form=form,
                            location_form=location_form,
-                           data="data")
+                           data="data",
+                           GCS_DEVELOPER_KEY=GCS_DEVELOPER_KEY)
 
 
 @app.route("/weather/<query>")
