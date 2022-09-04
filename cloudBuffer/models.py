@@ -3,21 +3,22 @@ from cloudBuffer import db, login_manager, app
 from flask_login import UserMixin
 from datetime import datetime
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 user_group = db.Table(
     'user_group', db.Model.metadata,
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
-)
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id')))
 
 mod_group = db.Table(
     'mod_group', db.Model.metadata,
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
-)
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id')))
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -32,9 +33,13 @@ class User(db.Model, UserMixin):
                             nullable=True,
                             default=datetime.utcnow)
     posts = db.relationship("Post", backref="author", lazy=True)
-    groupposts = db.relationship("Grouppost", backref="group_author", lazy=True)
+    groupposts = db.relationship("Grouppost",
+                                 backref="group_author",
+                                 lazy=True)
     comments = db.relationship("Comment", backref="author", lazy=True)
-    groupcomments = db.relationship("Groupcomment", backref="author", lazy=True)
+    groupcomments = db.relationship("Groupcomment",
+                                    backref="author",
+                                    lazy=True)
     admin = db.Column(db.Boolean(), default=False)
 
     def follow(self, group):
@@ -61,6 +66,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
+
 class Post(db.Model):
     __searchable__ = ['title', "content"]
     id = db.Column(db.Integer, primary_key=True)
@@ -79,6 +85,7 @@ class Post(db.Model):
     def as_dict(self):
         return {'type': 'post', 'id': self.id, 'title': self.title}
 
+
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(140))
@@ -88,6 +95,8 @@ class Comment(db.Model):
 
     def __repr__(self):
         return f"Comment('{self.content}', '{self.timestamp}')"
+
+
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(30), unique=True, nullable=False)
@@ -96,8 +105,13 @@ class Group(db.Model):
                            nullable=False,
                            default="default.jpg")
     language = db.Column(db.String(), default="International")
-    users = db.relationship("User", secondary=user_group, backref=db.backref("groups", lazy='dynamic'))
-    moderators = db.relationship("User", secondary=mod_group, backref=db.backref("mod_groups", lazy='dynamic'))
+    users = db.relationship("User",
+                            secondary=user_group,
+                            backref=db.backref("groups", lazy='dynamic'))
+    moderators = db.relationship("User",
+                                 secondary=mod_group,
+                                 backref=db.backref("mod_groups",
+                                                    lazy='dynamic'))
     posts = db.relationship("Grouppost", backref="author", lazy=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -105,7 +119,13 @@ class Group(db.Model):
         return f"Group('{self.title}', '{len(self.users)}')"
 
     def as_dict(self):
-        return {'type': 'group', 'id': self.id, 'title': self.title, 'image': self.image_file}
+        return {
+            'type': 'group',
+            'id': self.id,
+            'title': self.title,
+            'image': self.image_file
+        }
+
 
 class Grouppost(db.Model):
     __searchable__ = ['title', "content"]
@@ -118,7 +138,7 @@ class Grouppost(db.Model):
     topic = db.Column(db.String())
     comments = db.relationship("Groupcomment", backref="post", lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    group_id =  db.Column(db.Integer, db.ForeignKey("group.id"), nullable=False)
+    group_id = db.Column(db.Integer, db.ForeignKey("group.id"), nullable=False)
 
     def __repr__(self):
         return f"GroupPost('{self.title}', '{self.date_posted})"
@@ -126,11 +146,14 @@ class Grouppost(db.Model):
     def as_dict(self):
         return {'type': 'grouppost', 'id': self.id, 'title': self.title}
 
+
 class Groupcomment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey("grouppost.id"), nullable=False)
+    post_id = db.Column(db.Integer,
+                        db.ForeignKey("grouppost.id"),
+                        nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):

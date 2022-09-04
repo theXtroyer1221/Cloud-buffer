@@ -10,8 +10,9 @@
             <p class="text-secondary">{{ user.email }}</p>
             {% if user.biography is not none %}
             <p class="mt-2">{{ user.biography }}</p>
+            {% if user.date_joined %}
             <p class="mt-2 text-secondary"><i class="fas fa-calendar-alt mr-2"></i> Joined {{ user.date_joined.strftime('%B %Y') }}</p>
-            {% endif %}
+            {% endif %} {% endif %}
           </div>
         </div>
       </div>
