@@ -16,14 +16,14 @@
         <div class="media-body">
           <div class="article-metadata mb-2">
             <a class="mr-2" href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a>
-            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            <small class="text-muted">{{ post.date_posted.strftime('%d/%m/%Y') }}</small>
           </div>
           <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title | safe }}</a></h2>
           <div class="article-content text-truncate mt-3" style="max-height: 350px">{{ post.content| safe }}</div>
         </div>
       </article>
-      {% endfor %} {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %} {% if page_num
-      %} {% if posts.page == page_num %}
+      {% endfor %} {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %} {% if page_num %} {% if posts.page ==
+      page_num %}
       <a class="btn btn-primary mb-4" href="{{url_for('blog', page=page_num)}}"> {{page_num}}</a>
       {% else %}
       <a class="btn btn-outline-primary mb-4" href="{{url_for('blog', page=page_num)}}"> {{page_num}}</a>
@@ -35,8 +35,8 @@
         <div class="card-body">
           <div class="input-group">
             <form method="POST" action="" class="d-flex w-100">
-              {{form.hidden_tag()}} {{form.search(class="form-control", style="border-top-right-radius: 0px;
-              border-bottom-right-radius: 0px;")}} {{form.submit(class="btn btn-primary")}}
+              {{form.hidden_tag()}} {{form.search(class="form-control", style="border-top-right-radius: 0px; border-bottom-right-radius: 0px;")}}
+              {{form.submit(class="btn btn-primary")}}
             </form>
           </div>
         </div>
@@ -49,16 +49,8 @@
           <p class="text-center text-secondary bg-light py-4 mb-4">Your group list is empty, try joining new groups</p>
           {% else %} {% for group in current_user.groups %}
           <div class="my-2 d-flex">
-            <img
-              class="rounded-circle mr-3"
-              src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}"
-              alt=""
-              width="65px"
-              height="65px"
-            />
-            <a href="{{url_for('group', title=group.title)}}" class="d-flex" style="align-self: center; font-size: 22px"
-              >{{ group.title }}</a
-            >
+            <img class="rounded-circle mr-3" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" alt="" width="65px" height="65px" />
+            <a href="{{url_for('group', title=group.title)}}" class="d-flex" style="align-self: center; font-size: 22px">{{ group.title }}</a>
           </div>
           <hr />
           {% endfor %} {% endif %}
@@ -80,9 +72,7 @@
             <a class="btn btn-primary mr-1" href="www.facebook.com"><i class="fab fa-facebook fa-2x"></i></a>
             <a class="btn btn-primary mx-1" href="https://twitter.com/theXtoyer"><i class="fab fa-twitter fa-2x"></i></a>
             <a class="btn btn-primary mx-1" href="https://discord.gg/GbZr5c6"><i class="fab fa-discord fa-2x"></i></a>
-            <a class="btn btn-primary ml-1" href="https://github.com/theXtroyer1221/Cloud-buffer"
-              ><i class="fab fa-github fa-2x"></i
-            ></a>
+            <a class="btn btn-primary ml-1" href="https://github.com/theXtroyer1221/Cloud-buffer"><i class="fab fa-github fa-2x"></i></a>
           </div>
         </div>
       </div>

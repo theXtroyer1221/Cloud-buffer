@@ -23,6 +23,7 @@ GCS_CX = os.environ.get('GCS_CX')
 IP_STACK = os.environ.get("IP_STACK")
 IP_SEARCH_API = os.environ.get("IP_SEARCH_API")
 
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if current_user.is_authenticated:
@@ -70,17 +71,14 @@ def search(query):
         else:
             user_ip = request.remote_addr
         #url = 'https://freegeoip.app/json/{}'.format(user_ip)
-        url = 'https://api.ipbase.com/v2/info?apikey={}&ip={}'.format(IP_SEARCH_API, user_ip)
+        url = 'https://api.ipbase.com/v2/info?apikey={}&ip={}'.format(
+            IP_SEARCH_API, user_ip)
         r = requests.get(url)
         j = json.loads(r.text)
         query = j['city']
         redirect(url_for("search", query=query))
 
-    payload = {
-        'q': query,
-        'units': 'metric',
-        'appid': WEATHER_API
-    }
+    payload = {'q': query, 'units': 'metric', 'appid': WEATHER_API}
     r = requests.get('http://api.openweathermap.org/data/2.5/weather',
                      params=payload)
     data = r.json()
@@ -118,7 +116,8 @@ def search(query):
                                form=form,
                                location_form=location_form)
 
-@app.route("/blog",  methods=['GET', 'POST'])
+
+@app.route("/blog", methods=['GET', 'POST'])
 def blog():
     with open("cloudBuffer/message.json", "r") as f:
         message = json.load(f)
@@ -137,15 +136,24 @@ def blog():
         if post_query:
             return redirect(url_for('post', post_id=post_query.id))
         else:
-            flash(f"No article found with the name {form.search.data}", "danger")
+            flash(f"No article found with the name {form.search.data}",
+                  "danger")
             return redirect(url_for("blog"))
-    return render_template("blog.html", data="data", title="Blog", image_file=image_file, posts=posts, form=form, message=message)
+    return render_template("blog.html",
+                           data="data",
+                           title="Blog",
+                           image_file=image_file,
+                           posts=posts,
+                           form=form,
+                           message=message)
+
 
 @app.route('/posts')
 def posts_json():
     res = Post.query.all()
     list_posts = [r.as_dict() for r in res]
     return jsonify(list_posts)
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -273,19 +281,22 @@ def dashboard():
         title = form.title.data
         body = form.body.data
         send_admin_mail(title, body)
-    if messageForm.identifier.data == 'messageForm' and messageForm.validate_on_submit():
+    if messageForm.identifier.data == 'messageForm' and messageForm.validate_on_submit(
+    ):
         content = messageForm.content.data
         print(content)
         with open("cloudBuffer\message.json", "w") as f:
             content_obj = {"content": content}
             data = json.dump(content_obj, f, indent=4)
-        flash("Success! The blog page has been updated with the message", "success")
+        flash("Success! The blog page has been updated with the message",
+              "success")
     return render_template("dashboard.html",
                            title="Admin dashboard - Cloudbuffer",
                            User=User,
                            Post=Post,
                            Group=Group,
-                           form=form, messageForm=messageForm)
+                           form=form,
+                           messageForm=messageForm)
 
 
 @app.route("/post/new", methods=['GET', 'POST'])
@@ -309,20 +320,29 @@ def new_post():
                            image_file=image_file,
                            legend="Create a post")
 
+
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def post(post_id):
     form = AddCommentForm()
     editform = EditCommentForm()
     post = Post.query.get_or_404(post_id)
     if form.validate_on_submit():
-        comment = Comment(content=form.content.data, author=current_user, post=post)
+        comment = Comment(content=form.content.data,
+                          author=current_user,
+                          post=post)
         db.session.add(comment)
         db.session.commit()
     commentformplaceholder = "placeholder"
     return render_template("post.html",
                            title=post.title,
                            post=post,
-                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder, grouppost=False)
+                           data="post_site",
+                           Post=Post,
+                           form=form,
+                           editform=editform,
+                           commentformplaceholder=commentformplaceholder,
+                           grouppost=False)
+
 
 @app.route("/comment/<int:comment_id>/delete", methods=['POST'])
 @login_required
@@ -334,6 +354,7 @@ def delete_comment(comment_id):
     db.session.commit()
     flash("Your comment has been deleted", "success")
     return redirect(url_for("post", post_id=comment.post_id))
+
 
 @app.route("/comment/<int:comment_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -348,6 +369,7 @@ def edit_comment(comment_id):
         db.session.commit()
     flash("Your comment has been updated", "success")
     return redirect(url_for("post", post_id=comment.post_id))
+
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -393,6 +415,7 @@ def delete_post(post_id):
     flash("Your post has been deleted", "success")
     return redirect(url_for("blog"))
 
+
 def save_group_pic(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
@@ -416,15 +439,15 @@ def new_group():
     if form.validate_on_submit():
         title_name = form.title.data.replace(" ", "_").lower()
         group = Group(id=random.randint(1000, 99999),
-                    title=title_name,
-                    description=form.description.data,
-                    language=form.language.data,
-                    moderators=[current_user])
+                      title=title_name,
+                      description=form.description.data,
+                      language=form.language.data,
+                      moderators=[current_user])
         db.session.add(group)
         db.session.commit()
         if form.picture.data:
             group_picture = save_group_pic(form.picture.data)
-            group.image_file = group_picture 
+            group.image_file = group_picture
             db.session.commit()
         flash("The group has been created successfully", "success")
         return redirect(url_for("group", title=group.title))
@@ -432,22 +455,30 @@ def new_group():
                            title="New group",
                            form=form,
                            image_file=image_file,
-                           legend="Create a new group", data="post_site")
+                           legend="Create a new group",
+                           data="post_site")
+
 
 @app.route("/group/<title>", methods=['GET', 'POST'])
 def group(title):
     group = Group.query.filter_by(title=title).first_or_404()
-    grp_img = url_for("static",
-                    filename="profile_pics/" + group.image_file)
+    grp_img = url_for("static", filename="profile_pics/" + group.image_file)
     form = GroupPostForm()
     null_form = EmptyForm()
     page = request.args.get("page", 1, type=int)
-    posts = Grouppost.query.filter_by(group_id=group.id).order_by(Grouppost.date_posted.desc()).paginate(page=page,per_page=10)
+    posts = Grouppost.query.filter_by(group_id=group.id).order_by(
+        Grouppost.date_posted.desc()).paginate(page=page, per_page=10)
     #.order_by(group.posts.date_posted())
     return render_template("group_page.html",
                            title=group.title,
                            group=group,
-                           post="post", group_img=grp_img, data="post_site", form=form, posts=posts, empty_form=null_form)
+                           post="post",
+                           group_img=grp_img,
+                           data="post_site",
+                           form=form,
+                           posts=posts,
+                           empty_form=null_form)
+
 
 @app.route("/group/<title>/edit", methods=['GET', 'POST'])
 @login_required
@@ -481,12 +512,18 @@ def edit_group(title):
             db.session.commit()
             flash("User has been added as a moderator", "success")
         else:
-            flash(f"No user with the name '{form2.username.data}' was found, check the spelling", "warning")
+            flash(
+                f"No user with the name '{form2.username.data}' was found, check the spelling",
+                "warning")
         return redirect(url_for("edit_group", title=group.title))
     return render_template("edit_group.html",
                            title="Edit group information",
                            image_file=image_file,
-                           form=form, form2=form2, group=group, data="post_site")
+                           form=form,
+                           form2=form2,
+                           group=group,
+                           data="post_site")
+
 
 @app.route("/group/<int:group_id>/delete", methods=['POST'])
 @login_required
@@ -509,19 +546,19 @@ def delete_group(group_id):
     flash("Your Group has been deleted", "warning")
     return redirect(url_for("blog"))
 
+
 @app.route("/group/<title>/post/new", methods=['GET', 'POST'])
 @login_required
 def group_post_new(title):
     group = Group.query.filter_by(title=title).first_or_404()
-    grp_img = url_for("static",
-                    filename="profile_pics/" + group.image_file)
+    grp_img = url_for("static", filename="profile_pics/" + group.image_file)
     form = GroupPostForm()
     if form.validate_on_submit():
         post = Grouppost(id=random.randint(1000, 99999),
-                    title=form.title.data,
-                    content=form.content.data,
-                    user_id=current_user.id,
-                    group_id=group.id)
+                         title=form.title.data,
+                         content=form.content.data,
+                         user_id=current_user.id,
+                         group_id=group.id)
         db.session.add(post)
         db.session.commit()
         flash("The post has been created successfully", "success")
@@ -529,7 +566,12 @@ def group_post_new(title):
     return render_template("create_group_post.html",
                            title=group.title,
                            group=group,
-                           post="post", group_img=grp_img, data="post_site", form=form, legend="Create a group post")
+                           post="post",
+                           group_img=grp_img,
+                           data="post_site",
+                           form=form,
+                           legend="Create a group post")
+
 
 @app.route("/group/<title>/<int:post_id>", methods=['GET', 'POST'])
 def group_post(title, post_id):
@@ -538,9 +580,9 @@ def group_post(title, post_id):
     grouppost = Grouppost.query.get_or_404(post_id)
     if form.validate_on_submit():
         groupcomment = Groupcomment(id=random.randint(1000, 99999),
-                    content=form.content.data,
-                    author=current_user, 
-                    post=grouppost)
+                                    content=form.content.data,
+                                    author=current_user,
+                                    post=grouppost)
         db.session.add(groupcomment)
         db.session.commit()
     commentformplaceholder = "placeholder"
@@ -548,15 +590,21 @@ def group_post(title, post_id):
     return render_template("post.html",
                            title=grouppost.title,
                            post=grouppost,
-                           data="post_site", Post=Post, form=form, editform=editform, commentformplaceholder=commentformplaceholder, grouppost=True, group=group)
+                           data="post_site",
+                           Post=Post,
+                           form=form,
+                           editform=editform,
+                           commentformplaceholder=commentformplaceholder,
+                           grouppost=True,
+                           group=group)
+
 
 @app.route("/group/<title>/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_group_post(title, post_id):
     post = Grouppost.query.get_or_404(post_id)
     group = Group.query.filter_by(id=post.group_id).first()
-    grp_img = url_for("static",
-                    filename="profile_pics/" + group.image_file)
+    grp_img = url_for("static", filename="profile_pics/" + group.image_file)
     if post.author != current_user:
         if not current_user.admin:
             abort(403)
@@ -575,7 +623,11 @@ def update_group_post(title, post_id):
     return render_template("create_group_post.html",
                            title=group.title,
                            group=group,
-                           post="post", group_img=grp_img, data="post_site", form=form, legend="Update a group post")
+                           post="post",
+                           group_img=grp_img,
+                           data="post_site",
+                           form=form,
+                           legend="Update a group post")
 
 
 @app.route("/group/<title>/<int:post_id>/delete", methods=['POST'])
@@ -598,6 +650,7 @@ def delete_group_post(title, post_id):
     flash("Your post has been deleted", "success")
     return redirect(url_for("group", title=group.title))
 
+
 @app.route("/groupcomment/<int:comment_id>/update", methods=['GET', 'POST'])
 @login_required
 def edit_group_comment(comment_id):
@@ -612,7 +665,11 @@ def edit_group_comment(comment_id):
     find_post = comment.post_id
     group = Grouppost.query.get_or_404(find_post)
     flash("Your comment has been updated", "success")
-    return redirect(url_for("group_post", title=group.author.title, post_id=comment.post_id))
+    return redirect(
+        url_for("group_post",
+                title=group.author.title,
+                post_id=comment.post_id))
+
 
 @app.route("/groupcomment/<int:comment_id>/delete", methods=['POST'])
 @login_required
@@ -625,7 +682,11 @@ def delete_group_comment(comment_id):
     find_post = comment.post_id
     group = Grouppost.query.get_or_404(find_post)
     flash("Your comment has been deleted", "success")
-    return redirect(url_for("group_post", title=group.author.title, post_id=comment.post_id))
+    return redirect(
+        url_for("group_post",
+                title=group.author.title,
+                post_id=comment.post_id))
+
 
 @app.route('/follow/<title>', methods=['GET', 'POST'])
 @login_required
@@ -646,6 +707,7 @@ def follow(title):
     else:
         return redirect(url_for('blog'))
 
+
 @app.route('/unfollow/<title>', methods=['POST'])
 @login_required
 def unfollow(title):
@@ -661,6 +723,7 @@ def unfollow(title):
         return redirect(url_for('group', title=title))
     else:
         return redirect(url_for('blog'))
+
 
 def send_reset_email(user):
     token = user.get_reset_token()
@@ -721,6 +784,7 @@ def reset_token(token):
 def logout():
     logout_user()
     return redirect(url_for("blog"))
+
 
 @app.route("/terms")
 def terms():
