@@ -14,16 +14,15 @@
           </div>
         </div>
         {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">
-          {{ message }}
-        </div>
+        <div class="alert alert-{{ category }}">{{ message }}</div>
         {% endfor %} {% endif %} {% endwith %}
         <form method="POST" action="" enctype="multipart/form-data">
           {{ form.hidden_tag() }}
           <fieldset class="form-group">
             <legend class="border-bottom mb-4">Account information</legend>
             <div class="form-group">
-              {{ form.username.label(class="form-control-label") }} {% if form.username.errors %} {{ form.username(class="form-control form-control-lg is-invalid") }}
+              {{ form.username.label(class="form-control-label") }} {% if form.username.errors %} {{ form.username(class="form-control form-control-lg
+              is-invalid") }}
               <div class="invalid-feedback">
                 {% for error in form.username.errors %}
                 <span>{{ error }}</span>
@@ -41,7 +40,8 @@
               {% else %} {{ form.email(class="form-control form-control-lg") }} {% endif %}
             </div>
             <div class="form-group">
-              {{ form.biography.label(class="form-control-label") }} {% if form.biography.errors %} {{ form.biography(class="form-control form-control-lg is-invalid") }}
+              {{ form.biography.label(class="form-control-label") }} {% if form.biography.errors %} {{ form.biography(class="form-control form-control-lg
+              is-invalid") }}
               <div class="invalid-feedback">
                 {% for error in form.biography.errors %}
                 <span>{{ error }}</span>
@@ -50,23 +50,30 @@
               {% else %} {{ form.biography(class="form-control form-control-lg") }} {% endif %}
             </div>
             <div class="form-group">
-              {{ form.picture.label() }}
-              {{ form.picture(class="form-control-file") }}
-              {% if form.picture.errors %}
-                  {% for error in form.picture.errors %}
-                      <span class="text-danger">{{ error }}</span></br>
-                  {% endfor %}
-              {% endif %}
-          </div>
+              {{ form.picture.label() }} {{ form.picture(class="form-control-file") }} {% if form.picture.errors %} {% for error in form.picture.errors %}
+              <span class="text-danger">{{ error }}</span>
+              {% endfor %} {% endif %}
+            </div>
           </fieldset>
-          <div class="form-group">
-            {{ form.submit(class="btn btn-blog-dark") }}
-          </div>
+          <div class="form-group">{{ form.submit(class="btn btn-blog-dark") }}</div>
         </form>
       </div>
     </div>
     <div class="col-md-4">
-      <div style="border: 1px solid #dddddd; height: 100%; border-radius: 20px;"></div>
+      <div class="card mb-4 rounded">
+        <h5 class="card-header">Groups you follow</h5>
+        <div class="card-body pb-0">
+          {% if current_user.groups|list|count <= 0 %}
+          <p class="text-center text-secondary bg-light py-4 mb-4">Your group list is empty, try joining new groups</p>
+          {% else %} {% for group in current_user.groups %}
+          <div class="my-2 d-flex">
+            <img class="rounded-circle mr-3" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" alt="" width="65px" height="65px" />
+            <a href="{{url_for('group', title=group.title)}}" class="d-flex" style="align-self: center; font-size: 22px">{{ group.title }}</a>
+          </div>
+          <hr />
+          {% endfor %} {% endif %}
+        </div>
+      </div>
     </div>
   </div>
 </div>

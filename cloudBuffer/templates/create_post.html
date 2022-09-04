@@ -1,4 +1,6 @@
 {% extends 'base.html' %} {% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <div class="container pt-5 mt-5">
   <div class="row">
     <div class="col-md-8">
@@ -7,7 +9,7 @@
           <div class="content-section">
             <form method="POST" action="" class="my-2 mt-2">
               {{ form.hidden_tag() }}
-              <fieldset class="form-group">
+              <fieldset class="form-group mb-0">
                 <legend class="border-bottom mb-4">{{ legend }}</legend>
                 <div class="form-group">
                   {{ form.title.label(class="form-control-label") }} {% if form.title.errors %} {{ form.title(class="form-control form-control-lg is-invalid") }}
@@ -18,7 +20,7 @@
                   </div>
                   {% else %} {{ form.title(class="form-control form-control-lg") }} {% endif %}
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-0">
                   {{ form.content.label(class="form-control-label") }} {% if form.content.errors %} {{ form.content(class="form-control form-control-lg is-invalid", style="height: 250px;") }}
                   <div class="invalid-feedback">
                     {% for error in form.content.errors %}
@@ -37,6 +39,59 @@
       </div>
     </div>
     <div class="col-md-4">
+      {% if legend=="Create a group post" %}
+      <div>
+        <div class="card-img-top">
+          <img
+            src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}"
+            alt=""
+            width="100%"
+            height="125px"
+            style="border-top-right-radius: 15px !important; border-top-left-radius: 15px !important"
+          />
+        </div>
+        <div class="content-section account-body" style="border-radius: 0 !important">
+          <div class="media mb-2">
+            <div class="media-body">
+              <h2 class="account-heading">About community</h2>
+              <p class="text-secondary">{{ group.title }}</p>
+              {% if group.description is not none %}
+              <p class="my-2">{{ group.description }}</p>
+              {% endif %}
+              <div class="row">
+                <div class="col-6" style="display: inline-grid">
+                  <p style="font-size: 20px; display: flex; margin: auto !important">{{group.users|count}}</p>
+                  <p style="display: flex; margin: auto !important">Members</p>
+                </div>
+                {% if current_user in group.users %}
+                <div class="col-6" style="display: flex; align-items: center">
+                  <form action="{{ url_for('unfollow', title=group.title) }}" method="post" style="display: flex; margin: auto">
+                    {{ form.hidden_tag() }} {{ form.submit(value='Unfollow', class="btn btn-primary") }}
+                  </form>
+                </div>
+                {% else %}
+                <div class="col-6" style="display: flex; align-items: center">
+                  <form action="{{ url_for('follow', title=group.title) }}" method="post" style="display: flex; margin: auto">
+                    {{ form.hidden_tag() }} {{ form.submit(value='Follow', class="btn btn-blog-dark") }}
+                  </form>
+                </div>
+                {% endif %}
+              </div>
+              <hr />
+              <p class="mt-4">
+                <i class="fa fa-plus mr-2" aria-hidden="true"></i> Created {{group.date_created.strftime('%Y-%m-%d')}}
+              </p>
+              {% if current_user in group.moderators or current_user.admin %}
+              <hr />
+              <a href="{{url_for('edit_group', title=group.title)}}" class="btn btn-primary text-white w-100"
+                >Edit group - Moderator dashboard</a
+              >
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
       <div class="card card-signin mb-4">
         <div class="card-body">
           <h4 class="mb-4">Posting to CloudBuffer's blog</h4>
@@ -47,7 +102,7 @@
             <hr />
             <li>No NSFW content</li>
             <hr />
-            <li>Try seeking intresting topics to talk about</li>
+            <li>Try seeking interesting topics to talk about</li>
             <hr />
             <li>Pick a fitting title for the post</li>
           </ol>
@@ -66,5 +121,13 @@
       </div>
     </div>
   </div>
-  {% endblock %}
 </div>
+<!--<script>
+  document.getElementById('content').value = " ";
+  var simplemde = new SimpleMDE({ element: document.getElementById("content"), autoDownloadFontAwesome: false});
+  var existing = `{{form.content.data}}`;
+  if (existing !== `None`) {
+    simplemde.value(existing);
+  }
+</script>-->
+{% endblock %}

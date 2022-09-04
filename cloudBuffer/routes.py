@@ -1,5 +1,5 @@
 from sqlalchemy import null
-from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, UpdateGroupForm, AddAdminForm, GroupPostForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
+from cloudBuffer.forms import SearchForm, locationSearch, RegistrationForm, LoginForm, UpdateAccountForm, PostForm, GroupForm, UpdateGroupForm, AddAdminForm, AddGroupCommentForm, EditGroupCommentForm, RequestResetForm, ResetPasswordForm, AdminEmailForm, SearchPostForm, MessageForm, AddCommentForm, EditCommentForm, EmptyForm
 from flask import render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from cloudBuffer.models import User, Post, Comment, Group, Grouppost, Groupcomment
@@ -8,10 +8,11 @@ from flask_mail import Message
 from datetime import datetime
 
 from PIL import Image, ImageOps
+import numpy as np
+import markdown
 import requests
 import secrets
 import random
-import numpy as np
 import json
 import os
 
@@ -37,6 +38,7 @@ def index():
         return redirect(url_for("search", query=query))
 
     if request.args.get("hfield", None):
+        print("lol ya")
         if request.headers.getlist("X-Forwarded-For"):
             user_ip = request.headers.getlist("X-Forwarded-For")[0]
         else:
@@ -50,7 +52,8 @@ def index():
     return render_template("index.html",
                            form=form,
                            location_form=location_form,
-                           data="data")
+                           data="data",
+                           GCS_DEVELOPER_KEY=GCS_DEVELOPER_KEY)
 
 
 @app.route("/weather/<query>")
@@ -66,6 +69,7 @@ def search(query):
         return redirect(url_for("search", query=query))
 
     if request.args.get("hfield", None):
+        print("ya")
         if request.headers.getlist("X-Forwarded-For"):
             user_ip = request.headers.getlist("X-Forwarded-For")[0]
         else:
@@ -85,14 +89,12 @@ def search(query):
 
     if data["cod"] == 200:
         search_country = data["sys"]["country"]
-        search_query = f"{query} city {search_country}"
-        print(search_query)
+        search_query = f"{query} {search_country}"
         gis = GoogleImagesSearch(GCS_DEVELOPER_KEY, GCS_CX)
         _google_search_params = {
             'q': search_query,
             'num': 1,
             'safe': 'off',
-            'imgSize': 'XLARGE'
         }
         try:
             gis.search(search_params=_google_search_params)
@@ -122,6 +124,7 @@ def blog():
     with open("cloudBuffer/message.json", "r") as f:
         message = json.load(f)
     form = SearchPostForm()
+    writeform = PostForm()
     page = request.args.get("page", 1, type=int)
     if current_user.is_authenticated:
         image_file = url_for("static",
@@ -129,28 +132,50 @@ def blog():
                              current_user.image_file)
     else:
         image_file = None
+    posts = Grouppost.query.all()
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page,
                                                                   per_page=5)
     if form.validate_on_submit():
-        post_query = Post.query.filter_by(title=form.search.data).first()
-        if post_query:
-            return redirect(url_for('post', post_id=post_query.id))
+        title = form.search.data
+        if "Group:" in title:
+            search = title.removeprefix('Group: ')
+            query = Group.query.filter_by(title=search).first()
+            if query:
+                return redirect(url_for('group', title=query.title))
+            else:
+                flash(f"No group found with the name {search}", "danger")
+                return redirect(url_for("blog"))
+        elif "Group post:" in title:
+            search = title.removeprefix('Group post: ')
+            query = Grouppost.query.filter_by(title=search).first()
+            if query:
+                return redirect(
+                    url_for('group_post', title=query.title, post_id=query.id))
+            else:
+                flash(f'No group post found with the name "{search}"',
+                      "danger")
+                return redirect(url_for("blog"))
         else:
-            flash(f"No article found with the name {form.search.data}",
-                  "danger")
-            return redirect(url_for("blog"))
+            search = title.removeprefix("Post: ")
+            query = Post.query.filter_by(title=search).first()
+            if query:
+                return redirect(url_for('post', post_id=query.id))
+            else:
+                flash(f"No article found with the name {title}", "danger")
+                return redirect(url_for("blog"))
     return render_template("blog.html",
                            data="data",
                            title="Blog",
                            image_file=image_file,
                            posts=posts,
                            form=form,
+                           writeform=writeform,
                            message=message)
 
 
 @app.route('/posts')
 def posts_json():
-    res = Post.query.all()
+    res = Post.query.all() + Group.query.all() + Grouppost.query.all()
     list_posts = [r.as_dict() for r in res]
     return jsonify(list_posts)
 
@@ -226,6 +251,12 @@ def account():
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
+            if current_user.image_file == "default.jpg":
+                pass
+            else:
+                os.remove(
+                    f"cloudBuffer/static/profile_pics/{current_user.image_file}"
+                )
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -247,17 +278,46 @@ def account():
 
 @app.route("/user/<username>", methods=['GET', 'POST'])
 def user(username):
+    form = SearchPostForm()
     page = request.args.get("page", 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
     if current_user == user:
         return redirect(url_for("account"))
     posts = Post.query.filter_by(author=user).order_by(
-        Post.date_posted.desc()).paginate(page=page, per_page=5)
+        Post.date_posted.desc()).paginate(page=page, per_page=3)
+    if form.validate_on_submit():
+        title = form.search.data
+        if "Group:" in title:
+            search = title.removeprefix('Group: ')
+            query = Group.query.filter_by(title=search).first()
+            if query:
+                return redirect(url_for('group', title=query.title))
+            else:
+                flash(f"No group found with the name {search}", "danger")
+                return redirect(url_for("blog"))
+        elif "Group post:" in title:
+            search = title.removeprefix('Group post: ')
+            query = Grouppost.query.filter_by(title=search).first()
+            if query:
+                return redirect(
+                    url_for('group_post', title=query.title, post_id=query.id))
+            else:
+                flash(f'No group post found with the name "{search}"',
+                      "danger")
+                return redirect(url_for("blog"))
+        else:
+            search = title.removeprefix("Post: ")
+            query = Post.query.filter_by(title=search).first()
+            if query:
+                return redirect(url_for('post', post_id=query.id))
+            else:
+                flash(f"No article found with the name {title}", "danger")
+                return redirect(url_for("blog"))
     return render_template("user.html",
                            title=user.username,
                            user=user,
                            posts=posts,
-                           post="post")
+                           form=form)
 
 
 def send_admin_mail(title, body, recipients=None):
@@ -265,7 +325,9 @@ def send_admin_mail(title, body, recipients=None):
         users = [user.email for user in User.query.all()]
     else:
         users = [recipients]
-    msg = Message(f"{title} - CloudBuffer", recipients=users)
+    msg = Message(f"{title} - CloudBuffer",
+                  recipients=users,
+                  sender="noreply@CloudBuffer.com")
     msg.html = render_template("admin_email.html", body=body)
     mail.send(msg)
 
@@ -308,7 +370,7 @@ def new_post():
     if form.validate_on_submit():
         post = Post(id=random.randint(1000, 9999),
                     title=form.title.data,
-                    content=form.content.data,
+                    content=markdown.markdown(form.content.data),
                     author=current_user)
         db.session.add(post)
         db.session.commit()
@@ -383,7 +445,7 @@ def update_post(post_id):
     form = PostForm()
     if form.validate_on_submit():
         post.title = form.title.data
-        post.content = form.content.data
+        post.content = markdown.markdown(form.content.data)
         db.session.commit()
         flash("Your post has been updated", "success")
         return redirect(url_for("post", post_id=post.id))
@@ -444,10 +506,15 @@ def new_group():
                       language=form.language.data,
                       moderators=[current_user])
         db.session.add(group)
+        group.users.append(current_user)
+        group.moderators.append(current_user)
         db.session.commit()
         if form.picture.data:
             group_picture = save_group_pic(form.picture.data)
             group.image_file = group_picture
+            db.session.commit()
+        else:
+            group.image_file = "default.jpg"
             db.session.commit()
         flash("The group has been created successfully", "success")
         return redirect(url_for("group", title=group.title))
@@ -463,7 +530,7 @@ def new_group():
 def group(title):
     group = Group.query.filter_by(title=title).first_or_404()
     grp_img = url_for("static", filename="profile_pics/" + group.image_file)
-    form = GroupPostForm()
+    form = PostForm()
     null_form = EmptyForm()
     page = request.args.get("page", 1, type=int)
     posts = Grouppost.query.filter_by(group_id=group.id).order_by(
@@ -490,7 +557,9 @@ def edit_group(title):
         if form.image_file.data:
             picture_file = save_group_pic(form.image_file.data)
             group.image_file = picture_file
-        group.title = form.title.data
+        if form.title.data == title:
+            print("yes")
+            group.title = form.title.data
         group.description = form.description.data
         group.language = form.language.data
         db.session.commit()
@@ -503,10 +572,8 @@ def edit_group(title):
     image_file = url_for('static',
                          filename='profile_pics/' + current_user.image_file)
     if form2.validate_on_submit():
-        username = form2.username.data.replace(" ", "_")
-        print(username)
+        username = form2.username.data
         user = User.query.filter_by(username=username).first()
-        print(user)
         if user is not None:
             group.moderators.append(user)
             db.session.commit()
@@ -535,13 +602,21 @@ def delete_group(group_id):
     if current_user.admin:
         title = f"Your group ({group.title}) has been deleted"
         body = f"Your group ({group.title}) has been removed by the admins from our website. This can be the cause of violating the terms of service in our website where the group could have included directly or indirectly Profanity, Abusive Content, Adult Content, Illegal Content, Offensive Content and/or Threats in its content. Please respect the action taken by admins. The group has been only removed without any warning. You are still free to create on the website. For more question feel free to contact us."
+        emails_final = ""
         for user in group.moderators:
             emails = []
             emails.append(user.email)
             emails.append('jaddou2005@gmail.com')
             emails_final = tuple(emails)
         send_admin_mail(title, body, emails_final)
+    posts = Grouppost.query.filter_by(group_id=group.id).all()
+    if group.image_file == "default.jpg":
+        pass
+    else:
+        os.remove(f"cloudBuffer/static/profile_pics/{group.image_file}")
     db.session.delete(group)
+    for post in posts:
+        db.session.delete(post)
     db.session.commit()
     flash("Your Group has been deleted", "warning")
     return redirect(url_for("blog"))
@@ -552,7 +627,7 @@ def delete_group(group_id):
 def group_post_new(title):
     group = Group.query.filter_by(title=title).first_or_404()
     grp_img = url_for("static", filename="profile_pics/" + group.image_file)
-    form = GroupPostForm()
+    form = PostForm()
     if form.validate_on_submit():
         post = Grouppost(id=random.randint(1000, 99999),
                          title=form.title.data,
@@ -563,7 +638,7 @@ def group_post_new(title):
         db.session.commit()
         flash("The post has been created successfully", "success")
         return redirect(url_for("group", title=group.title))
-    return render_template("create_group_post.html",
+    return render_template("create_post.html",
                            title=group.title,
                            group=group,
                            post="post",
@@ -620,7 +695,7 @@ def update_group_post(title, post_id):
     if request.method == "GET":
         form.title.data = post.title
         form.content.data = post.content
-    return render_template("create_group_post.html",
+    return render_template("create_post.html",
                            title=group.title,
                            group=group,
                            post="post",

@@ -10,6 +10,7 @@
             <p class="text-secondary">{{ user.email }}</p>
             {% if user.biography is not none %}
             <p class="mt-2">{{ user.biography }}</p>
+            <p class="mt-2 text-secondary"><i class="fas fa-calendar-alt mr-2"></i> Joined {{ user.date_joined.strftime('%B %Y') }}</p>
             {% endif %}
           </div>
         </div>
@@ -41,23 +42,31 @@
       {% endif %} {% else %} ... {% endif %} {% endfor %}
     </div>
     <div class="col-md-4">
-      <div class="content-section-article-user_page" , style="overflow: auto; height: 500px">
-        <legend>Groups that {{user.username}} follow:</legend>
-        <hr />
-        {% if user.groups|list|count > 0 %} {% for group in user.groups %}
-        <div class="my-2 d-flex">
-          <a href="{{url_for('group', title=group.title)}}" class="d-flex" style="align-self: center; font-size: 20px">
-            <img class="rounded-circle mr-3" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" alt="" width="65px" height="65px" />
-            {{ group.title}}</a
-          >
+      <div class="card mb-4 rounded">
+        <h5 class="card-header">Search Cloudbuffer</h5>
+        <div class="card-body">
+          <div class="input-group">
+            <form method="POST" action="" class="d-flex w-100">
+              {{form.hidden_tag()}} {{form.search(class="form-control", style="border-top-right-radius: 0px; border-bottom-right-radius: 0px;")}}
+              {{form.submit(class="btn btn-primary")}}
+            </form>
+          </div>
         </div>
-        <hr />
-        {% endfor %} {% else %}
-        <div class="bg-secondary">
-          <h5 class="text-muted text-center text-secondary bg-light p-4">{{user.username}} doesn't follow any group, invite them to one!</h5>
-        </div>
-        {% endif %}
       </div>
+      {% if user.groups|list|count > 0 %}
+      <div class="card mb-4 rounded">
+        <h5 class="card-header">Groups that {{user.username}} follows</h5>
+        <div class="card-body">
+          {% for group in user.groups %}
+          <div class="my-2 d-flex">
+            <img class="rounded-circle mr-3" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" alt="" width="65px" height="65px" />
+            <a href="{{url_for('group', title=group.title)}}" class="d-flex" style="align-self: center; font-size: 22px">{{ group.title }}</a>
+          </div>
+          <hr />
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>

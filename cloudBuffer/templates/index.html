@@ -5,16 +5,26 @@
     <p class="lead text-white mb-3 header-muted">Your search too, try finding your city's weather anywhere, at anytime</p>
     <div class="form-div">
       <form action="" method="GET">
-        {{form.search(class_="form-control header-input", placeholder="London, New York, Stockholm, Paris", value="London, New York, Stockholm, Paris", onfocus="this.value=''")}}
+        {{form.search(class_="form-control header-input", placeholder="London, New York, Stockholm, Paris", value="London, New York, Stockholm, Paris",
+        onfocus="this.value=''")}}
         <button class="header-button btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
       </form>
       <form action="" method="GET">
         {{location_form.hfield(class_="d-none", value="123")}}
-        <button class="header-button btn btn-primary" type="submit" style="left: 5px;"><i class="fas fa-map-marker-alt"></i></button>
+        <button class="header-button btn btn-primary" type="submit" style="left: 5px"><i class="fas fa-map-marker-alt"></i></button>
       </form>
     </div>
   </div>
-  <svg style="pointer-events: none;" class="wave" width="100%" height="50px" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 75">
+  <svg
+    style="pointer-events: none"
+    class="wave"
+    width="100%"
+    height="50px"
+    preserveAspectRatio="none"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 0 1920 75"
+  >
     <defs>
       <style>
         .a {
@@ -39,26 +49,38 @@
         <rect class="a" width="1920" height="75"></rect>
       </clipPath>
     </defs>
-    <g class="b"><path class="c" d="M1963,327H-105V65A2647.49,2647.49,0,0,1,431,19c217.7,3.5,239.6,30.8,470,36,297.3,6.7,367.5-36.2,642-28a2511.41,2511.41,0,0,1,420,48"></path></g>
-    <g class="b"><path class="d" d="M-127,404H1963V44c-140.1-28-343.3-46.7-566,22-75.5,23.3-118.5,45.9-162,64-48.6,20.2-404.7,128-784,0C355.2,97.7,341.6,78.3,235,50,86.6,10.6-41.8,6.9-127,10"></path></g>
+    <g class="b">
+      <path
+        class="c"
+        d="M1963,327H-105V65A2647.49,2647.49,0,0,1,431,19c217.7,3.5,239.6,30.8,470,36,297.3,6.7,367.5-36.2,642-28a2511.41,2511.41,0,0,1,420,48"
+      ></path>
+    </g>
+    <g class="b">
+      <path
+        class="d"
+        d="M-127,404H1963V44c-140.1-28-343.3-46.7-566,22-75.5,23.3-118.5,45.9-162,64-48.6,20.2-404.7,128-784,0C355.2,97.7,341.6,78.3,235,50,86.6,10.6-41.8,6.9-127,10"
+      ></path>
+    </g>
     <g class="b"><path class="d" d="M1979,462-155,446V106C251.8,20.2,576.6,15.9,805,30c167.4,10.3,322.3,32.9,680,56,207,13.4,378,20.3,494,24"></path></g>
     <g class="b"><path class="d" d="M1998,484H-243V100c445.8,26.8,794.2-4.1,1035-39,141-20.4,231.1-40.1,378-45,349.6-11.6,636.7,73.8,828,150"></path></g>
   </svg>
 </header>
 
 <section class="py-5">
-  <div class="container">
+  <div class="container" id="about">
     <div class="row">
       <div class="col-lg-6">
         <h1 class="display-4 text-primary">We love the <i class="fas fa-globe-americas"></i>!</h1>
         <p class="lead mb-2">Our world is special, we should give it <i class="fas fa-heart text-primary"></i></p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-        <p class="mb-2">consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-        <p>facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur praesentium sunt provident sed ipsum ea consectetur facilis qui neque voluptates ipsam aut ducimus perferendis</p>
+        <p class="mb-2">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere
+          eum non illo voluptatem quae delectus odit vel itaque amet. consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto
+          commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet. facere eum non illo voluptatem quae delectus odit vel
+          itaque amet.
+        </p>
       </div>
       <div class="col-lg-6">
-        <img class="d-flex mx-auto" src="../static/brand/logo-verti-transparent.png" alt="logo" style="height: 330px; border-radius: 10px;" />
+        <img class="d-flex mx-auto" src="../static/brand/logo-verti-transparent.png" alt="logo" style="height: 330px; border-radius: 10px" />
       </div>
     </div>
   </div>
@@ -68,22 +90,29 @@
     <div class="row py-1">
       <div class="col-lg-6">
         <h1 class="text-primary">What is weather?</h1>
-        <p class="text-white">Weather is the state of the atmosphere, describing for example the degree to which it is hot or cold, wet or dry, calm or stormy, clear or cloudy.[1] Most weather phenomena occur in the lowest level of the atmosphere, the troposphere,[2][3] just below the stratosphere. Weather refers to day-to-day temperature and precipitation activity, whereas climate is the term for the averaging of atmospheric conditions over longer periods of time.[4] When used without qualification, "weather" is generally understood to mean the weather of Earth.</p>
+        <p class="text-white">
+          Weather is the state of the atmosphere, describing for example the degree to which it is hot or cold, wet or dry, calm or stormy, clear or cloudy.[1]
+          Most weather phenomena occur in the lowest level of the atmosphere, the troposphere,[2][3] just below the stratosphere. Weather refers to day-to-day
+          temperature and precipitation activity, whereas climate is the term for the averaging of atmospheric conditions over longer periods of time.[4] When
+          used without qualification, "weather" is generally understood to mean the weather of Earth.
+        </p>
       </div>
       <div class="col-lg-6 d-flex">
         <h1 class="text-primary mt-4"><i class="fas fa-quote-left"></i></h1>
-        <p class="text-white quote ml-2 mt-4">Change will not come if we wait for some other person or some other time. We are the ones we've been waiting for. We are the change that we seek.</p>
+        <p class="text-white quote ml-2 mt-4">
+          Change will not come if we wait for some other person or some other time. We are the ones we've been waiting for. We are the change that we seek.
+        </p>
       </div>
     </div>
   </div>
 </section>
 <section class="py-4 mt-4">
-  <div class="container">
+  <div class="container" id="contact">
     <div class="row">
       <div class="col-md-6">
-        <h1 class="text-primary">More about us</h1>
+        <h1 class="text-primary">Contact us</h1>
         <hr />
-        <p class="mb-2">We humans have always been wanting to know everything, we here decided to make a weather forecast so that you dont need to worry about it raining on your day.</p>
+        <p class="mb-2">You are free to email or call us whenever you need help and we would be happy to cooperate with you.</p>
         <ul class="list-group">
           <li class="list-group-item"><i class="fas fa-map-marked-alt fa-2x mr-2"></i> Norrköping, Sweden</li>
           <li class="list-group-item"><i class="fas fa-phone fa-2x mr-2"></i> +46 76 431 02 56</li>
@@ -91,22 +120,16 @@
         </ul>
       </div>
       <div class="col-md-6">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d81361.30566422334!2d16.114215287111538!3d58.58673443104814!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4659286a5f50dca7%3A0x400fef341e48e80!2sNorrk%C3%B6ping!5e1!3m2!1sen!2sse!4v1582202212831!5m2!1sen!2sse" width="100%" height="100%" frameborder="0" style="border: 0;" allowfullscreen=""></iframe>
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d81361.30566422334!2d16.114215287111538!3d58.58673443104814!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4659286a5f50dca7%3A0x400fef341e48e80!2sNorrk%C3%B6ping!5e1!3m2!1sen!2sse!4v1582202212831!5m2!1sen!2sse"
+          width="100%"
+          height="100%"
+          frameborder="0"
+          style="border: 0"
+          allowfullscreen=""
+        ></iframe>
       </div>
     </div>
   </div>
 </section>
-<script>
-  var nav = document.getElementById("navbar");
-
-  window.onscroll = function () {
-    if (window.scrollY >= 100) {
-      nav.classList.remove("py-4");
-      nav.classList.add("bg-dark");
-    } else {
-      nav.classList.add("py-4");
-      nav.classList.remove("bg-dark");
-    }
-  };
-</script>
 {% endblock %}

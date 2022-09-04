@@ -4,7 +4,9 @@
     <div class="col-md-8">
       <div class="content-section account-body">
         <div class="media mb-2">
-          <a href=" {{url_for('group', title=group.title)}} "><img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}" /></a>
+          <a href=" {{url_for('group', title=group.title)}} "
+            ><img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + group.image_file) }}"
+          /></a>
           <div class="media-body">
             <div>
               <h2 class="account-heading mb-1">{{ group.title }}</h2>
@@ -26,8 +28,7 @@
           <fieldset class="form-group">
             <legend class="border-bottom mb-4">Group information</legend>
             <div class="form-group">
-              {{ form.title.label(class="form-control-label") }} {% if form.title.errors %} {{ form.title(class="form-control
-              form-control-lg is-invalid") }}
+              {{ form.title.label(class="form-control-label") }} {% if form.title.errors %} {{ form.title(class="form-control form-control-lg is-invalid") }}
               <div class="invalid-feedback">
                 {% for error in form.title.errors %}
                 <span>{{ error }}</span>
@@ -36,8 +37,8 @@
               {% else %} {{ form.title(class="form-control form-control-lg") }} {% endif %}
             </div>
             <div class="form-group">
-              {{ form.description.label(class="form-control-label") }} {% if form.description.errors %} {{
-              form.description(class="form-control form-control-lg is-invalid") }}
+              {{ form.description.label(class="form-control-label") }} {% if form.description.errors %} {{ form.description(class="form-control form-control-lg
+              is-invalid") }}
               <div class="invalid-feedback">
                 {% for error in form.description.errors %}
                 <span>{{ error }}</span>
@@ -45,12 +46,10 @@
               </div>
               {% else %} {{ form.description(class="form-control form-control-lg") }} {% endif %}
             </div>
+            <div class="form-group">{{ form.language.label(class="form-control-label") }} {{ form.language(class="form-control form-control-lg") }}</div>
             <div class="form-group">
-              {{ form.language.label(class="form-control-label") }} {{ form.language(class="form-control form-control-lg") }}
-            </div>
-            <div class="form-group">
-              {{ form.image_file.label() }} {{ form.image_file(class="form-control-file btn") }} {% if form.image_file.errors %} {%
-              for error in form.image_file.errors %}
+              {{ form.image_file.label() }} {{ form.image_file(class="form-control-file btn") }} {% if form.image_file.errors %} {% for error in
+              form.image_file.errors %}
               <span class="text-danger">{{ error }}</span>
               {% endfor %} {% endif %}
             </div>
@@ -65,16 +64,8 @@
         <hr />
         {% for user in group.moderators %}
         <div class="my-2 d-flex">
-          <img
-            class="rounded-circle mr-3"
-            src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}"
-            alt=""
-            width="65px"
-            height="65px"
-          />
-          <a href="{{url_for('user', username=user.username)}}" class="d-flex" style="align-self: center; font-size: 20px"
-            >{{ user.username }}</a
-          >
+          <img class="rounded-circle mr-3" src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" alt="" width="65px" height="65px" />
+          <a href="{{url_for('user', username=user.username)}}" class="d-flex" style="align-self: center; font-size: 20px">{{ user.username }}</a>
         </div>
         <hr />
         {% endfor %}
@@ -84,18 +75,14 @@
         <hr />
         <form method="POST" action="">
           {{ form2.hidden_tag() }}
-          <div class="form-group">
-            {{ form2.username.label() }} {{ form2.username(class="form-control form-control-lg") }} {% if form2.username.errors %}
-            {% for error in form2.username.errors %}
-            <span class="text-danger">{{ error }}</span>
-            {% endfor %} {% endif %}
-            <p style="font-size: 12px" class="text-secondary text-small mt-2">
-              Case sensetive names, Once the user is added, he can not be removed
-            </p>
-          </div>
-          <div class="form-group">
-            <div class="form-group">{{ form.submit(class="btn btn-blog-dark") }}</div>
-          </div>
+          <fieldset class="form-group">
+            {{ form2.username.label() }} {% if form2.username.errors %} {{ form2.username(class="form-control form-control-lg is-invalid") }} {% for error in
+            form2.username.errors %}
+            <div class="invalid-feedback"><span>{{ error }}</span></div>
+            {% endfor %} {% else %} {{ form2.username(class="form-control form-control-lg") }} {% endif %}
+            <p style="font-size: 12px" class="text-secondary text-small mt-2">Case sensitive names, Once the user is added, he can not be removed</p>
+          </fieldset>
+          <div class="form-group">{{ form2.add_user(class="btn btn-blog-dark") }}</div>
         </form>
       </div>
       <div class="content-section account-body border-danger">
@@ -116,7 +103,8 @@
               </div>
               <div class="modal-body">
                 <p class="text-danger">
-                  Are you sure you want to delete {{group.title}}? <b>The group will be deleted permanently.</b>
+                  Are you sure you want to delete {{group.title}}?
+                  <b>The group will be deleted permanently.</b>
                 </p>
               </div>
               <div class="modal-footer">

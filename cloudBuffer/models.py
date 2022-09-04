@@ -28,6 +28,9 @@ class User(db.Model, UserMixin):
                            nullable=False,
                            default="default.jpg")
     biography = db.Column(db.Text, nullable=True)
+    date_joined = db.Column(db.DateTime,
+                            nullable=True,
+                            default=datetime.utcnow)
     posts = db.relationship("Post", backref="author", lazy=True)
     groupposts = db.relationship("Grouppost", backref="group_author", lazy=True)
     comments = db.relationship("Comment", backref="author", lazy=True)
@@ -58,7 +61,6 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
-#@whooshee.register_model('title', 'content')
 class Post(db.Model):
     __searchable__ = ['title', "content"]
     id = db.Column(db.Integer, primary_key=True)
@@ -75,7 +77,7 @@ class Post(db.Model):
         return f"Post('{self.title}', '{self.date_posted}')"
 
     def as_dict(self):
-        return {'id': self.id, 'title': self.title}
+        return {'type': 'post', 'id': self.id, 'title': self.title}
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -88,7 +90,7 @@ class Comment(db.Model):
         return f"Comment('{self.content}', '{self.timestamp}')"
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(140))
+    title = db.Column(db.String(30), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=True)
     image_file = db.Column(db.String(20),
                            nullable=False,
@@ -101,6 +103,9 @@ class Group(db.Model):
 
     def __repr__(self):
         return f"Group('{self.title}', '{len(self.users)}')"
+
+    def as_dict(self):
+        return {'type': 'group', 'id': self.id, 'title': self.title, 'image': self.image_file}
 
 class Grouppost(db.Model):
     __searchable__ = ['title', "content"]
@@ -116,10 +121,10 @@ class Grouppost(db.Model):
     group_id =  db.Column(db.Integer, db.ForeignKey("group.id"), nullable=False)
 
     def __repr__(self):
-        return f"GroupPost('{self.title}', '{self.date_posted}', '{self.group}')"
+        return f"GroupPost('{self.title}', '{self.date_posted})"
 
     def as_dict(self):
-        return {'id': self.id, 'title': self.title}
+        return {'type': 'grouppost', 'id': self.id, 'title': self.title}
 
 class Groupcomment(db.Model):
     id = db.Column(db.Integer, primary_key=True)

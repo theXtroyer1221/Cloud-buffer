@@ -20,9 +20,9 @@ class locationSearch(FlaskForm):
 class RegistrationForm(FlaskForm):
     username = StringField('Username',
                            validators=[DataRequired(),
-                                       Length(min=2, max=20)])
+                                       Length(min=2, max=40)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField(
         'Confirm Password', validators=[DataRequired(),
                                         EqualTo('password')])
@@ -53,7 +53,7 @@ class UpdateAccountForm(FlaskForm):
                            validators=[DataRequired(),
                                        Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    biography = TextAreaField("Biography", validators=[Length(min=5, max=150)])
+    biography = TextAreaField("Biography", validators=[Length(max=150)])
     picture = FileField('Update Profile Picture',
                         validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Update')
@@ -110,7 +110,7 @@ class GroupForm(FlaskForm):
 
 
 class UpdateGroupForm(FlaskForm):
-    title = StringField('Username',
+    title = StringField('Title',
                            validators=[DataRequired(),
                                        Length(min=2, max=20)])
     description = StringField('Description', validators=[DataRequired(), Length(min=2, max=100)])
@@ -120,19 +120,17 @@ class UpdateGroupForm(FlaskForm):
     submit = SubmitField('Save changes')
 
     def validate_title(self, title):
-        group = Group.query.filter_by(title=title.data).first()
-        if group:
-            raise ValidationError(
-                "That group title is already taken, please choose another one")
+        if self.title == title:
+            pass
+        else:
+            group = Group.query.filter_by(title=title.data).first()
+            if group:
+                raise ValidationError("That group title is already taken, please choose another one")
 
 class AddAdminForm(FlaskForm):
     username = StringField("User's Username", validators=[DataRequired()])
-    submit = SubmitField("Send")
+    add_user = SubmitField("Submit User")
 
-class GroupPostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField("Content", validators=[DataRequired()])
-    submit = SubmitField("Post")
 class AddGroupCommentForm(FlaskForm):
     content = StringField("Content", validators=[DataRequired(), Length(min=5, max=140)])
     submit = SubmitField("Post")

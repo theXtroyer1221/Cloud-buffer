@@ -34,17 +34,25 @@
   font-weight: 600;
 }
 
-.weather-humidity {
+.w-display {
   font-family: $font1;
   font-size: 40px;
   font-weight: 600;
 }
 
-.weather-wind {
-  font-family: $font1;
-  font-weight: 600;
-  font-size: 50px;
+@media screen and (max-width: 768px) {
+  .w-display {
+    font-size: 24px;
+  }
+}
 
+@media screen and (max-width: 440px) {
+  .header-index .header-input .search-input .search-header {
+    width: 250px !important;
+    color: #000;
+  }
+}
+.weather-wind {
   &::after {
     content: "m/s";
     font-size: 25px;
@@ -52,10 +60,6 @@
 }
 
 .weather-pressure {
-  font-family: $font1;
-  font-weight: 600;
-  font-size: 40px;
-
   &::after {
     content: "hPa";
     font-size: 25px;
@@ -75,4 +79,8 @@
 #weatherMap {
   height: 450px;
   width: 100%;
+}
+
+.ui-menu .ui-menu-item {
+  font-size: 14px !important;
 }

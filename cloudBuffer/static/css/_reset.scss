@@ -115,6 +115,10 @@ ul {
 }
 
 @media (max-width: 576px) {
+  .form-div {
+    display: flex !important;
+    justify-content: center;
+  }
   .weather-temp {
     text-align: center;
     justify-content: center;
@@ -135,16 +139,25 @@ ul {
   }
 
   .header-index .header-input {
-    width: 370px;
+    width: 350px;
   }
 
   .search-header .search-input {
-    width: 370px !important;
+    width: 330px !important;
   }
 
   .header-title {
     font-size: 2rem;
     margin-bottom: 7px;
+  }
+
+  .humidity {
+    justify-content: center;
+    margin-bottom: 0.5em;
+  }
+
+  .display-4 {
+    font-size: 2.75rem;
   }
 }
 

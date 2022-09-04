@@ -347,6 +347,14 @@ ul {
 }
 
 @media (max-width: 576px) {
+  .form-div {
+    display: -webkit-box !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
   .weather-temp {
     text-align: center;
     -webkit-box-pack: center;
@@ -367,14 +375,23 @@ ul {
     margin-right: auto;
   }
   .header-index .header-input {
-    width: 370px;
+    width: 350px;
   }
   .search-header .search-input {
-    width: 370px !important;
+    width: 330px !important;
   }
   .header-title {
     font-size: 2rem;
     margin-bottom: 7px;
+  }
+  .humidity {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    margin-bottom: 0.5em;
+  }
+  .display-4 {
+    font-size: 2.75rem;
   }
 }
 
@@ -653,7 +670,7 @@ body::-webkit-scrollbar-thumb {
 #loader {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 65%;
   z-index: 1;
   width: 150px;
   height: 150px;
@@ -746,27 +763,28 @@ body::-webkit-scrollbar-thumb {
   font-weight: 600;
 }
 
-.weather-humidity {
+.w-display {
   font-family: "Montserrat", sans-serif;
   font-size: 40px;
   font-weight: 600;
 }
 
-.weather-wind {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  font-size: 50px;
+@media screen and (max-width: 768px) {
+  .w-display {
+    font-size: 24px;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .header-index .header-input .search-input .search-header {
+    width: 250px !important;
+    color: #000;
+  }
 }
 
 .weather-wind::after {
   content: "m/s";
   font-size: 25px;
-}
-
-.weather-pressure {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  font-size: 40px;
 }
 
 .weather-pressure::after {
@@ -787,5 +805,9 @@ body::-webkit-scrollbar-thumb {
 #weatherMap {
   height: 450px;
   width: 100%;
+}
+
+.ui-menu .ui-menu-item {
+  font-size: 14px !important;
 }
 /*# sourceMappingURL=style.css.map */
