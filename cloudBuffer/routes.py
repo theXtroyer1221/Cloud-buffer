@@ -21,6 +21,8 @@ from google_images_search import GoogleImagesSearch
 GCS_DEVELOPER_KEY = os.environ.get('GCS_DEVELOPER_KEY')
 WEATHER_API = os.environ.get("WEATHER_API")
 GCS_CX = os.environ.get('GCS_CX')
+IP_STACK = os.environ.get("IP_STACK")
+IP_SEARCH_API = os.environ.get("IP_SEARCH_API")
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -72,7 +74,9 @@ def search(query):
             user_ip = request.headers.getlist("X-Forwarded-For")[0]
         else:
             user_ip = request.remote_addr
-        url = 'https://freegeoip.app/json/{}'.format(user_ip)
+        #url = 'https://freegeoip.app/json/{}'.format(user_ip)
+        url = 'https://api.ipbase.com/v2/info?apikey={}&ip={}'.format(
+            IP_SEARCH_API, user_ip)
         r = requests.get(url)
         j = json.loads(r.text)
         query = j['city']

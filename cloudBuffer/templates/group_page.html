@@ -15,12 +15,7 @@
             height="125px"
           />
           {% else %}
-          <img
-            class="rounded-circle article-img"
-            src="{{ url_for('static', filename='profile_pics/' + 'default.jpg') }}"
-            width="125px"
-            height="125px"
-          />
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + 'default.jpg') }}" width="125px" height="125px" />
           {% endif %}
           <a class="w-100" href="{{url_for('group_post_new', title=group.title)}}">
             <form method="POST" action="" class="mt-2">
@@ -33,9 +28,8 @@
                     <span>{{ error }}</span>
                     {% endfor %}
                   </div>
-                  {% else %} {% if current_user.is_authenticated %} {{ form.title(class="form-control form-control-lg",
-                  placeholder="Write a Group post") }} {% else %} {{ form.title(class="form-control form-control-lg",
-                  placeholder="Login to write a group post") }} {% endif %}{% endif %}
+                  {% else %} {% if current_user.is_authenticated %} {{ form.title(class="form-control form-control-lg", placeholder="Write a Group post") }} {%
+                  else %} {{ form.title(class="form-control form-control-lg", placeholder="Login to write a group post") }} {% endif %}{% endif %}
                 </div>
               </fieldset>
             </form>
@@ -57,22 +51,17 @@
               {% else %}
               <a class="mr-2" href="{{ url_for('user', username=post.group_author.username) }}">{{ post.group_author.username }}</a>
               {% endif %}
-              <small class="text-muted"
-                >{{ post.date_posted.strftime('%B %d, %Y') }} at {{ post.date_posted.strftime('%I:%M %p') }}</small
-              >
+              <small class="text-muted">{{ post.date_posted.strftime('%d/%m/%Y') }} at {{ post.date_posted.strftime('%I:%M %p') }}</small>
             </div>
             <h2>
-              <a class="article-title mb-3" href="{{ url_for('group_post', title=group.title, post_id=post.id) }}"
-                >{{ post.title | safe }}</a
-              >
+              <a class="article-title mb-3" href="{{ url_for('group_post', title=group.title, post_id=post.id) }}">{{ post.title | safe }}</a>
             </h2>
-            <div class="article-content text-truncate" style="max-height: 350px;">{{ post.content| safe }}</div>
+            <div class="article-content text-truncate" style="max-height: 350px">{{ post.content| safe }}</div>
           </div>
         </article>
         {% endfor %} {% endif %}
       </div>
-      {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %} {% if page_num %} {% if
-      posts.page == page_num %}
+      {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %} {% if page_num %} {% if posts.page == page_num %}
       <a class="btn btn-primary mb-4" href="{{url_for('group', page=page_num, title=group.title)}}"> {{page_num}}</a>
       {% else %}
       <a class="btn btn-outline-primary mb-4" href="{{url_for('group', page=page_num, title=group.title)}}"> {{page_num}}</a>
@@ -116,14 +105,10 @@
               {% endif %}
             </div>
             <hr />
-            <p class="mt-4">
-              <i class="fa fa-plus mr-2" aria-hidden="true"></i> Created {{group.date_created.strftime('%Y-%m-%d')}}
-            </p>
+            <p class="mt-4"><i class="fa fa-plus mr-2" aria-hidden="true"></i> Created {{group.date_created.strftime('%d-%m-%Y')}}</p>
             {% if current_user in group.moderators or current_user.admin %}
             <hr />
-            <a href="{{url_for('edit_group', title=group.title)}}" class="btn btn-primary text-white w-100"
-              >Edit group - Moderator dashboard</a
-            >
+            <a href="{{url_for('edit_group', title=group.title)}}" class="btn btn-primary text-white w-100">Edit group - Moderator dashboard</a>
             {% endif %}
           </div>
         </div>
@@ -134,16 +119,8 @@
         <hr />
         {% for user in group.users %}
         <div class="my-2 d-flex">
-          <img
-            class="rounded-circle mr-3"
-            src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}"
-            alt=""
-            width="65px"
-            height="65px"
-          />
-          <a href="{{url_for('user', username=user.username)}}" class="d-flex" style="align-self: center; font-size: 20px"
-            >{{ user.username }}</a
-          >
+          <img class="rounded-circle mr-3" src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" alt="" width="65px" height="65px" />
+          <a href="{{url_for('user', username=user.username)}}" class="d-flex" style="align-self: center; font-size: 20px">{{ user.username }}</a>
         </div>
         <hr />
         {% endfor %}
