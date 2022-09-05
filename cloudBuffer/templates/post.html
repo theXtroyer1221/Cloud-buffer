@@ -69,13 +69,8 @@
             {% endif %} {% else %}
             <a class="mr-2" href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a>
             {% endif %}
-<<<<<<< HEAD
             <small class="text-muted">{{ post.date_posted.strftime('%d/%m/%Y') }}</small>
             {% if post.author == current_user or current_user.admin %}
-=======
-            <small class="text-muted">{{ post.date_posted.strftime('%B %d, %Y') }}</small>
-            {% if post.group_author == current_user or current_user.admin %}
->>>>>>> heroku
             <div>
               {% if grouppost %}
               <a class="btn btn-secondary btn-sm mt-2 mb-1" href="{{url_for('update_group_post', title=group.title, post_id=post.id)}}">Update</a>
@@ -232,11 +227,7 @@
                   <a href="{{url_for('user', username=comment.author.username)}}">{{comment.author.username}}</a>{% endif %} {% endif %}
                   <p class="mb-1">{{comment.content}}</p>
                   <span class="text-secondary"
-<<<<<<< HEAD
                     >{{comment.timestamp.strftime('%d/%m/%Y, %H:%M %p')}} •
-=======
-                    >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M %p')}} •
->>>>>>> heroku
                     <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'
                       ><i class="fa fa-twitter" aria-hidden="true"></i></a
                   ></span>
@@ -285,11 +276,7 @@
                       {% endif %}
                     </div>
                     <span class="text-secondary"
-<<<<<<< HEAD
-                      >{{comment.timestamp.strftime('%d/%m/%Y, %H:%M %p')}} •
-=======
-                      >{{comment.timestamp.strftime('%Y-%m-%d, %H:%M %p')}} •
->>>>>>> heroku
+                      >{{comment.timestamp.strftime('%d/%m/%Y, %H:%M %p')}}
                       <a href='https://twitter.com/intent/tweet?text="{{comment.content}}" - {{comment.author.username}}&url={{request.url}}'
                         ><i class="fa fa-twitter" aria-hidden="true"></i></a
                     ></span>
@@ -365,11 +352,7 @@
       <div class="media content-section-article d-block text-center">
         <h3 class="mt-4">Post published</h3>
         <br />
-<<<<<<< HEAD
         <h4 class="text-primary mb-4">{{ post.date_posted.strftime('%d/%m/%Y') }}</h4>
-=======
-        <h4 class="text-primary mb-4">{{ post.date_posted.strftime('%B %d, %Y') }}</h4>
->>>>>>> heroku
         <h3>Post author</h3>
         <br />
         <h4 class="text-primary mb-4">
